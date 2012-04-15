@@ -3,17 +3,19 @@ package phones;
 import java.util.Date;
 
 public abstract class InteractionModel {
+	
+	public abstract void reset();
 
-	static abstract class Descriptor {
-		public int timeout; // in seconds
+	public static abstract class Descriptor {
+		public int timeout; // in seconds; -1 for infinity
 	}
 
 	// TODO: pick a proper name instead of 'tick'
-	static class TickDescriptor extends Descriptor {
+	public static class TickDescriptor extends Descriptor {
 		public String status;
 	}
 	
-	static class MenuDescriptor extends Descriptor {
+	public static class MenuDescriptor extends Descriptor {
 		public String question;
 		public String[] options;
 	}
@@ -31,6 +33,7 @@ public abstract class InteractionModel {
 	
 	public abstract void receiveTickTimeout();
 	public abstract void receiveCode(String code);
+	
 	public abstract void receiveMenuTimeout();
 	public abstract void receiveMenuOption(String option);
 	
