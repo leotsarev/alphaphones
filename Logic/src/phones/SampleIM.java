@@ -19,6 +19,8 @@ public class SampleIM extends InteractionModel {
 	public int codeStatus(String code) {
 		if (code.length() > 3)
 			return TOO_LONG_CODE;
+		if (code.equals("123"))
+			return VALID_CODE;
 		return POTENTIAL_PREFIX;
 	}
 
@@ -26,7 +28,8 @@ public class SampleIM extends InteractionModel {
 	}
 
 	public void receiveCode(String code) {
-		Utils.assert_(false, "no codes");
+		System.out.println("SampleIM: code "+code+" received.");
+		//Utils.assert_(false, "no codes");
 	}
 
 	public void receiveMenuTimeout() {

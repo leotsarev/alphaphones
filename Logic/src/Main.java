@@ -3,8 +3,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.util.Date;
-import java.util.zip.InflaterOutputStream;
-
 import phones.InteractionModel;
 import phones.InteractionModel.Descriptor;
 import phones.InteractionModel.MenuDescriptor;
@@ -22,32 +20,44 @@ public class Main {
 	
 	static TickDescriptor tickDescriptor;
 	static MenuDescriptor menuDescriptor;
-	static String prevStatus = null;
-	static Date prevTime, currentTime;
 	static int remainingTimeout;
 	
+	static String prevStatus = null;
+	static Date prevTime, currentTime;
+	
 	static void next() {
-		long dt = (currentTime.getTime()-prevTime.getTime())/1000;
-		Descriptor descriptor = im.whatNext((int)dt, currentTime);
-		prevTime = currentTime;
-		remainingTimeout = descriptor.timeout;
-		if (descriptor instanceof TickDescriptor) {
-			tickDescriptor = (TickDescriptor)descriptor;
-			menuDescriptor = null;
-		} else {
-			menuDescriptor = (MenuDescriptor)descriptor;
-			tickDescriptor = null;
-		}
-
-		if (tickDescriptor != null) {
-			if (!tickDescriptor.status.equals(prevStatus)) {
-				out.println("STATUS: "+tickDescriptor.status);
-				prevStatus = tickDescriptor.status;
+		do {
+			long dt = (currentTime.getTime()-prevTime.getTime())/1000;
+			Descriptor descriptor = im.whatNext((int)dt, currentTime);
+			prevTime = currentTime;
+			remainingTimeout = descriptor.timeout;
+			if (descriptor instanceof TickDescriptor) {
+				tickDescriptor = (TickDescriptor)descriptor;
+				menuDescriptor = null;
+			} else {
+				menuDescriptor = (MenuDescriptor)descriptor;
+				tickDescriptor = null;
 			}
-		}
+	
+			if (tickDescriptor != null) {
+				if (!tickDescriptor.status.equals(prevStatus)) {
+					out.println("STATUS: "+tickDescriptor.status);
+					prevStatus = tickDescriptor.status;
+				}
+			}
+			else if (menuDescriptor != null) {
+				out.println("Menu (TODO)");
+			}
+			else
+				Utils.assert_(false);
+			
+		} while (remainingTimeout == 0);
 	}
 	
 	static void advanceTime(int dt) {
+		Utils.assert_(dt >= 0);
+		if (dt == 0)
+			return;
 		out.println(dt+" seconds later...");
 		currentTime = new Date(currentTime.getTime()+1000*dt);
 	}
@@ -56,11 +66,22 @@ public class Main {
 		while (t >= remainingTimeout) {
 			int dt = remainingTimeout;
 			t -= dt;
+			
 			advanceTime(dt);
+			
+			if (tickDescriptor != null) 
+				im.receiveTickTimeout();
+			else if (menuDescriptor != null)
+				im.receiveMenuTimeout();
+			else
+				Utils.assert_(false);
 			next();
 		}
+		
 		remainingTimeout -= t;
 		advanceTime(t);
+		
+		Utils.assert_(remainingTimeout > 0);
 	}
 	
 	public static void main(String[] args) throws IOException {
@@ -82,9 +103,9 @@ public class Main {
 			
 			if (input.equals("help")) {
 				out.println("Commands:");
-				out.println("    help - show this help message");
-				out.println("    exit - exit, obviously");
-				out.println("    wait <seconds> - wait, obviously");
+				out.println("    help");
+				out.println("    exit");
+				out.println("    wait <seconds>");
 				continue;
 			}
 			
@@ -98,7 +119,24 @@ public class Main {
 				}
 			}
 			
-			out.println("Unrecognized command.");
+			if (tickDescriptor != null) {
+				try {
+					Integer.parseInt(input);
+					switch (im.codeStatus(input)) {
+					case InteractionModel.VALID_CODE:
+						im.receiveCode(input);
+						next();
+						continue;
+					default:
+						out.println("Code is not valid.");
+						continue;
+					}
+				}
+				catch (NumberFormatException e) {
+				}
+			}
+			
+			out.println("Unrecognized command. Type 'help' for help.");
 		}
 	}
 
