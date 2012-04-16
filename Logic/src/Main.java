@@ -26,7 +26,7 @@ public class Main {
 	static Date prevTime, currentTime;
 	
 	static void next() {
-		do {
+		while (true) {
 			long dt = (currentTime.getTime()-prevTime.getTime())/1000;
 			Descriptor descriptor = im.whatNext((int)dt, currentTime);
 			prevTime = currentTime;
@@ -51,7 +51,18 @@ public class Main {
 			else
 				Utils.assert_(false);
 			
-		} while (remainingTimeout == 0);
+			if (remainingTimeout > 0)
+				break;
+			
+			if (tickDescriptor != null) {
+				im.receiveTickTimeout();
+			}
+			else if (menuDescriptor != null) {
+				im.receiveMenuTimeout();
+			}
+			else
+				Utils.assert_(false);
+		}
 	}
 	
 	static void advanceTime(int dt) {
