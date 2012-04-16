@@ -34,34 +34,30 @@ public class Main {
 			if (descriptor instanceof TickDescriptor) {
 				tickDescriptor = (TickDescriptor)descriptor;
 				menuDescriptor = null;
+				
+				if (!tickDescriptor.status.equals(prevStatus)) {
+					out.println("STATUS: " + tickDescriptor.status);
+					prevStatus = tickDescriptor.status;
+				}
+				
+				if (remainingTimeout > 0)
+					break;
+				im.receiveTickTimeout();
 			} else {
 				menuDescriptor = (MenuDescriptor)descriptor;
 				tickDescriptor = null;
-			}
-	
-			if (tickDescriptor != null) {
-				if (!tickDescriptor.status.equals(prevStatus)) {
-					out.println("STATUS: "+tickDescriptor.status);
-					prevStatus = tickDescriptor.status;
-				}
-			}
-			else if (menuDescriptor != null) {
-				out.println("Menu (TODO)");
-			}
-			else
-				Utils.assert_(false);
-			
-			if (remainingTimeout > 0)
-				break;
-			
-			if (tickDescriptor != null) {
-				im.receiveTickTimeout();
-			}
-			else if (menuDescriptor != null) {
+				
+				if (menuDescriptor.beepAtStart)
+					out.println("BEEP");
+				out.println(menuDescriptor.question);
+				for (int i = 0; i < menuDescriptor.options.length; i++)
+					out.println("  " + (i + 1) + ". " + menuDescriptor.options[i]);
+				out.println("(timeout: " + menuDescriptor.timeout + "s)");
+				
+				if (remainingTimeout > 0)
+					break;
 				im.receiveMenuTimeout();
 			}
-			else
-				Utils.assert_(false);
 		}
 	}
 	
@@ -82,10 +78,9 @@ public class Main {
 			
 			if (tickDescriptor != null) 
 				im.receiveTickTimeout();
-			else if (menuDescriptor != null)
+			if (menuDescriptor != null)
 				im.receiveMenuTimeout();
-			else
-				Utils.assert_(false);
+
 			next();
 		}
 		
@@ -140,6 +135,19 @@ public class Main {
 						continue;
 					default:
 						out.println("Code is not valid.");
+						continue;
+					}
+				}
+				catch (NumberFormatException e) {
+				}
+			}
+			
+			if (menuDescriptor != null) {
+				try {
+					int option = Integer.parseInt(input);
+					if (option >= 1 && option <= menuDescriptor.options.length) {
+						im.receiveMenuOption(option-1);
+						next();
 						continue;
 					}
 				}

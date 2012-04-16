@@ -18,6 +18,9 @@ public abstract class InteractionModel {
 	public static class MenuDescriptor extends Descriptor {
 		public String question;
 		public String[] options;
+		public boolean beepAtStart;
+		public int reminder; // 15 means that it will beep every 15 seconds
+							 // 0 means it's disabled
 	}
 	
 	
@@ -35,7 +38,7 @@ public abstract class InteractionModel {
 	public abstract void receiveCode(String code);
 	
 	public abstract void receiveMenuTimeout();
-	public abstract void receiveMenuOption(String option);
+	public abstract void receiveMenuOption(int option);
 	
 	public abstract boolean needSave();
 	

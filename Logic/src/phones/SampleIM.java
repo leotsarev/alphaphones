@@ -5,15 +5,27 @@ import java.util.Date;
 
 public class SampleIM extends InteractionModel {
 
+	boolean state;
 	public void reset() {
+		state = false;
 	}
 
 	public Descriptor whatNext(int timePassed, Date currentTime) {
-		TickDescriptor result = new TickDescriptor();
-		result.timeout = 60;
-		String time = DateFormat.getTimeInstance().format(currentTime); 
-		result.status = "It's " + time + ".";
-		return result;
+		state = !state;
+		if (state) {
+			TickDescriptor result = new TickDescriptor();
+			result.timeout = 60;
+			String time = DateFormat.getTimeInstance().format(currentTime); 
+			result.status = "It's " + time + ".";
+			return result;
+		} else {
+			MenuDescriptor result = new MenuDescriptor();
+			result.timeout = 30;
+			result.question = "Choose one option:";
+			String[] options = { "Apples", "Bananas" };
+			result.options = options;
+			return result;
+		}
 	}
 
 	public int codeStatus(String code) {
@@ -29,15 +41,14 @@ public class SampleIM extends InteractionModel {
 
 	public void receiveCode(String code) {
 		System.out.println("SampleIM: code "+code+" received.");
-		//Utils.assert_(false, "no codes");
 	}
 
 	public void receiveMenuTimeout() {
-		Utils.assert_(false, "no menus");
+		System.out.println("SampleIM: no option was chosen.");
 	}
 
-	public void receiveMenuOption(String option) {
-		Utils.assert_(false, "no menus");
+	public void receiveMenuOption(int option) {
+		System.out.println("SampleIM: option "+option+" received.");
 	}
 
 	public boolean needSave() {
