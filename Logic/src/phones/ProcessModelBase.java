@@ -4,8 +4,50 @@ import java.util.Date;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.Stack;
+import java.util.Vector;
 
 public class ProcessModelBase extends InteractionModel{
+	
+	private Hashtable usedCodes;
+	private Vector commandWordDefs = new Vector();
+	
+	private abstract class CommandWordDefBase
+	{
+		public abstract boolean isValidWord(String word);
+		public abstract boolean isValidPrefix(String word);
+		public abstract Process get(String word);
+		public boolean isOneTimeCode(String code) {
+			return false;
+		}
+	}
+	
+	private class FixedCommandWord extends CommandWordDefBase
+	{
+		private String fixedWord, processName;
+		
+		public FixedCommandWord(String fixedWord, String processName)
+		{
+			this.fixedWord = fixedWord;
+			this.processName = processName;
+		}
+		
+		public Process get(String word) {
+			if (isValidWord(word))
+			{
+				return createProcessByName(processName);
+			}
+			return null;
+		}
+
+		public boolean isValidWord(String word) {
+			return word.equals(fixedWord);
+		}
+
+		public boolean isValidPrefix(String word) {
+			return fixedWord.startsWith(word);
+		}
+		
+	}
 	
 	public static abstract class Process
 	{
@@ -38,7 +80,6 @@ public class ProcessModelBase extends InteractionModel{
 		{
 			for (int i = 0; i < ProcessData.size(); i ++)
 			{
-				Utils.assert_(false);
 				ser.writeDict(ProcessData);
 			}
 		}
@@ -148,6 +189,12 @@ public class ProcessModelBase extends InteractionModel{
 		
 	}
 	
+	protected void bindFixedCommandWord(String commandWord, String processName)
+	{
+		commandWordDefs.add(new FixedCommandWord(commandWord, processName));
+
+	}
+	
 	public void scheduleNow(Process process)
 	{
 		scheduler.scheduleNow(process);
@@ -160,8 +207,10 @@ public class ProcessModelBase extends InteractionModel{
 	
 	private ProcessScheduler scheduler = new ProcessScheduler();
 	
-	public void reset() {
+	protected void reset() {
 		scheduler = new ProcessScheduler();
+		commandWordDefs = new Vector();
+		usedCodes = new Hashtable();
 	}
 	
 	private int currentMin;
@@ -192,16 +241,59 @@ public class ProcessModelBase extends InteractionModel{
 		}
 	}
 
-	protected Process getProcessForCode(String code) {
+	private Process getProcessForCode(String code) {
+		for (int i = 0; i < commandWordDefs.size(); i++)
+		{
+			CommandWordDefBase def = (CommandWordDefBase) commandWordDefs.get(i);
+			if (def.isValidWord(code))
+			{
+				if (def.isOneTimeCode(code))
+				{
+					usedCodes.put(code, "");
+				}
+				return def.get(code);
+			}
+		}
+		Utils.assert_(false, "Не удалось привязать код: " + code);
 		return null;
+	}
+	
+	public ProcessModelBase()
+	{
+		reset();
+	}
+	
+	public int checkCommandWord(String commandWord) {
+		if (usedCodes.containsKey(commandWord))
+		{
+			return CODE_USED;
+		}
+		int status = super.checkCommandWord(commandWord);
+		Utils.assert_(commandWordDefs.size() > 0);
+		for (int i = 0; i < commandWordDefs.size(); i++)
+		{
+			CommandWordDefBase def = (CommandWordDefBase) commandWordDefs.get(i);
+			if (def.isValidWord(commandWord))
+			{
+				return CODE_VALID;
+			}
+			if (def.isValidPrefix(commandWord))
+			{
+				status = CODE_PREFIX;
+			}
+		}
+		return status;
 	}
 
 	public void unserialize(ISerializer ser) {
+		reset();
 		scheduler.unserialize(ser);
+		usedCodes = ser.readDict();
 	}
 
 	public void serialize(ISerializer ser) {
 		scheduler.serialize(ser);
+		ser.writeDict(usedCodes);
 	}
 	
 	public Process createProcessByName(String name)

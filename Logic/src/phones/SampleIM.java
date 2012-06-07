@@ -31,10 +31,10 @@ public class SampleIM extends InteractionModel {
 
 	public int checkCommandWord(String commandWord) {
 		if (commandWord.length() > 3)
-			return TOO_LONG_CODE;
+			return CODE_UNKNOWN;
 		if (commandWord.equals("123"))
-			return VALID_CODE;
-		return POTENTIAL_PREFIX;
+			return CODE_VALID;
+		return CODE_PREFIX;
 	}
 
 	public void assertCommandWord(String code) {

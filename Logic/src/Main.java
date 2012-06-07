@@ -5,6 +5,7 @@ import java.io.PrintStream;
 import java.util.Date;
 import phones.InteractionModel;
 import phones.InteractionModel.*;
+import phones.AlphaIM;
 import phones.SampleEventIM;
 import phones.StringSerializer;
 import phones.Utils;
@@ -91,8 +92,7 @@ public class Main {
 		in = new BufferedReader(new InputStreamReader(System.in));
 		out = new PrintStream(System.out, true, "utf-8"/*"866"*/);
 		
-		im = new SampleEventIM();
-		im.reset();
+		im = new AlphaIM();
 		
 		prevTime = currentTime = new Date(); 
 		next();
@@ -134,11 +134,22 @@ public class Main {
 				}
 			}
 			
+			if (im.checkCommandWord(input) == InteractionModel.CODE_VALID)
+			{
+				im.assertCommandWord(input);
+				wait(0);
+				continue;
+			}
+			else
+			{
+				out.println(im.checkCommandWord(input));
+			}
+			
 			if (sleepDescriptor != null) {
 				try {
 					Integer.parseInt(input);
 					switch (im.checkCommandWord(input)) {
-					case InteractionModel.VALID_CODE:
+					case InteractionModel.CODE_VALID:
 						im.assertCommandWord(input);
 						next();
 						continue;
@@ -164,7 +175,9 @@ public class Main {
 				}
 			}
 			
-			out.println("Unrecognized command. Type 'help' for help.");
+			
+			
+			out.println("Unrecognized command (" + input + ") Type 'help' for help.");
 		}
 	}
 

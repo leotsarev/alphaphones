@@ -7,12 +7,12 @@ public abstract class InteractionModel {
     public static final int PRIORITY_WHATEVER = 50;
     public static final int PRIORITY_SILENT = 1;
     
-	public abstract void reset();
+	protected abstract void reset();
 
 	public static abstract class Descriptor {
 		public int timeout; // in seconds; -1 for infinity, 0 for now
-		public boolean saveRequired;
-		public int priority;
+		public boolean saveRequired = true;
+		public int priority = PRIORITY_WHATEVER;
 	}
 	
 	public static class MenuItem
@@ -40,10 +40,9 @@ public abstract class InteractionModel {
 	public abstract Descriptor whatNext(int minsFromWorldStart, Date currentTime);
 
 	public static final int CODE_UNKNOWN = 0;
-	public static final int VALID_CODE = 1;
-	public static final int USED_CODE = 2;
-	public static final int TOO_LONG_CODE = 3;
-	public static final int POTENTIAL_PREFIX = 4;
+	public static final int CODE_VALID = 1;
+	public static final int CODE_USED = 2;
+	public static final int CODE_PREFIX = 3;
 	public int checkCommandWord(String commandWord)
 	{
 		return CODE_UNKNOWN;
