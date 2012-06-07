@@ -22,8 +22,8 @@ public class SampleIM extends InteractionModel {
 			MenuDescriptor result = new MenuDescriptor();
 			result.timeout = 30;
 			result.menuHeader = "Choose one option:";
-			MenuItem[] options = {new MenuItem("Apples","APPLE"), new MenuItem("bananas", "BANANA")};
-			result.options = options;
+			result.addItem("Apples","APPLE");
+			result.addItem("bananas", "BANANA");
 			result.timeoutCommand = "TIMEOUT";
 			return result;
 		}

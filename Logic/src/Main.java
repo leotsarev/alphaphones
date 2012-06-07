@@ -6,7 +6,7 @@ import java.util.Date;
 import phones.InteractionModel;
 import phones.InteractionModel.*;
 import phones.AlphaIM;
-import phones.SampleEventIM;
+import phones.InteractionModel.MenuDescriptor;
 import phones.StringSerializer;
 import phones.Utils;
 
@@ -46,8 +46,9 @@ public class Main {
 				menuDescriptor = (MenuDescriptor)descriptor;
 				sleepDescriptor = null;
 				out.println(menuDescriptor.menuHeader);
-				for (int i = 0; i < menuDescriptor.options.length; i++)
-					out.println("  " + (i + 1) + ". " + menuDescriptor.options[i].ItemName);
+				String[] names = menuDescriptor.getNames();
+				for (int i = 0; i < names.length; i++)
+					out.println("  " + (i + 1) + ". " + names[i]);
 				out.println("(timeout: " + menuDescriptor.timeout + "s)");
 				
 				if (remainingTimeout > 0)
@@ -134,16 +135,7 @@ public class Main {
 				}
 			}
 			
-			if (im.checkCommandWord(input) == InteractionModel.CODE_VALID)
-			{
-				im.assertCommandWord(input);
-				wait(0);
-				continue;
-			}
-			else
-			{
-				out.println(im.checkCommandWord(input));
-			}
+			
 			
 			if (sleepDescriptor != null) {
 				try {
@@ -165,8 +157,8 @@ public class Main {
 			if (menuDescriptor != null) {
 				try {
 					int option = Integer.parseInt(input);
-					if (option >= 1 && option <= menuDescriptor.options.length) {
-						im.assertCommandWord(menuDescriptor.options[option+1].ItemCommand);
+					if (option >= 1 && option <= menuDescriptor.getCount()) {
+						im.assertCommandWord(menuDescriptor.getCommand(option));
 						next();
 						continue;
 					}
@@ -175,7 +167,12 @@ public class Main {
 				}
 			}
 			
-			
+			if (im.checkCommandWord(input) == InteractionModel.CODE_VALID)
+			{
+				im.assertCommandWord(input);
+				next();
+				continue;
+			}
 			
 			out.println("Unrecognized command (" + input + ") Type 'help' for help.");
 		}

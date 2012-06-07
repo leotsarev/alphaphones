@@ -1,6 +1,7 @@
 package phones;
 
 import java.util.Date;
+import java.util.Vector;
 
 public abstract class InteractionModel {
 	public static final int PRIORITY_FUCKING_ANNOYING = 100;
@@ -15,25 +16,48 @@ public abstract class InteractionModel {
 		public int priority = PRIORITY_WHATEVER;
 	}
 	
-	public static class MenuItem
-    {
-		public MenuItem(String name, String command)
-		{
-			ItemName = name;
-			ItemCommand = command;
-		}
-        public String ItemName;
-        public String ItemCommand;
-    }
+	
 
 	public static class SleepDescriptor extends Descriptor {
 		public String status;
 	}
 	
 	public static class MenuDescriptor extends Descriptor {
+		private static class MenuItem
+	    {
+			public MenuItem(String name, String command)
+			{
+				ItemName = name;
+				ItemCommand = command;
+			}
+	        public String ItemName;
+	        public String ItemCommand;
+	    }
+		
 		public String menuHeader;
-        public MenuItem[] options; 
+        private Vector options = new Vector();
         public String timeoutCommand;
+		public void addItem(String name, String command) {
+			options.add(new MenuItem(name, command));
+		}
+		public String getCommand(int index) {
+			return (String) ((MenuItem) options.get(index-1)).ItemCommand;
+		}
+		
+		public String[] getNames()
+		{
+			String[] result = new String[options.size()];
+			for (int i = 0; i < result.length; i++)
+			{
+				result[i] = ((MenuItem) options.get(i)).ItemName;
+			}
+			return result;
+		}
+		
+		public int getCount()
+		{
+			return options.size();
+		}
 	}
 	
 	
