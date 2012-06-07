@@ -98,8 +98,14 @@ public class ProcessModelBase extends InteractionModel{
 		public void setIntArg(String key, int coord) {
 			setStringArg(key, Integer.toString(coord));
 		}
-		protected void scheduleNow(ProcessModelBase.Process updateFaction) {
-			model.scheduleNow(updateFaction);
+		protected void scheduleNow(ProcessModelBase.Process process) {
+			model.scheduleNow(process);
+		}
+		public Descriptor createMessage(String message) {
+			SleepDescriptor result = new SleepDescriptor();
+			result.status = message;
+			result.timeout = 0;
+			return result;
 		}
 	}
 	

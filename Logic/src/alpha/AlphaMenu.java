@@ -15,7 +15,7 @@ public class AlphaMenu extends MenuBase {
 	}
 	
 	public void addMenuItems(MenuDescriptor menu) {
-		menu.addItem("Выбор идеологии", "IDEOLOGY");
+		menu.addItem("Выбор идеологии", "IDEOLOGY_MENU");
 	}
 
 }

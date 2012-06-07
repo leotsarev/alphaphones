@@ -10,10 +10,7 @@ public abstract class OneTimeMessageBase extends ProcessModelBase.Process {
 	}
 
 	public Descriptor handle() {
-		SleepDescriptor result = new SleepDescriptor();
-		result.status = getStringArg("message");
-		result.timeout = 0;
-		return result;
+		return createMessage(getStringArg("message"));
 	}
 
 }

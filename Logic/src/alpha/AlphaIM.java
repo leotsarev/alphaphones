@@ -1,19 +1,36 @@
 package alpha;
 
+import phones.ISerializer;
 import phones.ProcessModelBase;
 import phones.Sample.HitMeProcess;
 
 public class AlphaIM extends ProcessModelBase{
 
-	public int[] coords = new int[4];
+	public Faction[] factions;
+	public Faction currentFaction = null;
 
 	protected void reset()
 	{
 		super.reset();
+		
 		bindFixedCommandWord("HITME", new HitMeProcess(this));
 		bindFixedCommandWord("MENU", new AlphaMenu(this));
-		bindFixedCommandWord("IDEOLOGY", new IdeologyMenu(this));
-		bindFixedCommandWord("SCIENCS", new IdeologyChange(this));
+		bindFixedCommandWord("IDEOLOGY_CHECK", new IdeologyCheck(this));
+		bindFixedCommandWord("IDEOLOGY_MENU", new IdeologyMenu(this));
+		
+		bindFixedCommandWord("INDIVIDUAL", new IdeologyChange(this, 0, 1));
+		bindFixedCommandWord("COMMONS", new IdeologyChange(this, 0, -1));
+		
+		bindFixedCommandWord("SCIENCE", new IdeologyChange(this, 1, 1));
+		bindFixedCommandWord("MYSTIC", new IdeologyChange(this, 1, -1));
+
+		bindFixedCommandWord("EXPLORE", new IdeologyChange(this, 2, 1));
+		bindFixedCommandWord("PROTECT", new IdeologyChange(this, 2, -1));
+		
+		bindFixedCommandWord("WEAK", new IdeologyChange(this, 3, 1));
+		bindFixedCommandWord("HARD", new IdeologyChange(this, 3, -1));
+		
+		factions = Faction.createFactions(this);
 	}
 	
 	public Process createProcessByName(String name) {
@@ -24,7 +41,7 @@ public class AlphaIM extends ProcessModelBase{
 				new AlphaMenu(this),
 				new IdeologyMenu(this),
 				new IdeologyChange(this),
-				new UpdateFaction(this)
+				new IdeologyCheck(this),
 			};
 		for (int i = 0; i < process.length; i++)
 		{
@@ -34,6 +51,65 @@ public class AlphaIM extends ProcessModelBase{
 			}
 		}
 		return super.createProcessByName(name);
+	}
+	
+	public void serialize(ISerializer ser) {
+		super.serialize(ser);
+		for (int i =0; i<factions.length; i++)
+		{
+			factions[i].serialize(ser);
+		}
+	}
+	
+	public void unserialize(ISerializer ser) {
+		super.unserialize(ser);
+		for (int i =0; i<factions.length; i++)
+		{
+			factions[i].unserialize(ser);
+		}
+	}
+
+	public Faction getCurrentFaction() {
+		updateCurrentFaction();
+		return currentFaction;
+	}
+
+	private void updateCurrentFaction() {
+		if (currentFaction == null)
+		{
+			selectFactionForFirstTime();
+		}
+		else for (int i =0; i<factions.length; i++)
+		{
+			Faction fct = factions[i];
+			if (fct.getTrack() > currentFaction.getTrack())
+			{
+				currentFaction = fct;
+			}
+		}
+	}
+
+	public void selectFactionForFirstTime() {
+		boolean skipFirst = Math.random() > 0.5;
+		for (int i =0; i<factions.length; i++)
+		{
+			Faction fct = factions[i];
+			if  (fct.getTrack() > 0)
+			{
+				if (skipFirst)
+				{
+					skipFirst = false;
+				}
+				else
+				{
+					currentFaction = fct;
+				}
+			}
+		}
+	}
+
+	public boolean isFanatic() {
+		return currentFaction != null && currentFaction.isFanatic();
 	}
 
 }
