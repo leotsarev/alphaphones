@@ -4,10 +4,9 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.util.Date;
 import phones.InteractionModel;
-import phones.InteractionModel.Descriptor;
-import phones.InteractionModel.MenuDescriptor;
-import phones.InteractionModel.TickDescriptor;
-import phones.SampleIM;
+import phones.InteractionModel.*;
+import phones.SampleEventIM;
+import phones.StringSerializer;
 import phones.Utils;
 
 
@@ -18,7 +17,7 @@ public class Main {
 
 	static InteractionModel im;
 	
-	static TickDescriptor tickDescriptor;
+	static SleepDescriptor sleepDescriptor;
 	static MenuDescriptor menuDescriptor;
 	static int remainingTimeout;
 	
@@ -31,34 +30,34 @@ public class Main {
 			Descriptor descriptor = im.whatNext((int)dt, currentTime);
 			prevTime = currentTime;
 			remainingTimeout = descriptor.timeout;
-			if (descriptor instanceof TickDescriptor) {
-				tickDescriptor = (TickDescriptor)descriptor;
+			if (descriptor instanceof SleepDescriptor) {
+				sleepDescriptor = (SleepDescriptor)descriptor;
 				menuDescriptor = null;
 				
-				if (!tickDescriptor.status.equals(prevStatus)) {
-					out.println("STATUS: " + tickDescriptor.status);
-					prevStatus = tickDescriptor.status;
+				if (!sleepDescriptor.status.equals(prevStatus) || true) {
+					out.println("STATUS: " + sleepDescriptor.status);
+					prevStatus = sleepDescriptor.status;
 				}
 				
 				if (remainingTimeout > 0)
 					break;
-				im.receiveTickTimeout();
 			} else {
 				menuDescriptor = (MenuDescriptor)descriptor;
-				tickDescriptor = null;
-				
-				if (menuDescriptor.beepAtStart)
-					out.println("BEEP");
-				out.println(menuDescriptor.question);
+				sleepDescriptor = null;
+				out.println(menuDescriptor.menuHeader);
 				for (int i = 0; i < menuDescriptor.options.length; i++)
-					out.println("  " + (i + 1) + ". " + menuDescriptor.options[i]);
+					out.println("  " + (i + 1) + ". " + menuDescriptor.options[i].ItemName);
 				out.println("(timeout: " + menuDescriptor.timeout + "s)");
 				
 				if (remainingTimeout > 0)
 					break;
-				im.receiveMenuTimeout();
+				signalMenuTimeout();
 			}
 		}
+	}
+
+	private static void signalMenuTimeout() {
+		im.assertCommandWord(menuDescriptor.timeoutCommand);
 	}
 	
 	static void advanceTime(int dt) {
@@ -76,10 +75,8 @@ public class Main {
 			
 			advanceTime(dt);
 			
-			if (tickDescriptor != null) 
-				im.receiveTickTimeout();
 			if (menuDescriptor != null)
-				im.receiveMenuTimeout();
+				signalMenuTimeout();
 
 			next();
 		}
@@ -94,7 +91,7 @@ public class Main {
 		in = new BufferedReader(new InputStreamReader(System.in));
 		out = new PrintStream(System.out, true, "utf-8"/*"866"*/);
 		
-		im = new SampleIM();
+		im = new SampleEventIM();
 		im.reset();
 		
 		prevTime = currentTime = new Date(); 
@@ -112,7 +109,19 @@ public class Main {
 				out.println("    help");
 				out.println("    exit");
 				out.println("    wait <seconds>");
+				out.println("    dump");
 				continue;
+			}
+			
+			if (input.startsWith("dump")) {
+				try {
+					StringSerializer ser = new StringSerializer();
+					im.serialize(ser);
+					ser.print();
+					continue;
+				}
+				catch (NumberFormatException e) {
+				}
 			}
 			
 			if (input.startsWith("wait ")) {
@@ -125,12 +134,12 @@ public class Main {
 				}
 			}
 			
-			if (tickDescriptor != null) {
+			if (sleepDescriptor != null) {
 				try {
 					Integer.parseInt(input);
-					switch (im.codeStatus(input)) {
+					switch (im.checkCommandWord(input)) {
 					case InteractionModel.VALID_CODE:
-						im.receiveCode(input);
+						im.assertCommandWord(input);
 						next();
 						continue;
 					default:
@@ -146,7 +155,7 @@ public class Main {
 				try {
 					int option = Integer.parseInt(input);
 					if (option >= 1 && option <= menuDescriptor.options.length) {
-						im.receiveMenuOption(option-1);
+						im.assertCommandWord(menuDescriptor.options[option+1].ItemCommand);
 						next();
 						continue;
 					}
