@@ -29,7 +29,7 @@ public class Main {
 			long dt = (currentTime.getTime()-prevTime.getTime())/1000;
 			Descriptor descriptor = im.whatNext((int)dt, currentTime);
 			prevTime = currentTime;
-			remainingTimeout = descriptor.timeout;
+			remainingTimeout = descriptor.timeout *60;
 			if (descriptor instanceof SleepDescriptor) {
 				sleepDescriptor = (SleepDescriptor)descriptor;
 				menuDescriptor = null;
