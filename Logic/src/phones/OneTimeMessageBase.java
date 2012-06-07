@@ -1,11 +1,9 @@
-package phones.Processes;
+package phones;
 
-import phones.InteractionModel.Descriptor;
-import phones.InteractionModel.SleepDescriptor;
-import phones.ProcessModelBase;
-import phones.ProcessModelBase.Process;
+import phones.InteractionModel.*;
 
-public abstract class OneTimeMessageBase extends Process {
+
+public abstract class OneTimeMessageBase extends ProcessModelBase.Process {
 	public OneTimeMessageBase(ProcessModelBase model, String message) {
 		super(model);
 		setStringArg("message", message);

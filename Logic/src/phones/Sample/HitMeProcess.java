@@ -1,5 +1,6 @@
-package phones.Processes;
+package phones.Sample;
 
+import phones.OneTimeMessageBase;
 import phones.ProcessModelBase;
 
 public class HitMeProcess extends OneTimeMessageBase {

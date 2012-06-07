@@ -1,6 +1,5 @@
-package phones.Processes;
+package alpha;
 
-import phones.AlphaIM;
 import phones.InteractionModel.Descriptor;
 import phones.ProcessModelBase;
 

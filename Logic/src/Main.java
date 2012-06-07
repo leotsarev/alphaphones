@@ -3,12 +3,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.util.Date;
+
+import alpha.AlphaIM;
+
 import phones.InteractionModel;
-import phones.InteractionModel.*;
-import phones.AlphaIM;
-import phones.InteractionModel.MenuDescriptor;
-import phones.StringSerializer;
 import phones.Utils;
+import phones.InteractionModel.*;
 
 
 public class Main {

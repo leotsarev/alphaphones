@@ -1,11 +1,9 @@
-package phones.Processes;
+package phones;
 
-import phones.InteractionModel.Descriptor;
-import phones.InteractionModel.MenuDescriptor;
-import phones.ProcessModelBase;
-import phones.ProcessModelBase.Process;
+import phones.InteractionModel.*;
 
-public abstract class MenuBase extends Process {
+
+public abstract class MenuBase extends ProcessModelBase.Process {
 
 	public MenuBase(ProcessModelBase model) {
 		super(model);

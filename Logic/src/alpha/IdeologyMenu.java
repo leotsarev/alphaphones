@@ -1,6 +1,7 @@
-package phones.Processes;
+package alpha;
 
 import phones.InteractionModel.MenuDescriptor;
+import phones.MenuBase;
 import phones.ProcessModelBase;
 
 public class IdeologyMenu extends MenuBase {

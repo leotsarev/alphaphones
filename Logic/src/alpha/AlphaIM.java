@@ -1,6 +1,8 @@
-package phones;
+package alpha;
 
-import phones.Processes.*;
+import phones.ProcessModelBase;
+import phones.ProcessModelBase.Process;
+import phones.Sample.HitMeProcess;
 
 public class AlphaIM extends ProcessModelBase{
 

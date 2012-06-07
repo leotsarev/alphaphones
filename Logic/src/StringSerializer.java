@@ -1,4 +1,4 @@
-package phones;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
+
+import phones.ISerializer;
 
 public class StringSerializer implements ISerializer {
 

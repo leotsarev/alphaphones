@@ -1,7 +1,13 @@
-package phones;
+package phones.Sample;
 
 import java.text.DateFormat;
 import java.util.Date;
+
+import phones.ISerializer;
+import phones.InteractionModel;
+import phones.InteractionModel.Descriptor;
+import phones.InteractionModel.MenuDescriptor;
+import phones.InteractionModel.SleepDescriptor;
 
 public class SampleIM extends InteractionModel {
 

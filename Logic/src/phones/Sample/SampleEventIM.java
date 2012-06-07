@@ -1,6 +1,6 @@
-package phones;
+package phones.Sample;
 
-import phones.Processes.BreathHardly;
+import phones.ProcessModelBase;
 
 public class SampleEventIM extends ProcessModelBase {
 

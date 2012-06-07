@@ -1,4 +1,4 @@
-package phones.Processes;
+package phones.Sample;
 
 import phones.InteractionModel.Descriptor;
 import phones.InteractionModel.SleepDescriptor;
