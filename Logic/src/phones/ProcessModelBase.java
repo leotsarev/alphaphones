@@ -24,17 +24,21 @@ public class ProcessModelBase extends InteractionModel{
 	private class FixedCommandWord extends CommandWordDefBase
 	{
 		private String fixedWord, processName;
+		private Hashtable processData;
 		
-		public FixedCommandWord(String fixedWord, String processName)
+		public FixedCommandWord(String fixedWord, String processName, Hashtable processData)
 		{
 			this.fixedWord = fixedWord;
 			this.processName = processName;
+			this.processData = processData;
 		}
 		
 		public Process get(String word) {
 			if (isValidWord(word))
 			{
-				return createProcessByName(processName);
+				Process process = createProcessByName(processName);
+				process.ProcessData = (Hashtable) processData.clone();
+				return process;
 			}
 			return null;
 		}
@@ -59,7 +63,7 @@ public class ProcessModelBase extends InteractionModel{
 		public abstract Descriptor handle();
 		private Hashtable ProcessData;
 		public abstract String getName();
-		private ProcessModelBase model;
+		protected ProcessModelBase model;
 		
 		protected String getStringArg(String key)
 		{
@@ -87,6 +91,15 @@ public class ProcessModelBase extends InteractionModel{
 		public final void unserializeData (ISerializer ser)
 		{
 			ProcessData = ser.readDict();
+		}
+		protected int getIntArg(String key) {
+			return Integer.parseInt(getStringArg(key));
+		}
+		public void setIntArg(String key, int coord) {
+			setStringArg(key, Integer.toString(coord));
+		}
+		protected void scheduleNow(ProcessModelBase.Process updateFaction) {
+			model.scheduleNow(updateFaction);
 		}
 	}
 	
@@ -189,18 +202,18 @@ public class ProcessModelBase extends InteractionModel{
 		
 	}
 	
-	protected void bindFixedCommandWord(String commandWord, String processName)
+	protected void bindFixedCommandWord(String commandWord, Process process)
 	{
-		commandWordDefs.add(new FixedCommandWord(commandWord, processName));
+		commandWordDefs.add(new FixedCommandWord(commandWord, process.getName(), process.ProcessData));
 
 	}
 	
-	public void scheduleNow(Process process)
+	protected void scheduleNow(Process process)
 	{
 		scheduler.scheduleNow(process);
 	}
 	
-	public void schedule(Process process, int offset)
+	protected void schedule(Process process, int offset)
 	{
 		scheduler.schedule(process, offset);
 	}

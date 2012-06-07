@@ -4,13 +4,15 @@ import phones.Processes.*;
 
 public class AlphaIM extends ProcessModelBase{
 
+	public int[] coords = new int[4];
+
 	protected void reset()
 	{
 		super.reset();
-		bindFixedCommandWord("HITME", new HitMeProcess(this).getName());
-		bindFixedCommandWord("MENU", new AlphaMenu(this).getName());
-		bindFixedCommandWord("IDEOLOGY", new IdeologyMenu(this).getName());
-		
+		bindFixedCommandWord("HITME", new HitMeProcess(this));
+		bindFixedCommandWord("MENU", new AlphaMenu(this));
+		bindFixedCommandWord("IDEOLOGY", new IdeologyMenu(this));
+		bindFixedCommandWord("SCIENCS", new IdeologyChange(this));
 	}
 	
 	public Process createProcessByName(String name) {
@@ -19,7 +21,9 @@ public class AlphaIM extends ProcessModelBase{
 			{
 				new HitMeProcess(this),
 				new AlphaMenu(this),
-				new IdeologyMenu(this)
+				new IdeologyMenu(this),
+				new IdeologyChange(this),
+				new UpdateFaction(this)
 			};
 		for (int i = 0; i < process.length; i++)
 		{
