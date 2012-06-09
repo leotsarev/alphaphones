@@ -8,6 +8,9 @@ public class AlphaIM extends ProcessModelBase{
 
 	public Faction[] factions;
 	public Faction currentFaction = null;
+	
+	public static final int LEFT_LIMB = 1;
+	public static final int RIGHT_LIMB = 1;
 
 	protected void reset()
 	{
@@ -16,6 +19,7 @@ public class AlphaIM extends ProcessModelBase{
 		bindFixedCommandWord("HITME", new HitMeProcess(this));
 		bindFixedCommandWord("MENU", new AlphaMenu(this));
 		bindFixedCommandWord("IDEOLOGY_CHECK", new IdeologyCheck(this));
+		
 		bindFixedCommandWord("IDEOLOGY_MENU", new IdeologyMenu(this));
 		
 		bindFixedCommandWord("INDIVIDUAL", new IdeologyChange(this, 0, 1));
@@ -29,6 +33,11 @@ public class AlphaIM extends ProcessModelBase{
 		
 		bindFixedCommandWord("WEAK", new IdeologyChange(this, 3, 1));
 		bindFixedCommandWord("HARD", new IdeologyChange(this, 3, -1));
+		
+		bindFixedCommandWord("wound_menu", new WoundMenu(this));
+		
+		bindFixedCommandWord("wound_left_arm", new ArmWound(this, LEFT_LIMB));
+		bindFixedCommandWord("wound_right_arm", new ArmWound(this, RIGHT_LIMB));
 		
 		factions = Faction.createFactions(this);
 	}
