@@ -61,7 +61,7 @@ public abstract class InteractionModel {
 	}
 	
 	
-	public abstract Descriptor whatNext(int minsFromWorldStart, Date currentTime);
+	public abstract Descriptor whatNext(int secsFromWorldStart, Date currentTime);
 
 	public static final int CODE_UNKNOWN = 0;
 	public static final int CODE_VALID = 1;
