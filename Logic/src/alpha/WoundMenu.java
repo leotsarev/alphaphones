@@ -4,19 +4,19 @@ import phones.InteractionModel.MenuDescriptor;
 import phones.MenuBase;
 import phones.ProcessModelBase;
 
-public class AlphaMenu extends MenuBase {
+public class WoundMenu extends MenuBase {
 
-	public AlphaMenu(ProcessModelBase model) {
+	public WoundMenu(ProcessModelBase model) {
 		super(model);
 	}
 
 	public String getName() {
-		return "AlphaMenu";
+		return "WoundMenu";
 	}
-	
+
 	public void addMenuItems(MenuDescriptor menu) {
-		menu.addItem("Выбор идеологии", "IDEOLOGY_MENU");
-		menu.addItem("Ранение", "wound_menu");
+		menu.addItem("Ранен в левую руку", "wound_left_arm");
+		
 	}
 
 }
