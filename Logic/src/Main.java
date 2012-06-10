@@ -35,13 +35,14 @@ public class Main {
 				sleepDescriptor = (SleepDescriptor)descriptor;
 				menuDescriptor = null;
 				
-				if (!sleepDescriptor.status.equals(prevStatus) || true) {
+				if (!sleepDescriptor.status.equals(prevStatus)) {
 					out.println("STATUS: " + sleepDescriptor.status);
 					prevStatus = sleepDescriptor.status;
 				}
 				
 				if (remainingTimeout > 0)
 					break;
+				// TODO: signal sleep timeout
 			} else {
 				menuDescriptor = (MenuDescriptor)descriptor;
 				sleepDescriptor = null;
@@ -66,6 +67,7 @@ public class Main {
 		Utils.assert_(dt >= 0);
 		if (dt == 0)
 			return;
+		// TODO: accumulate time and only print on status change or menu
 		out.println(dt+" seconds later...");
 		currentTime = new Date(currentTime.getTime()+1000*dt);
 	}
@@ -77,6 +79,7 @@ public class Main {
 			
 			advanceTime(dt);
 			
+			// TODO: sleep descriptor timeout
 			if (menuDescriptor != null)
 				signalMenuTimeout();
 
@@ -158,7 +161,7 @@ public class Main {
 				try {
 					int option = Integer.parseInt(input);
 					if (option >= 1 && option <= menuDescriptor.getCount()) {
-						im.assertCommandWord(menuDescriptor.getCommand(option));
+						im.assertCommandWord(menuDescriptor.getCommand(option-1));
 						next();
 						continue;
 					}

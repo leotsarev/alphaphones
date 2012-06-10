@@ -4,16 +4,16 @@ import java.util.Date;
 import java.util.Vector;
 
 public abstract class InteractionModel {
-	public static final int PRIORITY_FUCKING_ANNOYING = 100;
-    public static final int PRIORITY_WHATEVER = 50;
-    public static final int PRIORITY_SILENT = 1;
+	public static final int ALARM_RECURRENT = 100;
+    public static final int ALARM_SINGLE = 50;
+    public static final int ALARM_SILENT = 1;
     
 	protected abstract void reset();
 
 	public static abstract class Descriptor {
 		public int timeout; // in seconds; -1 for infinity, 0 for now
 		public boolean saveRequired = true;
-		public int priority = PRIORITY_WHATEVER;
+		public int alarm = ALARM_SILENT;
 	}
 	
 	
@@ -37,11 +37,13 @@ public abstract class InteractionModel {
 		public String menuHeader;
         private Vector options = new Vector();
         public String timeoutCommand;
+        
 		public void addItem(String name, String command) {
 			options.add(new MenuItem(name, command));
 		}
+		
 		public String getCommand(int index) {
-			return (String) ((MenuItem) options.get(index-1)).ItemCommand;
+			return (String) ((MenuItem) options.get(index)).ItemCommand;
 		}
 		
 		public String[] getNames()
