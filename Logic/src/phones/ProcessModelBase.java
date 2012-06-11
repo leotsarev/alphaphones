@@ -111,7 +111,7 @@ public class ProcessModelBase extends InteractionModel{
 	
 	private class ProcessScheduler
 	{
-
+// TODO (keep efficiently events planned after long pauses)
 		private LinkedList list = new LinkedList();
 		public Process pop() {
 			Stack currentStack = getCurrentStack();
