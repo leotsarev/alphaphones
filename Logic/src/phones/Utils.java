@@ -24,6 +24,7 @@ public class Utils {
 	public static String[] split(String s, String sep) {
 		int cnt = 1;
 		int pos = 0;
+		// counting pass
 		while (true) {
 			int newpos = s.indexOf(sep, pos);
 			if (newpos == -1)
