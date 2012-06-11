@@ -232,12 +232,12 @@ public class ProcessModelBase extends InteractionModel{
 		usedCodes = new Hashtable();
 	}
 	
-	private int currentMin;
+	private int currentSec;
 	
-	public Descriptor whatNext(int minsFromWorldStart, Date currentTime) {
-		while (currentMin < minsFromWorldStart && scheduler.canAdvance())
+	public Descriptor whatNext(int secsFromWorldStart, Date currentTime) {
+		while (currentSec < secsFromWorldStart && scheduler.canAdvance())
 		{
-			currentMin++;
+			currentSec++;
 			scheduler.advance();
 		}
 		Process process = scheduler.pop();
