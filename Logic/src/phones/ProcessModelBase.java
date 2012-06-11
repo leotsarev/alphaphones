@@ -244,7 +244,6 @@ public class ProcessModelBase extends InteractionModel{
 		if (process == null)
 		{
 			SleepDescriptor result = new SleepDescriptor();
-			result.saveRequired = false;
 			result.status = "";
 			result.timeout = scheduler.getPossibleSleep();
 			return result;

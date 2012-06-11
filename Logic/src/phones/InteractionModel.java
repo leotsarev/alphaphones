@@ -12,7 +12,6 @@ public abstract class InteractionModel {
 
 	public static abstract class Descriptor {
 		public int timeout; // in seconds; -1 for infinity, 0 for now
-		public boolean saveRequired = true;
 		public int priority = PRIORITY_WHATEVER;
 	}
 	
