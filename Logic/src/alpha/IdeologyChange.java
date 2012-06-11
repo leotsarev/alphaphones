@@ -37,7 +37,7 @@ public class IdeologyChange extends ProcessModelBase.Process {
 		if (currentFaction == null)
 		{
 			message = "Похоже, построение нового общества сложное дело! Без моральных ориентиров тут не обойтись. Вот, например, эти, как их, "
-		+ newFaction.getName()+ ", похоже разумные ребята. Надо бы присмотрется поближе к их идеологии";
+		+ newFaction.getName()+ ", похоже разумные ребята. Надо бы присмотреться поближе к их идеологии";
 		}
 		else if (currentFaction != newFaction)
 		{
