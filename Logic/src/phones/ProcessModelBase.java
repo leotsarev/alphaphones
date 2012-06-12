@@ -9,7 +9,9 @@ import java.util.Vector;
 public class ProcessModelBase extends InteractionModel{
 	
 	private Hashtable usedCodes;
+	private StatusContainer status = new StatusContainer();
 	private Vector commandWordDefs = new Vector();
+	private ProcessScheduler scheduler = new ProcessScheduler();
 	
 	private abstract class CommandWordDefBase
 	{
@@ -50,7 +52,6 @@ public class ProcessModelBase extends InteractionModel{
 		public boolean isValidPrefix(String word) {
 			return fixedWord.startsWith(word);
 		}
-		
 	}
 	
 	public static abstract class Process
@@ -106,6 +107,55 @@ public class ProcessModelBase extends InteractionModel{
 			result.status = message;
 			result.timeout = 0;
 			return result;
+		}
+		protected void addStatusMessage(String statusTag, String message) {
+			model.status.addMessage(statusTag, message);
+			
+		}
+		protected void scheduleAfterMins(Process process, int mins) {
+			scheduleAfterSecs(process, mins * 60);
+		}
+		protected void scheduleAfterSecs(Process process, int secs) {
+			model.schedule(process, secs);
+			
+		}
+		protected void removeStatusMessage(String tag) {
+			model.status.removeMessage(tag);
+		}
+	}
+	
+	private static class StatusContainer
+	{
+		private Hashtable table = new Hashtable();
+		
+		public void addMessage(String statusTag, String message) {
+			table.put(statusTag, message);
+		}
+		
+
+		protected void removeMessage(String tag) {
+			table.remove(tag);
+		}
+		
+		private String get() {
+			StringBuffer buffer = new StringBuffer();
+			Object[] statusValues = table.values().toArray();
+			for (int i=0; i < statusValues.length; i++)
+			{
+				buffer.append((String)statusValues[i]);
+				buffer.append('\n');
+			}
+			return buffer.toString();
+		}
+
+
+		public void serialize(ISerializer ser) {
+			ser.writeDict(table);			
+		}
+
+
+		public void unserialize(ISerializer ser) {
+			table = ser.readDict();
 		}
 	}
 	
@@ -220,12 +270,11 @@ public class ProcessModelBase extends InteractionModel{
 		scheduler.schedule(process, offset);
 	}
 	
-	private ProcessScheduler scheduler = new ProcessScheduler();
-	
 	protected void reset() {
 		scheduler = new ProcessScheduler();
 		commandWordDefs = new Vector();
 		usedCodes = new Hashtable();
+		status = new StatusContainer();
 	}
 	
 	private int currentSec;
@@ -240,12 +289,14 @@ public class ProcessModelBase extends InteractionModel{
 		if (process == null)
 		{
 			SleepDescriptor result = new SleepDescriptor();
-			result.status = "";
+			result.status = status.get();
 			result.timeout = scheduler.getPossibleSleep();
 			return result;
 		}
 		return process.handle();
 	}
+
+
 
 	public void assertCommandWord(String code) {
 		Process process = getProcessForCode(code);
@@ -303,16 +354,17 @@ public class ProcessModelBase extends InteractionModel{
 		reset();
 		scheduler.unserialize(ser);
 		usedCodes = ser.readDict();
+		status.unserialize(ser);
 	}
 
 	public void serialize(ISerializer ser) {
 		scheduler.serialize(ser);
 		ser.writeDict(usedCodes);
+		status.serialize(ser);
 	}
 	
 	public Process createProcessByName(String name)
 	{
 		return null;
 	}
-
 }
