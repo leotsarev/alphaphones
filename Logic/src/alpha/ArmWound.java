@@ -4,7 +4,7 @@ import phones.InteractionModel.Descriptor;
 import phones.ProcessModelBase;
 import phones.ProcessModelBase.Process;
 
-public class ArmWound extends Process {
+public class ArmWound extends AlphaProcess {
 
 	public ArmWound(ProcessModelBase model, int location) {
 		super(model);

@@ -1,9 +1,8 @@
 package alpha;
 
 import phones.InteractionModel.Descriptor;
-import phones.ProcessModelBase;
 
-public class IdeologyChange extends ProcessModelBase.Process {
+public class IdeologyChange extends AlphaProcess {
 
 	public IdeologyChange(AlphaIM model) {
 		super(model);
@@ -19,9 +18,9 @@ public class IdeologyChange extends ProcessModelBase.Process {
 		int coord = getIntArg("coord");
 		int sign = getIntArg("sign");
 		
-		Faction[] factions = getAlphaIM().factions;
+		Faction[] factions = getAlphaModel().factions;
 		boolean currentFactionUpdated = false; 
-		Faction currentFaction = getAlphaIM().getCurrentFaction();
+		Faction currentFaction = getAlphaModel().getCurrentFaction();
 		String message;
 		
 		for (int i =0; i<factions.length; i++)
@@ -32,7 +31,7 @@ public class IdeologyChange extends ProcessModelBase.Process {
 			 }
 		}
 		
-		Faction newFaction = getAlphaIM().getCurrentFaction();
+		Faction newFaction = getAlphaModel().getCurrentFaction();
 		
 		if (currentFaction == null)
 		{
@@ -61,10 +60,6 @@ public class IdeologyChange extends ProcessModelBase.Process {
 		}
 		
 		return createMessage(message);
-	}
-
-	public AlphaIM getAlphaIM() {
-		return (AlphaIM)model;
 	}
 
 	public String getName() {

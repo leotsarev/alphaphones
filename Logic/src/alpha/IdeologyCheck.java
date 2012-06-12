@@ -4,14 +4,14 @@ import phones.InteractionModel.Descriptor;
 import phones.ProcessModelBase;
 import phones.ProcessModelBase.Process;
 
-public class IdeologyCheck extends Process {
+public class IdeologyCheck extends AlphaProcess {
 
 	public IdeologyCheck(ProcessModelBase model) {
 		super(model);
 	}
 
 	public Descriptor handle() {
-		if (((AlphaIM)model).isFanatic())
+		if (getAlphaModel().isFanatic())
 		{
 			return createMessage("Вы уже тверды в своем выборе и никогда не сойдете с избранного пути! Отмечать поступки больше не надо");
 		}
