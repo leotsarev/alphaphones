@@ -20,8 +20,7 @@ public class IdeologyCheck extends Process {
 	}
 
 	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
+		return "IdeologyCheck";
 	}
 
 }
