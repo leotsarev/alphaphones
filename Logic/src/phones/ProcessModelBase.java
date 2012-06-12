@@ -130,11 +130,6 @@ public class ProcessModelBase extends InteractionModel{
 			return currentStack;
 		}
 
-		public void scheduleNow(Process process) {
-			Stack currentStack = getCurrentStack();
-			currentStack.push(process);
-		}
-
 		public void advance() {
 			Utils.assert_(canAdvance(), "Cannot advance until all process has handled.");
 			list.removeFirst();
@@ -216,7 +211,8 @@ public class ProcessModelBase extends InteractionModel{
 	
 	protected void scheduleNow(Process process)
 	{
-		scheduler.scheduleNow(process);
+		Utils.assert_(process.getName() != null);
+		schedule(process, 0);
 	}
 	
 	protected void schedule(Process process, int offset)
@@ -255,7 +251,7 @@ public class ProcessModelBase extends InteractionModel{
 		Process process = getProcessForCode(code);
 		if (process != null)
 		{
-			scheduler.scheduleNow(process);
+			scheduleNow(process);
 		}
 	}
 
