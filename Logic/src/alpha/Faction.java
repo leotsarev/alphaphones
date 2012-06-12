@@ -1,6 +1,7 @@
 package alpha;
 
 import phones.ISerializer;
+import phones.Utils;
 
 public class Faction {
 	private String name;
@@ -9,9 +10,17 @@ public class Faction {
 	
 	private Faction(AlphaIM model, String name, int coord0, int coord1, int coord2, int coord3)
 	{
+		Utils.assert_(isValidCoord(coord0));
+		Utils.assert_(isValidCoord(coord1));
+		Utils.assert_(isValidCoord(coord2));
+		Utils.assert_(isValidCoord(coord3));
 		this.name = name; 
 		int[] c = {coord0, coord1, coord2, coord3};
 		this.coords = c;
+	}
+
+	protected boolean isValidCoord(int coord) {
+		return coord == 1 || coord == -1;
 	}
 	
 	public boolean apply (int coord, int sign)
@@ -30,11 +39,11 @@ public class Faction {
 				new Faction(model, "Флора", -1, 
 						-1, -1, 1),
 				new Faction(model, "Дети Господа", +1, 
-						-1, 1, -11),
+						-1, 1, -1),
 				new Faction(model, "Полдень", +1, 
 						1, -1, 1),
 				new Faction(model, "Воля Человека", -1, 
-						1, 1, -11),
+						1, 1, -1),
 		};
 		return r;
 	}
