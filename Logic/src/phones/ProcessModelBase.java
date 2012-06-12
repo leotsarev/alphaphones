@@ -9,7 +9,7 @@ import java.util.Vector;
 public class ProcessModelBase extends InteractionModel{
 	
 	private Hashtable usedCodes;
-	private StatusContainer status = new StatusContainer();
+	protected StatusContainer status = new StatusContainer();
 	private Vector commandWordDefs = new Vector();
 	private ProcessScheduler scheduler = new ProcessScheduler();
 	
@@ -124,7 +124,7 @@ public class ProcessModelBase extends InteractionModel{
 		}
 	}
 	
-	private static class StatusContainer
+	protected static class StatusContainer
 	{
 		private Hashtable table = new Hashtable();
 		
