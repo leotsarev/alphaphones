@@ -21,8 +21,7 @@ public class OutOfOxygen extends OxygenProcess {
 	}
 
 	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
+		return "OutOfOxygen";
 	}
 
 }
