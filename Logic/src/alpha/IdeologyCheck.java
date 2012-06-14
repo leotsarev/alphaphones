@@ -2,7 +2,6 @@ package alpha;
 
 import phones.InteractionModel.Descriptor;
 import phones.ProcessModelBase;
-import phones.ProcessModelBase.Process;
 
 public class IdeologyCheck extends AlphaProcess {
 

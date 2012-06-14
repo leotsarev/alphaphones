@@ -9,7 +9,7 @@ import java.util.Vector;
 public class ProcessModelBase extends InteractionModel{
 	
 	private Hashtable usedCodes;
-	private StatusContainer status = new StatusContainer();
+	protected StatusContainer status = new StatusContainer();
 	private Vector commandWordDefs = new Vector();
 	private ProcessScheduler scheduler = new ProcessScheduler();
 	
@@ -124,7 +124,7 @@ public class ProcessModelBase extends InteractionModel{
 		}
 	}
 	
-	private static class StatusContainer
+	protected static class StatusContainer
 	{
 		private Hashtable table = new Hashtable();
 		
@@ -285,15 +285,19 @@ public class ProcessModelBase extends InteractionModel{
 			currentSec++;
 			scheduler.advance();
 		}
-		Process process = scheduler.pop();
-		if (process == null)
+		Descriptor result = null;
+		while (result == null)
 		{
-			SleepDescriptor result = new SleepDescriptor();
-			result.status = status.get();
-			result.timeout = scheduler.getPossibleSleep();
-			return result;
+			Process process = scheduler.pop();
+			if (process == null)
+			{
+				result = new SleepDescriptor(status.get());
+				result.timeout = scheduler.getPossibleSleep();
+				return result;
+			}
+			result = process.handle();
 		}
-		return process.handle();
+		return result;
 	}
 
 

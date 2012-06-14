@@ -2,21 +2,21 @@ package alpha;
 
 import phones.InteractionModel.Descriptor;
 import phones.ProcessModelBase;
+import phones.ProcessModelBase.Process;
 
-public class ArmWound extends AlphaProcess {
+public class AlphaInit extends Process {
 
-	public ArmWound(ProcessModelBase model, int location) {
+	public AlphaInit(ProcessModelBase model) {
 		super(model);
-		setIntArg("location", location);
 	}
 
 	public Descriptor handle() {
-		// TODO Auto-generated method stub
+		scheduleNow(new ScheduleNextOxygen(model));
 		return null;
 	}
 
 	public String getName() {
-		return "ArmWound";
+		return "AlphaInit";
 	}
 
 }
