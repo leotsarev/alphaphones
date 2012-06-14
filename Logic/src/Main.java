@@ -102,7 +102,7 @@ public class Main {
 		next();
 
 		while (true) {
-			out.print(">>> ");
+			out.print(remainingTimeout +  ">>> ");
 			String input = in.readLine();
 			
 			if (input.equals("exit"))
