@@ -18,6 +18,14 @@ public abstract class InteractionModel {
 	
 
 	public static class SleepDescriptor extends Descriptor {
+		public SleepDescriptor (String status)
+		{
+			this.status = status;
+		}
+		public SleepDescriptor()
+		{
+			
+		}
 		public String status;
 	}
 	

@@ -16,12 +16,6 @@ public class AlphaIM extends ProcessModelBase{
 	{
 		super.reset();
 		
-		bindCommandWords();
-		
-		factions = Faction.createFactions(this);
-	}
-
-	private void bindCommandWords() {
 		bindFixedCommandWord("HITME", new HitMeProcess(this));
 		bindFixedCommandWord("MENU", new AlphaMenu(this));
 		bindFixedCommandWord("IDEOLOGY_CHECK", new IdeologyCheck(this));
@@ -44,6 +38,8 @@ public class AlphaIM extends ProcessModelBase{
 		
 		bindFixedCommandWord("wound_left_arm", new ArmWound(this, LEFT_LIMB));
 		bindFixedCommandWord("wound_right_arm", new ArmWound(this, RIGHT_LIMB));
+		
+		factions = Faction.createFactions(this);
 	}
 	
 	public Process createProcessByName(String name) {
@@ -55,8 +51,6 @@ public class AlphaIM extends ProcessModelBase{
 				new IdeologyMenu(this),
 				new IdeologyChange(this),
 				new IdeologyCheck(this),
-				new OutOfOxygen(this),
-				new CanBreathAgain(this),
 			};
 		for (int i = 0; i < process.length; i++)
 		{
