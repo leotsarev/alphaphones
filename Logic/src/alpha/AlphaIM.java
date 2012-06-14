@@ -110,6 +110,8 @@ public class AlphaIM extends ProcessModelBase{
 				currentFaction = fct;
 			}
 		}
+		String factionName = (currentFaction != null) ? currentFaction.getName() : "Не определился"; 
+		status.addMessage("faction", "Фракция: " + factionName);
 	}
 
 	public void selectFactionForFirstTime() {
