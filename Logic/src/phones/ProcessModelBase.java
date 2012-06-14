@@ -247,7 +247,14 @@ public class ProcessModelBase extends InteractionModel{
 		}
 
 		public int getPossibleSleep() {
-			// TODO Auto-generated method stub
+			for (int i =0; i< list.size(); i++)
+			{
+				Stack stack = (Stack)list.get(i);
+				if (!stack.empty())
+				{
+					return i;
+				}
+			}
 			return 1;
 		}
 		
@@ -267,6 +274,7 @@ public class ProcessModelBase extends InteractionModel{
 	
 	protected void schedule(Process process, int offset)
 	{
+		Utils.assert_(process.getName() != null);
 		scheduler.schedule(process, offset);
 	}
 	
@@ -278,9 +286,12 @@ public class ProcessModelBase extends InteractionModel{
 	}
 	
 	private int currentSec;
+	private int targetSec;
 	
-	public Descriptor whatNext(int secsFromWorldStart, Date currentTime) {
-		while (currentSec < secsFromWorldStart && scheduler.canAdvance())
+	public Descriptor whatNext(int passedSecs, Date currentTime) {
+		targetSec += passedSecs;
+			
+		while (currentSec < targetSec && scheduler.canAdvance())
 		{
 			currentSec++;
 			scheduler.advance();
