@@ -19,9 +19,10 @@ public class InteractionModelCheckDecorator extends InteractionModel {
 		commandWordAlreadyAsserted = false;
 	}
 
-	public Descriptor whatNext(int minsFromWorldStart, Date currentTime) {
+	public Descriptor whatNext(int passedSecs, Date currentTime) {
 		commandWordAlreadyAsserted = false;
-		return innerModel.whatNext(minsFromWorldStart, currentTime);
+		Utils.assert_(passedSecs >= 0, "Time MUSTN'T go backwards");
+		return innerModel.whatNext(passedSecs, currentTime);
 	}
 
 	public int checkCommandWord(String commandWord)
