@@ -26,6 +26,14 @@ public class AlphaMenu extends MenuBase {
 		{
 			addMenuItemAndBind(menu, "Лечь спать", new Asleep(model));
 		}
+		if (((AlphaIM)model).wearingMask)
+		{
+			addMenuItemAndBind(menu, "Снять маску", new PutMaskOff(model));
+		}
+		else
+		{
+			addMenuItemAndBind(menu, "Одеть маску", new PutMaskOn(model));
+		}
 	}
 
 }

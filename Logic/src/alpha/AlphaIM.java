@@ -227,7 +227,9 @@ public class AlphaIM extends ProcessModelBase{
 				new AnalyzeGene(this),
 				new GeneAnalyzeMenu(this),
 				new Awake(this),
-				new Asleep(this)
+				new Asleep(this),
+				new PutMaskOn(this),
+				new PutMaskOff(this)
 			};
 		for (int i = 0; i < process.length; i++)
 		{
