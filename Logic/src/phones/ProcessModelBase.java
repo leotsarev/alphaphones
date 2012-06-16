@@ -318,12 +318,24 @@ public class ProcessModelBase extends InteractionModel{
 		
 	}
 	
+	private void checkCreatePossible(IProcess process) {
+		Process sampleProcess = createProcessByName(process.getName());
+		Utils.assert_(sampleProcess != null, "Don't know how to create " + process.getName() + " bind failed.");
+		Utils.assert_(sampleProcess.getName().equals(process.getName()), "Try create " + process.getName() + ", but got: " + sampleProcess.getName());
+	}
+	
 	protected void bindFixedCommandWord(String commandWord, Process process)
 	{
+		checkCreatePossible(process);
 		commandWordDefs.add(new FixedCommandWord(commandWord, process));
 	}
 	
+	protected void bindFixedCommandWord(Process process) {
+		bindFixedCommandWord(process.getName(), process);
+	}
+
 	protected void bindPrefixCommandWord(String commandWordPrefix, IPrefixHandler process) {
+		checkCreatePossible(process);
 		commandWordDefs.add(new MenuPrefixCommandWord(commandWordPrefix, process));
 	}
 	
