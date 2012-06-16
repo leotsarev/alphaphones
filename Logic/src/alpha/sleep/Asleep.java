@@ -12,7 +12,18 @@ public class Asleep extends AlphaProcess {
 	}
 
 	public Descriptor handle() {
-		Utils.assert_(!getAlphaModel().sleeping);
+		if (getAlphaModel().sleeping)
+		{
+			return createMessage("Я и так уже сплю!");
+		}
+		if (getAlphaModel().wearingMask)
+		{
+			return createMessage("В маске не поспишь!");
+		}
+		if (getAlphaModel().isBadAtmoshere())
+		{
+			return createMessage("В таком воздухе не поспишь!");
+		}
 		getAlphaModel().sleeping = true;
 		addStatusMessage("sleep", "Сплю");
 		return createMessage("Я потихоньку засыпаю...");
