@@ -214,7 +214,9 @@ public class AlphaIM extends ProcessModelBase{
 				new AlphaInit(this),
 				new ScheduleNextOxygen(this),
 				new MasterGeneMenu(this),
-				new MasterToggleGene(this)
+				new MasterToggleGene(this),
+				new WoundMenu(this),
+				new ArmWound(this, LEFT_LIMB)
 			};
 		for (int i = 0; i < process.length; i++)
 		{
