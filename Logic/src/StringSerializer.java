@@ -200,6 +200,14 @@ public class StringSerializer implements ISerializer {
 		return result;
 	}
 
+	public boolean readBool() {
+		return readBool("true", "false");
+	}
+
+	public void writeBool(boolean bool) {
+		writeBool(bool, "true", "false");
+	}
+
 	// J2ME DON'T HAVE SORT
 	// THIS IS A FUCKING SORT FROM THE FUCKING INTERNETS
 	// SO IT'S LIKELY TO BE RETARDED AND PLAIN WRONG, BUT IDC
