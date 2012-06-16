@@ -21,6 +21,7 @@ public class AlphaIM extends ProcessModelBase{
 	public boolean initCompleted;
 	private boolean gender;
 	static final String TOGGLE_GENE = "toggle_gene_";
+	public static final String ANALYZE_GENE = "analyze_gene_";
 	
 	public static class GeneContainer
 	{
@@ -98,6 +99,10 @@ public class AlphaIM extends ProcessModelBase{
 
 			public String getName() {
 				return getMyChar();
+			}
+
+			public String getAnalyzeResult() {
+				return "ANALYZE RESULT SHOULD UPDATE " + toString();
 			}
 		}
 		
@@ -193,6 +198,7 @@ public class AlphaIM extends ProcessModelBase{
 		bindFixedCommandWord("menu_master", new MasterMenu(this));
 		
 		bindPrefixCommandWord(TOGGLE_GENE, new MasterToggleGene(this));
+		bindPrefixCommandWord(ANALYZE_GENE, new AnalyzeGene(this));
 	}
 	
 	public Process createProcessByName(String name) {
@@ -214,7 +220,9 @@ public class AlphaIM extends ProcessModelBase{
 				new ArmWound(this, LEFT_LIMB),
 				new MasterGeneMenu(this),
 				new MasterMenu(this),
-				new ToggleGender(this)
+				new ToggleGender(this),
+				new AnalyzeGene(this),
+				new GeneAnalyzeMenu(this)
 			};
 		for (int i = 0; i < process.length; i++)
 		{

@@ -17,6 +17,7 @@ public class AlphaMenu extends MenuBase {
 	public void addMenuItems(MenuDescriptor menu) {
 		addMenuItemAndBind(menu, "Выбор идеологии", new IdeologyCheck(model));
 		addMenuItemAndBind(menu, "Ранение", new WoundMenu(model));
+		addMenuItemAndBind(menu, "(Под код) Генетический анализ", new GeneAnalyzeMenu(model)); 
 	}
 
 }
