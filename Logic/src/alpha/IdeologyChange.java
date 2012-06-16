@@ -1,14 +1,15 @@
 package alpha;
 
 import phones.InteractionModel.Descriptor;
+import phones.ProcessModelBase;
 
 public class IdeologyChange extends AlphaProcess {
 
-	public IdeologyChange(AlphaIM model) {
+	public IdeologyChange(ProcessModelBase model) {
 		super(model);
 	}
 	
-	public IdeologyChange(AlphaIM model, int coord, int sign) {
+	public IdeologyChange(ProcessModelBase model, int coord, int sign) {
 		super(model);
 		setIntArg("coord", coord);
 		setIntArg("sign", sign);

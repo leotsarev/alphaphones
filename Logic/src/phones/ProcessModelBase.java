@@ -15,31 +15,85 @@ public class ProcessModelBase extends InteractionModel{
 	
 	private abstract class CommandWordDefBase
 	{
+		protected final IProcess processTemplate;
+		
+		protected CommandWordDefBase(IProcess processTemplate)
+		{
+			this.processTemplate = processTemplate;
+		}
+		
 		public abstract boolean isValidWord(String word);
 		public abstract boolean isValidPrefix(String word);
-		public abstract Process get(String word);
+		public abstract IProcess get(String word);
 		public boolean isOneTimeCode(String code) {
 			return false;
 		}
+
+		public IProcess createProcess() {
+			Process process = createProcessByName(processTemplate.getName());
+			Utils.assert_(process != null, "Не удалось создать процесс по имени " + processTemplate.getName());
+			process.ProcessData = processTemplate.cloneData();
+			return process;
+		}
+	}
+	
+	private class MenuPrefixCommandWord extends CommandWordDefBase
+	{
+
+		private final String commandWordPrefix;
+
+		public MenuPrefixCommandWord(String commandWordPrefix, IPrefixHandler processTemplate) {
+			super(processTemplate);
+			this.commandWordPrefix = commandWordPrefix;
+		}
+
+		public boolean isValidWord(String word) {
+			if (!word.startsWith(commandWordPrefix))
+			{
+				return false;
+			}
+			return ((IPrefixHandler)processTemplate).isValidSuffix(getSuffix(word));
+		}
+
+		public String getSuffix(String word) {
+			Utils.assert_(word.length() > commandWordPrefix.length(), "Invalid word " + word);
+			return word.substring(commandWordPrefix.length());
+		}
+
+		public boolean isValidPrefix(String word) {
+			if (commandWordPrefix.startsWith(word))
+			{
+				return true;
+			}
+			if (!word.startsWith(commandWordPrefix))
+			{
+				return false;
+			}
+			return ((IPrefixHandler)processTemplate).isStartOfSuffix(getSuffix(word));
+		}
+
+		public IProcess get(String word) {
+			Utils.assert_(isValidWord(word));
+			IPrefixHandler process = (IPrefixHandler) super.createProcess();
+			process.setSuffixValue(getSuffix(word));
+			return process;
+		}
+		
 	}
 	
 	private class FixedCommandWord extends CommandWordDefBase
 	{
-		private String fixedWord, processName;
-		private Hashtable processData;
-		
-		public FixedCommandWord(String fixedWord, String processName, Hashtable processData)
+		private String fixedWord;
+		public FixedCommandWord(String fixedWord, Process processTemplate)
 		{
+			super(processTemplate);
 			this.fixedWord = fixedWord;
-			this.processName = processName;
-			this.processData = processData;
 		}
 		
-		public Process get(String word) {
+		public IProcess get(String word) {
 			if (isValidWord(word))
 			{
-				Process process = createProcessByName(processName);
-				process.ProcessData = (Hashtable) processData.clone();
+				IProcess process = createProcess();
 				return process;
 			}
 			return null;
@@ -54,15 +108,14 @@ public class ProcessModelBase extends InteractionModel{
 		}
 	}
 	
-	public static abstract class Process
+	public static abstract class Process implements IProcess
 	{
 		public Process (ProcessModelBase model)
 		{
-			this.ProcessData = new Hashtable();
 			this.model = model;
 		}
 		public abstract Descriptor handle();
-		private Hashtable ProcessData;
+		private Hashtable ProcessData = new Hashtable();
 		public abstract String getName();
 		protected ProcessModelBase model;
 		
@@ -99,7 +152,7 @@ public class ProcessModelBase extends InteractionModel{
 		public void setIntArg(String key, int coord) {
 			setStringArg(key, Integer.toString(coord));
 		}
-		protected void scheduleNow(ProcessModelBase.Process process) {
+		protected void scheduleNow(IProcess process) {
 			model.scheduleNow(process);
 		}
 		public Descriptor createMessage(String message) {
@@ -112,15 +165,20 @@ public class ProcessModelBase extends InteractionModel{
 			model.status.addMessage(statusTag, message);
 			
 		}
-		protected void scheduleAfterMins(Process process, int mins) {
+		protected void scheduleAfterMins(IProcess process, int mins) {
 			scheduleAfterSecs(process, mins * 60);
 		}
-		protected void scheduleAfterSecs(Process process, int secs) {
+		protected void scheduleAfterSecs(IProcess process, int secs) {
 			model.schedule(process, secs);
 			
 		}
 		protected void removeStatusMessage(String tag) {
 			model.status.removeMessage(tag);
+		}
+		
+		public Hashtable cloneData()
+		{
+			return (Hashtable) ProcessData.clone();
 		}
 	}
 	
@@ -163,13 +221,13 @@ public class ProcessModelBase extends InteractionModel{
 	{
 // TODO (keep efficiently events planned after long pauses)
 		private LinkedList list = new LinkedList();
-		public Process pop() {
+		public IProcess pop() {
 			Stack currentStack = getCurrentStack();
 			if (currentStack.empty())
 			{
 				return null;
 			}
-			return (Process) currentStack.pop();
+			return (IProcess) currentStack.pop();
 		}
 
 		private Stack getCurrentStack() {
@@ -190,7 +248,7 @@ public class ProcessModelBase extends InteractionModel{
 			return currentStack.isEmpty();
 		}
 
-		public void schedule(Process process, int offset) {
+		public void schedule(IProcess process, int offset) {
 			ensureOffsetPresent(offset);
 			Stack targetStack = (Stack) list.get(offset);
 			targetStack.push(process);
@@ -262,17 +320,20 @@ public class ProcessModelBase extends InteractionModel{
 	
 	protected void bindFixedCommandWord(String commandWord, Process process)
 	{
-		commandWordDefs.add(new FixedCommandWord(commandWord, process.getName(), process.ProcessData));
-
+		commandWordDefs.add(new FixedCommandWord(commandWord, process));
 	}
 	
-	protected void scheduleNow(Process process)
+	protected void bindPrefixCommandWord(String commandWordPrefix, IPrefixHandler process) {
+		commandWordDefs.add(new MenuPrefixCommandWord(commandWordPrefix, process));
+	}
+	
+	protected void scheduleNow(IProcess process)
 	{
 		Utils.assert_(process.getName() != null);
 		schedule(process, 0);
 	}
 	
-	protected void schedule(Process process, int offset)
+	protected void schedule(IProcess process, int offset)
 	{
 		Utils.assert_(process.getName() != null);
 		scheduler.schedule(process, offset);
@@ -299,7 +360,7 @@ public class ProcessModelBase extends InteractionModel{
 		Descriptor result = null;
 		while (result == null)
 		{
-			Process process = scheduler.pop();
+			IProcess process = scheduler.pop();
 			if (process == null)
 			{
 				result = new SleepDescriptor(status.get());
@@ -314,14 +375,14 @@ public class ProcessModelBase extends InteractionModel{
 
 
 	public void assertCommandWord(String code) {
-		Process process = getProcessForCode(code);
+		IProcess process = getProcessForCode(code);
 		if (process != null)
 		{
 			scheduleNow(process);
 		}
 	}
 
-	private Process getProcessForCode(String code) {
+	private IProcess getProcessForCode(String code) {
 		for (int i = 0; i < commandWordDefs.size(); i++)
 		{
 			CommandWordDefBase def = (CommandWordDefBase) commandWordDefs.get(i);
@@ -341,6 +402,7 @@ public class ProcessModelBase extends InteractionModel{
 	public ProcessModelBase()
 	{
 		reset();
+		bindFixedCommandWord("", new DoNothingProcess(this));
 	}
 	
 	public int checkCommandWord(String commandWord) {
@@ -380,6 +442,17 @@ public class ProcessModelBase extends InteractionModel{
 	
 	public Process createProcessByName(String name)
 	{
+		Process[] process = new Process[] {
+				new DoNothingProcess(this)
+		};
+		for (int i = 0; i < process.length; i++)
+		{
+			if (name == process[i].getName())
+			{
+				return process[i];
+			}
+		}
 		return null;
 	}
+	
 }

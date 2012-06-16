@@ -1,6 +1,7 @@
 package alpha;
 
 import phones.ISerializer;
+import phones.ProcessModelBase;
 import phones.Utils;
 
 public class Faction {
@@ -8,7 +9,7 @@ public class Faction {
 	private int[] coords;
 	private int track = 0;
 	
-	private Faction(AlphaIM model, String name, int coord0, int coord1, int coord2, int coord3)
+	private Faction(ProcessModelBase model, String name, int coord0, int coord1, int coord2, int coord3)
 	{
 		Utils.assert_(isValidCoord(coord0));
 		Utils.assert_(isValidCoord(coord1));
@@ -33,7 +34,7 @@ public class Faction {
 		return correct;
 	}
 	
-	public static Faction[] createFactions(AlphaIM model)
+	public static Faction[] createFactions(ProcessModelBase model)
 	{
 		Faction[] r = { 
 				new Faction(model, "Флора", -1, 
