@@ -2,7 +2,6 @@ package alpha;
 
 import phones.InteractionModel.Descriptor;
 import phones.ProcessModelBase;
-import phones.Utils;
 
 public class Awake extends AlphaProcess {
 
