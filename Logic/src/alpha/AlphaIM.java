@@ -99,11 +99,6 @@ public class AlphaIM extends ProcessModelBase{
 			}
 		}
 		
-		public Gene getGene(int geneNum)
-		{
-			return genes[geneNum];
-		}
-		
 		public Gene getGene(char geneName) {
 			return genes[findGenePos(geneName)];
 		}
