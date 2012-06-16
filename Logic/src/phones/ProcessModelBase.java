@@ -84,7 +84,7 @@ public class ProcessModelBase extends InteractionModel{
 	private class FixedCommandWord extends CommandWordDefBase
 	{
 		private String fixedWord;
-		public FixedCommandWord(String fixedWord, Process processTemplate)
+		public FixedCommandWord(String fixedWord, IProcess processTemplate)
 		{
 			super(processTemplate);
 			this.fixedWord = fixedWord;
@@ -180,6 +180,14 @@ public class ProcessModelBase extends InteractionModel{
 		{
 			return (Hashtable) ProcessData.clone();
 		}
+		protected void addMenuItemAndBind(MenuDescriptor menu, String itemName,
+				IProcess process) {
+					if (model.checkCommandWord(process.getName()) == InteractionModel.CODE_UNKNOWN)
+					{
+						model.bindFixedCommandWord(process);
+					}
+					menu.addItem(itemName, process.getName());
+				}
 	}
 	
 	protected static class StatusContainer
@@ -324,13 +332,13 @@ public class ProcessModelBase extends InteractionModel{
 		Utils.assert_(sampleProcess.getName().equals(process.getName()), "Try create " + process.getName() + ", but got: " + sampleProcess.getName());
 	}
 	
-	protected void bindFixedCommandWord(String commandWord, Process process)
+	protected void bindFixedCommandWord(String commandWord, IProcess process)
 	{
 		checkCreatePossible(process);
 		commandWordDefs.add(new FixedCommandWord(commandWord, process));
 	}
 	
-	protected void bindFixedCommandWord(Process process) {
+	protected void bindFixedCommandWord(IProcess process) {
 		bindFixedCommandWord(process.getName(), process);
 	}
 
