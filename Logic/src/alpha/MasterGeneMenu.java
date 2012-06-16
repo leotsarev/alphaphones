@@ -14,6 +14,7 @@ public class MasterGeneMenu extends AlphaProcess {
 	public Descriptor handle() {
 		MenuDescriptor menu = new MenuDescriptor();
 		menu.menuHeader = "МАСТЕРСКОЕ: управление генами";
+		menu.addItem("Закрыть", "");
 		Gene[] genes = getAlphaModel().Genes.asArray();
 		for (int i =0; i < genes.length; i++)
 		{

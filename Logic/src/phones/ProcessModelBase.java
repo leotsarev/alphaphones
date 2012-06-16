@@ -111,11 +111,10 @@ public class ProcessModelBase extends InteractionModel{
 	{
 		public Process (ProcessModelBase model)
 		{
-			this.ProcessData = new Hashtable();
 			this.model = model;
 		}
 		public abstract Descriptor handle();
-		private Hashtable ProcessData;
+		private Hashtable ProcessData = new Hashtable();
 		public abstract String getName();
 		protected ProcessModelBase model;
 		
@@ -402,6 +401,7 @@ public class ProcessModelBase extends InteractionModel{
 	public ProcessModelBase()
 	{
 		reset();
+		bindFixedCommandWord("", new DoNothingProcess(this));
 	}
 	
 	public int checkCommandWord(String commandWord) {
@@ -441,8 +441,17 @@ public class ProcessModelBase extends InteractionModel{
 	
 	public Process createProcessByName(String name)
 	{
+		Process[] process = new Process[] {
+				new DoNothingProcess(this)
+		};
+		for (int i = 0; i < process.length; i++)
+		{
+			if (name == process[i].getName())
+			{
+				return process[i];
+			}
+		}
 		return null;
 	}
-
 	
 }
