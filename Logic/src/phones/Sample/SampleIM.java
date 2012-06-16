@@ -33,10 +33,16 @@ public class SampleIM extends InteractionModel {
 	}
 
 	public int checkCommandWord(String commandWord) {
-		if (commandWord.length() > 3)
-			return CODE_UNKNOWN;
+		if (commandWord.equals("APPLE"))
+			return CODE_VALID;
+		if (commandWord.equals("BANANA"))
+			return CODE_VALID;
+		if (commandWord.equals("TIMEOUT"))
+			return CODE_VALID;
 		if (commandWord.equals("123"))
 			return CODE_VALID;
+		if (commandWord.length() > 3)
+			return CODE_UNKNOWN;
 		return CODE_PREFIX;
 	}
 
