@@ -3,20 +3,20 @@ package alpha;
 import phones.InteractionModel.Descriptor;
 import phones.ProcessModelBase;
 
-public class AlphaInit extends AlphaProcess {
+public class ToggleGender extends AlphaProcess {
 
-	public AlphaInit(ProcessModelBase model) {
+	public ToggleGender(ProcessModelBase model) {
 		super(model);
 	}
 
 	public Descriptor handle() {
-		getAlphaModel().initCompleted = true;
-		scheduleNow(new ScheduleNextOxygen(model));
+		getAlphaModel().toggleGender();
+		scheduleNow(new MasterMenu(model));
 		return null;
 	}
 
 	public String getName() {
-		return "AlphaInit";
+		return "ToggleGender";
 	}
 
 }

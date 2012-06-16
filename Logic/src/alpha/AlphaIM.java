@@ -18,6 +18,8 @@ public class AlphaIM extends ProcessModelBase{
 	public static final int RIGHT_LIMB = 1;
 	
 	public final GeneContainer Genes = new GeneContainer();
+	public boolean initCompleted;
+	private boolean gender;
 	static final String TOGGLE_GENE = "toggle_gene_";
 	
 	public static class GeneContainer
@@ -172,9 +174,6 @@ public class AlphaIM extends ProcessModelBase{
 	private void bindCommandWords() {
 		bindFixedCommandWord("HITME", new HitMeProcess(this));
 		bindFixedCommandWord("MENU", new AlphaMenu(this));
-		bindFixedCommandWord("IDEOLOGY_CHECK", new IdeologyCheck(this));
-		
-		bindFixedCommandWord("IDEOLOGY_MENU", new IdeologyMenu(this));
 		
 		bindFixedCommandWord("INDIVIDUAL", new IdeologyChange(this, 0, 1));
 		bindFixedCommandWord("COMMONS", new IdeologyChange(this, 0, -1));
@@ -188,14 +187,10 @@ public class AlphaIM extends ProcessModelBase{
 		bindFixedCommandWord("WEAK", new IdeologyChange(this, 3, 1));
 		bindFixedCommandWord("HARD", new IdeologyChange(this, 3, -1));
 		
-		bindFixedCommandWord("wound_menu", new WoundMenu(this));
-		
 		bindFixedCommandWord("wound_left_arm", new ArmWound(this, LEFT_LIMB));
 		bindFixedCommandWord("wound_right_arm", new ArmWound(this, RIGHT_LIMB));
 		
-		bindFixedCommandWord("alpha_std_init", new AlphaInit(this));
-		
-		bindFixedCommandWord("masters_gene_menu", new MasterGeneMenu(this));
+		bindFixedCommandWord("menu_master", new MasterMenu(this));
 		
 		bindPrefixCommandWord(TOGGLE_GENE, new MasterToggleGene(this));
 	}
@@ -216,11 +211,14 @@ public class AlphaIM extends ProcessModelBase{
 				new MasterGeneMenu(this),
 				new MasterToggleGene(this),
 				new WoundMenu(this),
-				new ArmWound(this, LEFT_LIMB)
+				new ArmWound(this, LEFT_LIMB),
+				new MasterGeneMenu(this),
+				new MasterMenu(this),
+				new ToggleGender(this)
 			};
 		for (int i = 0; i < process.length; i++)
 		{
-			if (name == process[i].getName())
+			if (name.equals(process[i].getName()))
 			{
 				return process[i];
 			}
@@ -230,21 +228,27 @@ public class AlphaIM extends ProcessModelBase{
 	
 	public void serialize(ISerializer ser) {
 		super.serialize(ser);
+		ser.writeBool(initCompleted);
+		ser.writeBool(gender);
 		for (int i =0; i<factions.length; i++)
 		{
 			factions[i].serialize(ser);
 		}
 		Genes.serialize(ser);
 	}
-	
+
 	public void unserialize(ISerializer ser) {
 		super.unserialize(ser);
+		initCompleted = ser.readBool();
+		gender = ser.readBool();
 		for (int i =0; i<factions.length; i++)
 		{
 			factions[i].unserialize(ser);
 		}
 		Genes.unserialize(ser);
 	}
+
+	
 
 	public Faction getCurrentFaction() {
 		updateCurrentFaction();
@@ -289,6 +293,14 @@ public class AlphaIM extends ProcessModelBase{
 
 	public boolean isFanatic() {
 		return currentFaction != null && currentFaction.isFanatic();
+	}
+
+	public void toggleGender() {
+		gender = !gender;
+	}
+
+	public String getGenderName() {
+		return gender ? "Мужчина" : "Женщина";
 	}
 
 }

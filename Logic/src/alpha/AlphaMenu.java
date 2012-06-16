@@ -15,8 +15,8 @@ public class AlphaMenu extends MenuBase {
 	}
 	
 	public void addMenuItems(MenuDescriptor menu) {
-		menu.addItem("Выбор идеологии", "IDEOLOGY_MENU");
-		menu.addItem("Ранение", "wound_menu");
+		addMenuItemAndBind(menu, "Выбор идеологии", new IdeologyCheck(model));
+		addMenuItemAndBind(menu, "Ранение", new WoundMenu(model));
 	}
 
 }
