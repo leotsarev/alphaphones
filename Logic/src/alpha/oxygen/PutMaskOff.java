@@ -11,12 +11,13 @@ public class PutMaskOff extends AlphaProcess {
 	}
 
 	public Descriptor handle() {
+		removeStatusMessage("mask");
 		if (!getAlphaModel().wearingMask)
 		{
 			return createMessage("Я без маски, что снимать?");
 		}
 		getAlphaModel().wearingMask = false;
-		removeStatusMessage("mask");
+		scheduleNow(new ScheduleNextOxygen(model));
 		return createMessage("Снимаю маску...");
 	}
 

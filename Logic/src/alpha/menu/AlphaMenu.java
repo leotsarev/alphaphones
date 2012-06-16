@@ -3,6 +3,8 @@ package alpha.menu;
 import alpha.AlphaIM;
 import alpha.genes.GeneAnalyzeMenu;
 import alpha.ideology.IdeologyCheck;
+import alpha.oxygen.EnterBase;
+import alpha.oxygen.ExitBase;
 import alpha.oxygen.PutMaskOff;
 import alpha.oxygen.PutMaskOn;
 import alpha.sleep.Asleep;
@@ -41,6 +43,14 @@ public class AlphaMenu extends MenuBase {
 		else
 		{
 			addMenuItemAndBind(menu, "Одеть маску", new PutMaskOn(model));
+		}
+		if (((AlphaIM)model).inHouse)
+		{
+			addMenuItemAndBind(menu, "Выйти из поселения", new ExitBase(model));
+		}
+		else
+		{
+			addMenuItemAndBind(menu, "Войти в поселение", new EnterBase(model));
 		}
 	}
 

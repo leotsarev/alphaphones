@@ -10,11 +10,7 @@ import alpha.ideology.IdeologyCheck;
 import alpha.ideology.IdeologyMenu;
 import alpha.menu.AlphaMenu;
 import alpha.menu.MasterMenu;
-import alpha.oxygen.CanBreathAgain;
-import alpha.oxygen.OutOfOxygen;
-import alpha.oxygen.PutMaskOff;
-import alpha.oxygen.PutMaskOn;
-import alpha.oxygen.ScheduleNextOxygen;
+import alpha.oxygen.*;
 import alpha.sleep.Asleep;
 import alpha.sleep.Awake;
 import alpha.wounds.ArmWound;
@@ -248,7 +244,9 @@ public class AlphaIM extends ProcessModelBase{
 				new Awake(this),
 				new Asleep(this),
 				new PutMaskOn(this),
-				new PutMaskOff(this)
+				new PutMaskOff(this),
+				new EnterBase(this),
+				new ExitBase(this),
 			};
 		for (int i = 0; i < process.length; i++)
 		{
@@ -341,5 +339,13 @@ public class AlphaIM extends ProcessModelBase{
 
 	public String getGenderName() {
 		return gender ? "Мужчина" : "Женщина";
+	}
+
+	public int calculateOxygenPause() {
+		return (int) Math.floor((10 + oxygenLevel * 5) * (Math.random() + 1));
+	}
+
+	public boolean isBadAtmoshere() {
+		return !inHouse && !wearingMask;
 	}
 }

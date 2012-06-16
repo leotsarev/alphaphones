@@ -181,13 +181,19 @@ public class ProcessModelBase extends InteractionModel{
 			return (Hashtable) ProcessData.clone();
 		}
 		protected void addMenuItemAndBind(MenuDescriptor menu, String itemName,
-				IProcess process) {
+				IProcess process)
+		{
 					if (model.checkCommandWord(process.getName()) == InteractionModel.CODE_UNKNOWN)
 					{
 						model.bindFixedCommandWord(process);
 					}
 					menu.addItem(itemName, process.getName());
-				}
+		}
+		
+		protected void unscheduleAll(IProcess process) {
+			model.scheduler.unscheduleAll(process.getName());
+			
+		}
 	}
 	
 	protected static class StatusContainer
@@ -236,6 +242,24 @@ public class ProcessModelBase extends InteractionModel{
 				return null;
 			}
 			return (IProcess) currentStack.pop();
+		}
+
+		public void unscheduleAll(String name) {
+			for (int i = 0; i <list.size(); i++)
+			{
+				unscheduleFromStack((Stack)list.get(i), name);
+			}
+		}
+
+		private void unscheduleFromStack(Stack stack, String name) {
+			for (int i = stack.size() - 1; i >= 0; i--)
+			{
+				Process item = (Process) stack.get(i);
+				if (item.getName() == name)
+				{
+					stack.remove(i);
+				}
+			}
 		}
 
 		private Stack getCurrentStack() {
