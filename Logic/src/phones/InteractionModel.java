@@ -27,6 +27,11 @@ public abstract class InteractionModel {
 			
 		}
 		public String status;
+		
+		public String toString()
+		{
+			return "SleepDescriptor: " + timeout + " sec"; 
+		}
 	}
 	
 	public static class MenuDescriptor extends Descriptor {
