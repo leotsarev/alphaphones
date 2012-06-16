@@ -2,5 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.elipse.mtj.JavaMEContainer/Oracle Java(TM) Platform Micro Edition SDK 3.0.5/DefaultCldcPhone1"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/AlphaLogic"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
