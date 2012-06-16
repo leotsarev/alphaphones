@@ -1,8 +1,9 @@
 package phones;
 
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.LinkedList;
+import java.util.ListIterator;
 import java.util.Stack;
 import java.util.Vector;
 
@@ -233,119 +234,136 @@ public class ProcessModelBase extends InteractionModel{
 	
 	private class ProcessScheduler
 	{
-// TODO (keep efficiently events planned after long pauses)
-		private LinkedList list = new LinkedList();
-		public IProcess pop() {
-			Stack currentStack = getCurrentStack();
-			if (currentStack.empty())
-			{
-				return null;
+		private class ProcessStack
+		{
+			private Stack stack = new Stack();
+
+			public void unscheduleAll(String name) {
+				ListIterator it = stack.listIterator();
+				while (it.hasNext())
+				{
+					if (((IProcess) it.next()).getName() == name)
+					{
+						it.remove();
+					}
+				}
 			}
-			return (IProcess) currentStack.pop();
+
+			public void push(IProcess process) {
+				stack.push(process);
+			}
+
+			public void serialize(ISerializer ser) {
+				ser.writeInt(stack.size());
+				for (int i = stack.size() - 1; i >= 0; i--)
+				{
+					Process item = (Process) stack.get(i);
+					ser.writeString(item.getName());
+					item.serializeData(ser);
+				}
+			}
+
+			public void unserialize(ISerializer ser) {
+				int size = ser.readInt();
+				for (int i =0; i< size; i++)
+				{
+					String name = ser.readString();
+					Process process = createProcessByName(name);
+					process.unserializeData(ser);
+					stack.push(process);
+				}
+			}
+
+			public boolean empty() {
+				return stack.empty();
+			}
+
+			public IProcess pop() {
+				return (IProcess) stack.pop();
+			}
 		}
+		Hashtable processStacks = new Hashtable();
 
 		public void unscheduleAll(String name) {
-			for (int i = 0; i <list.size(); i++)
+			Enumeration enm = processStacks.keys();
+			while (enm.hasMoreElements())
 			{
-				unscheduleFromStack((Stack)list.get(i), name);
-			}
-		}
-
-		private void unscheduleFromStack(Stack stack, String name) {
-			for (int i = stack.size() - 1; i >= 0; i--)
-			{
-				Process item = (Process) stack.get(i);
-				if (item.getName() == name)
+				String timeKey = (String) enm.nextElement();
+				ProcessStack stack = ((ProcessStack)processStacks.get(timeKey));
+				stack.unscheduleAll(name);
+				if (stack.empty())
 				{
-					stack.remove(i);
+					processStacks.remove(timeKey);
 				}
 			}
 		}
 
-		private Stack getCurrentStack() {
-			ensureOffsetPresent(0);
-			Utils.assert_(list.size() > 0);
-			Stack currentStack = (Stack) list.getFirst();
-			
-			return currentStack;
+		public void schedule(IProcess process, int time) {
+			ProcessStack stack = getStackForTime(time);
+			stack.push(process);
 		}
 
-		public void advance() {
-			Utils.assert_(canAdvance(), "Cannot advance until all process has handled.");
-			list.removeFirst();
-		}
-
-		private boolean canAdvance() {
-			Stack currentStack = getCurrentStack();
-			return currentStack.isEmpty();
-		}
-
-		public void schedule(IProcess process, int offset) {
-			ensureOffsetPresent(offset);
-			Stack targetStack = (Stack) list.get(offset);
-			targetStack.push(process);
-		}
-
-		private void ensureOffsetPresent(int offset) {
-			ensureSize(offset + 1);
-		}
-
-		private void ensureSize(int targetSize) {
-			int offsetToAdd = targetSize - list.size();
-			for (int i =0; i<offsetToAdd; i++)
+		private ProcessStack getStackForTime(int time) {
+			String timeKey = String.valueOf(time);
+			if (!processStacks.containsKey(timeKey))
 			{
-				list.addLast(new Stack());
+				processStacks.put(timeKey, new ProcessStack());
 			}
+			return (ProcessStack) processStacks.get(timeKey);
 		}
 
 		public void serialize(ISerializer ser) {
-			ser.writeInt(list.size());
-			for (int i = 0; i <list.size(); i++)
+			ser.writeInt(processStacks.size());
+			Enumeration enm = processStacks.keys();
+			while (enm.hasMoreElements())
 			{
-				writeStack(ser, (Stack)list.get(i));
-			}
-		}
-
-		private void writeStack(ISerializer ser, Stack stack) {
-			ser.writeInt(stack.size());
-			for (int i = stack.size() - 1; i >= 0; i--)
-			{
-				Process item = (Process) stack.get(i);
-				ser.writeString(item.getName());
-				item.serializeData(ser);
+				String timeKey = (String) enm.nextElement();
+				ser.writeString(timeKey);
+				((ProcessStack)processStacks.get(timeKey)).serialize(ser);
 			}
 		}
 
 		public void unserialize(ISerializer ser) {
 			int size = ser.readInt();
-			ensureSize(size);
-			for (int i = 0; i <list.size(); i++)
+			for (int i = 0; i <size; i++)
 			{
-				readStack(ser, (Stack)list.get(i));
+				String timeKey = ser.readString();
+				ProcessStack stack = new ProcessStack();
+				stack.unserialize(ser);
+				processStacks.put(timeKey, stack);
 			}
 		}
-
-		private void readStack(ISerializer ser, Stack stack) {
-			int size = ser.readInt();
-			for (int i =0; i< size; i++)
+		
+		public int getNextEventTime() {
+			int result = Integer.MAX_VALUE;
+			Enumeration enm = processStacks.keys();
+			while (enm.hasMoreElements())
 			{
-				String name = ser.readString();
-				Process process = createProcessByName(name);
-				process.unserializeData(ser);
-				stack.push(process);
-			}
-		}
-
-		public int getPossibleSleep() {
-			for (int i =0; i< list.size(); i++)
-			{
-				Stack stack = (Stack)list.get(i);
-				if (!stack.empty())
+				String timeKey = (String) enm.nextElement();
+				int time = Integer.valueOf(timeKey).intValue();
+				if (!getStackForTime(time).empty())
 				{
-					return i;
+					result = Math.min(result, time);
 				}
 			}
-			return 1;
+			return result;
+			
+		}
+
+		public IProcess popForTime(int time) {
+			int nextEventTime = getNextEventTime();
+			Utils.assert_(time <= nextEventTime, "Try to handle event for time '" + time + "' but next event before this, on time '" + nextEventTime+"'");
+			ProcessStack stack = getStackForTime(time);
+			if (stack.empty())
+			{
+				return null;
+			}
+			IProcess result = stack.pop();
+			if (stack.empty())
+			{
+				processStacks.remove(String.valueOf(time));
+			}
+			return result;
 		}
 		
 	}
@@ -380,7 +398,7 @@ public class ProcessModelBase extends InteractionModel{
 	protected void schedule(IProcess process, int offset)
 	{
 		Utils.assert_(process.getName() != null);
-		scheduler.schedule(process, offset);
+		scheduler.schedule(process, offset + currentSec);
 	}
 	
 	protected void reset() {
@@ -395,20 +413,15 @@ public class ProcessModelBase extends InteractionModel{
 	
 	public Descriptor whatNext(int passedSecs, Date currentTime) {
 		targetSec += passedSecs;
-			
-		while (currentSec < targetSec && scheduler.canAdvance())
-		{
-			currentSec++;
-			scheduler.advance();
-		}
+		currentSec = Math.min(targetSec, scheduler.getNextEventTime());
 		Descriptor result = null;
 		while (result == null)
 		{
-			IProcess process = scheduler.pop();
+			IProcess process = scheduler.popForTime(currentSec);
 			if (process == null)
 			{
 				result = new SleepDescriptor(status.get());
-				result.timeout = scheduler.getPossibleSleep();
+				result.timeout = scheduler.getNextEventTime() == Integer.MAX_VALUE ? -1 : ( scheduler.getNextEventTime() - targetSec);
 				return result;
 			}
 			result = process.handle();
