@@ -1,5 +1,24 @@
 package alpha;
 
+import alpha.genes.AnalyzeGene;
+import alpha.genes.GeneAnalyzeMenu;
+import alpha.genes.MasterGeneMenu;
+import alpha.genes.MasterToggleGene;
+import alpha.ideology.Faction;
+import alpha.ideology.IdeologyChange;
+import alpha.ideology.IdeologyCheck;
+import alpha.ideology.IdeologyMenu;
+import alpha.menu.AlphaMenu;
+import alpha.menu.MasterMenu;
+import alpha.oxygen.CanBreathAgain;
+import alpha.oxygen.OutOfOxygen;
+import alpha.oxygen.PutMaskOff;
+import alpha.oxygen.PutMaskOn;
+import alpha.oxygen.ScheduleNextOxygen;
+import alpha.sleep.Asleep;
+import alpha.sleep.Awake;
+import alpha.wounds.ArmWound;
+import alpha.wounds.WoundMenu;
 import phones.ISerializer;
 import phones.ProcessModelBase;
 import phones.Utils;
@@ -19,11 +38,11 @@ public class AlphaIM extends ProcessModelBase{
 	
 	public final GeneContainer Genes = new GeneContainer();
 	public boolean initCompleted;
-	boolean gender;
-	boolean inHouse;
-	boolean wearingMask;
-	boolean sleeping;
-	static final String TOGGLE_GENE = "toggle_gene_";
+	public boolean gender;
+	public boolean inHouse;
+	public boolean wearingMask;
+	public boolean sleeping;
+	public static final String TOGGLE_GENE = "toggle_gene_";
 	public static final String ANALYZE_GENE = "analyze_gene_";
 	
 	public static class GeneContainer

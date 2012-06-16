@@ -1,5 +1,7 @@
 package alpha;
 
+import alpha.oxygen.ScheduleNextOxygen;
+import alpha.sleep.Awake;
 import phones.InteractionModel.Descriptor;
 import phones.ProcessModelBase;
 

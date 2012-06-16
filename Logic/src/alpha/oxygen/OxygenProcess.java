@@ -1,5 +1,6 @@
-package alpha;
+package alpha.oxygen;
 
+import alpha.AlphaProcess;
 import phones.ProcessModelBase;
 
 public abstract class OxygenProcess extends AlphaProcess {

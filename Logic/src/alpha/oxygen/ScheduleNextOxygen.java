@@ -1,5 +1,6 @@
-package alpha;
+package alpha.oxygen;
 
+import alpha.AlphaProcess;
 import phones.InteractionModel.Descriptor;
 import phones.ProcessModelBase;
 

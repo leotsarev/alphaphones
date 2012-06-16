@@ -1,4 +1,4 @@
-package alpha;
+package alpha.wounds;
 
 import phones.InteractionModel.MenuDescriptor;
 import phones.MenuBase;

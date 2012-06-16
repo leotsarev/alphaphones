@@ -1,5 +1,13 @@
-package alpha;
+package alpha.menu;
 
+import alpha.AlphaIM;
+import alpha.genes.GeneAnalyzeMenu;
+import alpha.ideology.IdeologyCheck;
+import alpha.oxygen.PutMaskOff;
+import alpha.oxygen.PutMaskOn;
+import alpha.sleep.Asleep;
+import alpha.sleep.Awake;
+import alpha.wounds.WoundMenu;
 import phones.InteractionModel.MenuDescriptor;
 import phones.MenuBase;
 import phones.ProcessModelBase;

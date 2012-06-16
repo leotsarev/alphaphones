@@ -1,5 +1,9 @@
-package alpha;
+package alpha.menu;
 
+import alpha.AlphaIM;
+import alpha.AlphaInit;
+import alpha.ToggleGender;
+import alpha.genes.MasterGeneMenu;
 import phones.InteractionModel.MenuDescriptor;
 import phones.MenuBase;
 import phones.ProcessModelBase;

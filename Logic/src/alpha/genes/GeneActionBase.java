@@ -1,5 +1,6 @@
-package alpha;
+package alpha.genes;
 
+import alpha.AlphaProcess;
 import alpha.AlphaIM.GeneContainer.Gene;
 import phones.IPrefixHandler;
 import phones.ProcessModelBase;
