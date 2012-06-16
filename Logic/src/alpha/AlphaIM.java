@@ -225,7 +225,9 @@ public class AlphaIM extends ProcessModelBase{
 				new MasterMenu(this),
 				new ToggleGender(this),
 				new AnalyzeGene(this),
-				new GeneAnalyzeMenu(this)
+				new GeneAnalyzeMenu(this),
+				new Awake(this),
+				new Asleep(this)
 			};
 		for (int i = 0; i < process.length; i++)
 		{
@@ -272,7 +274,7 @@ public class AlphaIM extends ProcessModelBase{
 		return currentFaction;
 	}
 
-	private void updateCurrentFaction() {
+	public void updateCurrentFaction() {
 		if (currentFaction == null)
 		{
 			selectFactionForFirstTime();
@@ -319,5 +321,4 @@ public class AlphaIM extends ProcessModelBase{
 	public String getGenderName() {
 		return gender ? "Мужчина" : "Женщина";
 	}
-
 }

@@ -18,6 +18,14 @@ public class AlphaMenu extends MenuBase {
 		addMenuItemAndBind(menu, "Выбор идеологии", new IdeologyCheck(model));
 		addMenuItemAndBind(menu, "Ранение", new WoundMenu(model));
 		addMenuItemAndBind(menu, "(Под код) Генетический анализ", new GeneAnalyzeMenu(model)); 
+		if (((AlphaIM)model).sleeping)
+		{
+			addMenuItemAndBind(menu, "Проснуться", new Awake(model));
+		}
+		else
+		{
+			addMenuItemAndBind(menu, "Лечь спать", new Asleep(model));
+		}
 	}
 
 }

@@ -14,7 +14,8 @@ public class AlphaInit extends AlphaProcess {
 		getAlphaModel().inHouse = true;
 		getAlphaModel().gender = true;
 		getAlphaModel().wearingMask = false;
-		getAlphaModel().sleeping = false;
+		getAlphaModel().updateCurrentFaction();
+		scheduleNow(new Awake(model));
 		scheduleNow(new ScheduleNextOxygen(model));
 		return null;
 	}
