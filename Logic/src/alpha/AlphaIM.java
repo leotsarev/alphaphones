@@ -2,6 +2,7 @@ package alpha;
 
 import phones.ISerializer;
 import phones.ProcessModelBase;
+import phones.Utils;
 import phones.Sample.HitMeProcess;
 
 public class AlphaIM extends ProcessModelBase{
@@ -15,6 +16,154 @@ public class AlphaIM extends ProcessModelBase{
 	
 	public static final int LEFT_LIMB = 1;
 	public static final int RIGHT_LIMB = 1;
+	
+	public final GeneContainer Genes = new GeneContainer();
+	static final String TOGGLE_GENE = "toggle_gene_";
+	
+	public static class GeneContainer
+	{
+		public static final int GENE_MIN_VALUE = 0;
+		public static final int GENE_aa = 0;
+		public static final int GENE_Aa = 1;
+		public static final int GENE_AA = 2;
+		public static final int GENE_MAX_VALUE = 2;
+		
+		private Gene[] genes = new Gene[geneChars.length];
+		private static final char[] geneChars = 
+				new char[]
+						{
+						'a', 'b', 'g', 'd', 'f','h','k','e','x','p','r','y','l','m','u','n','t','s'
+						};
+		
+		public GeneContainer()
+		{
+			for (int i = 0; i<geneChars.length;i++)
+			{
+				genes[i] = new Gene(i);
+			}
+		}
+		
+		public class Gene
+		{
+			private final int geneNum;
+			private int geneValue = GENE_AA;
+
+			private Gene(int geneNum)
+			{
+				checkGeneNum(geneNum);
+				this.geneNum = geneNum;
+			}
+
+			public void serialize(ISerializer ser) {
+				ser.writeInt(geneValue);
+			}
+
+			public void unserialize(ISerializer ser) {
+				geneValue = ser.readInt();
+				checkGeneValue(geneValue);
+			}
+			
+			public String toString()
+			{
+				String result = getMyChar();
+				switch (geneValue) {
+				case GENE_aa:	
+						return result + result;
+				case GENE_Aa:
+					return result.toUpperCase() + result;
+				case GENE_AA:
+					return result.toUpperCase() + result.toUpperCase();
+				default:
+					Utils.assert_(false);
+					break;
+				}
+				return null;
+			}
+
+			private String getMyChar() {
+				return "" + geneChars[geneNum];
+			}
+
+			public void toggle() {
+				if (geneValue == GENE_MAX_VALUE)
+				{
+					geneValue = GENE_MIN_VALUE;
+				}
+				else{
+					geneValue++;
+				}
+			}
+
+			public String getName() {
+				return getMyChar();
+			}
+		}
+		
+		public Gene getGene(int geneNum)
+		{
+			return genes[geneNum];
+		}
+		
+		public Gene getGene(char geneName) {
+			return genes[findGenePos(geneName)];
+		}
+		
+		public Gene getGene(String geneName) {
+			Utils.assert_(geneName.length() == 1);
+			return getGene(geneName.charAt(0));
+		}
+
+		private void checkGeneValue(int geneValue) {
+			Utils.assert_(geneValue >= GENE_MIN_VALUE);
+			Utils.assert_(geneValue <= GENE_MAX_VALUE);
+		}
+
+		private void checkGeneNum(int geneNum) {
+			Utils.assert_(geneNum >= 0);
+			Utils.assert_(geneNum < geneChars.length);
+		}
+		
+		public void serialize (ISerializer ser)
+		{
+			for (int i = 0; i<genes.length;i++)
+			{
+				genes[i].serialize(ser);
+			}
+		}
+		
+		public void unserialize (ISerializer ser)
+		{
+			for (int i = 0; i<genes.length;i++)
+			{
+				genes[i].unserialize(ser);
+			}
+		}
+
+		public Gene[] asArray() {
+			return genes;
+		}
+
+		public boolean isValidGeneName(String suffix) {
+			if (suffix.length() != 1)
+			{
+				return false;
+			}
+			char ch = suffix.toLowerCase().charAt(0);
+			return findGenePos(ch) != -1;
+		}
+
+		private int findGenePos(char ch) {
+			for (int i = 0; i<geneChars.length;i++)
+			{
+				if (geneChars[i] == ch)
+				{
+					return i;
+				}
+			}
+			return -1;
+		}
+
+	}
 
 	protected void reset()
 	{
@@ -50,6 +199,10 @@ public class AlphaIM extends ProcessModelBase{
 		bindFixedCommandWord("wound_right_arm", new ArmWound(this, RIGHT_LIMB));
 		
 		bindFixedCommandWord("alpha_std_init", new AlphaInit(this));
+		
+		bindFixedCommandWord("masters_gene_menu", new MasterGeneMenu(this));
+		
+		bindPrefixCommandWord(TOGGLE_GENE, new MasterToggleGene(this));
 	}
 	
 	public Process createProcessByName(String name) {
@@ -64,7 +217,9 @@ public class AlphaIM extends ProcessModelBase{
 				new OutOfOxygen(this),
 				new CanBreathAgain(this),
 				new AlphaInit(this),
-				new ScheduleNextOxygen(this)
+				new ScheduleNextOxygen(this),
+				new MasterGeneMenu(this),
+				new MasterToggleGene(this)
 			};
 		for (int i = 0; i < process.length; i++)
 		{
@@ -82,6 +237,7 @@ public class AlphaIM extends ProcessModelBase{
 		{
 			factions[i].serialize(ser);
 		}
+		Genes.serialize(ser);
 	}
 	
 	public void unserialize(ISerializer ser) {
@@ -90,6 +246,7 @@ public class AlphaIM extends ProcessModelBase{
 		{
 			factions[i].unserialize(ser);
 		}
+		Genes.unserialize(ser);
 	}
 
 	public Faction getCurrentFaction() {

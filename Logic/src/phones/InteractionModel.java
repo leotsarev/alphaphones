@@ -30,6 +30,14 @@ public abstract class InteractionModel {
 	}
 	
 	public static class MenuDescriptor extends Descriptor {
+		
+		private static final int DEFAULT_MENU_TIMEOUT = 30;
+
+		public MenuDescriptor()
+		{
+			timeout = DEFAULT_MENU_TIMEOUT;
+		}
+		
 		private static class MenuItem
 	    {
 			public MenuItem(String name, String command)
@@ -43,7 +51,7 @@ public abstract class InteractionModel {
 		
 		public String menuHeader;
         private Vector options = new Vector();
-        public String timeoutCommand;
+        public String timeoutCommand = "";
         
 		public void addItem(String name, String command) {
 			options.add(new MenuItem(name, command));
