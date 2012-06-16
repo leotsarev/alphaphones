@@ -19,7 +19,10 @@ public class AlphaIM extends ProcessModelBase{
 	
 	public final GeneContainer Genes = new GeneContainer();
 	public boolean initCompleted;
-	private boolean gender;
+	boolean gender;
+	boolean inHouse;
+	boolean wearingMask;
+	boolean sleeping;
 	static final String TOGGLE_GENE = "toggle_gene_";
 	public static final String ANALYZE_GENE = "analyze_gene_";
 	
@@ -238,6 +241,9 @@ public class AlphaIM extends ProcessModelBase{
 		super.serialize(ser);
 		ser.writeBool(initCompleted);
 		ser.writeBool(gender);
+		ser.writeBool(inHouse);
+		ser.writeBool(sleeping);
+		ser.writeBool(wearingMask);
 		for (int i =0; i<factions.length; i++)
 		{
 			factions[i].serialize(ser);
@@ -249,6 +255,9 @@ public class AlphaIM extends ProcessModelBase{
 		super.unserialize(ser);
 		initCompleted = ser.readBool();
 		gender = ser.readBool();
+		inHouse = ser.readBool();
+		sleeping = ser.readBool();
+		wearingMask = ser.readBool();
 		for (int i =0; i<factions.length; i++)
 		{
 			factions[i].unserialize(ser);

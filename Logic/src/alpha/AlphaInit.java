@@ -11,6 +11,10 @@ public class AlphaInit extends AlphaProcess {
 
 	public Descriptor handle() {
 		getAlphaModel().initCompleted = true;
+		getAlphaModel().inHouse = true;
+		getAlphaModel().gender = true;
+		getAlphaModel().wearingMask = false;
+		getAlphaModel().sleeping = false;
 		scheduleNow(new ScheduleNextOxygen(model));
 		return null;
 	}
