@@ -31,6 +31,7 @@ public class ProcessModelBase extends InteractionModel{
 
 		public IProcess createProcess() {
 			Process process = createProcessByName(processTemplate.getName());
+			Utils.assert_(process != null, "Не удалось создать процесс по имени " + processTemplate.getName());
 			process.ProcessData = processTemplate.cloneData();
 			return process;
 		}
