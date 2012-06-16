@@ -59,11 +59,11 @@ public abstract class InteractionModel {
         public String timeoutCommand = "";
         
 		public void addItem(String name, String command) {
-			options.add(new MenuItem(name, command));
+			options.addElement(new MenuItem(name, command));
 		}
 		
 		public String getCommand(int index) {
-			return (String) ((MenuItem) options.get(index)).ItemCommand;
+			return (String) ((MenuItem) options.elementAt(index)).ItemCommand;
 		}
 		
 		public String[] getNames()
@@ -71,7 +71,7 @@ public abstract class InteractionModel {
 			String[] result = new String[options.size()];
 			for (int i = 0; i < result.length; i++)
 			{
-				result[i] = ((MenuItem) options.get(i)).ItemName;
+				result[i] = ((MenuItem) options.elementAt(i)).ItemName;
 			}
 			return result;
 		}

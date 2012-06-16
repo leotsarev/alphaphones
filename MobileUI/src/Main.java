@@ -11,13 +11,26 @@ import javax.microedition.lcdui.ItemStateListener;
 import javax.microedition.midlet.MIDlet;
 import javax.microedition.midlet.MIDletStateChangeException;
 
+import alpha.AlphaIM;
+
+import phones.InteractionModel;
+import phones.InteractionModelCheckDecorator;
+import phones.Utils;
+import phones.InteractionModel.MenuDescriptor;
+import phones.InteractionModel.SleepDescriptor;
+import phones.Sample.SampleIM;
+
 
 public class Main extends MIDlet implements ItemStateListener {
 
 	private Display display;
 	private Form mainScreen;
+	private Form menuScreen;
 	ChoiceGroup choiceGroup;
-
+	
+	InteractionModel im;
+	InteractionModel.Descriptor descriptor;
+	
 	public void itemStateChanged(Item item) {
 		boolean[] flags = new boolean[choiceGroup.size()];
 		choiceGroup.getSelectedFlags(flags);
@@ -41,22 +54,45 @@ public class Main extends MIDlet implements ItemStateListener {
 		}
 	}
 	
+	void processDescriptor() {
+		if (descriptor instanceof SleepDescriptor) {
+			SleepDescriptor sleep = (SleepDescriptor)descriptor;
+			Utils.assert_(false, "not implemented yet");
+		} else {
+			MenuDescriptor menu = (MenuDescriptor)descriptor;
+			choiceGroup = new ChoiceGroup(menu.menuHeader, Choice.MULTIPLE);
+			choiceGroup.setLabel(menu.menuHeader);
+			choiceGroup.deleteAll();
+			String[] names = menu.getNames();
+			for (int i = 0; i < names.length; i++) {
+				choiceGroup.append(names[i], null);
+			}
+
+			menuScreen = new Form(" ");
+			menuScreen.append(choiceGroup);
+
+			menuScreen.setItemStateListener(this);
+		}
+	}
 	
 	public Main() {
+		
 		display = Display.getDisplay(this);
-		mainScreen = new Form(" ");
+		//menuScreen = new Form(" ");
 		//mainScreen.append("Select option:");
 		
-		choiceGroup = new ChoiceGroup("Question:", Choice.MULTIPLE);
-		for (int i = 0; i < 20; i++)
-			choiceGroup.append("zzz whatever "+i, null);
-		mainScreen.append(choiceGroup);
 		
-		mainScreen.setItemStateListener(this);
+
+		im = new InteractionModelCheckDecorator(new SampleIM());
+		descriptor = im.whatNext(0, null);
+		//descriptor = new InteractionModel.SleepDescriptor("initial");
+		//descriptor.timeout = 10;
+	
+		processDescriptor();
 	}
 
 	protected void startApp() throws MIDletStateChangeException {
-		display.setCurrent(mainScreen);
+		display.setCurrent(menuScreen);
 	}
 	
 	protected void destroyApp(boolean arg0) throws MIDletStateChangeException {

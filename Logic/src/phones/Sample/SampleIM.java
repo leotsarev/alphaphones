@@ -1,6 +1,6 @@
 package phones.Sample;
 
-import java.text.DateFormat;
+//import java.text.DateFormat;
 import java.util.Date;
 
 import phones.ISerializer;
@@ -10,15 +10,15 @@ public class SampleIM extends InteractionModel {
 
 	boolean state;
 	public void reset() {
-		state = false;
+		state = true;
 	}
 
 	public Descriptor whatNext(int timePassed, Date currentTime) {
 		state = !state;
-		if (state) {
+		if (state && false) {
 			SleepDescriptor result = new SleepDescriptor();
 			result.timeout = 60;
-			String time = DateFormat.getTimeInstance().format(currentTime); 
+			String time = "fucking jme";//DateFormat.getTimeInstance().format(currentTime); 
 			result.status = "It's " + time + ".";
 			return result;
 		} else {
@@ -33,10 +33,16 @@ public class SampleIM extends InteractionModel {
 	}
 
 	public int checkCommandWord(String commandWord) {
-		if (commandWord.length() > 3)
-			return CODE_UNKNOWN;
+		if (commandWord.equals("APPLE"))
+			return CODE_VALID;
+		if (commandWord.equals("BANANA"))
+			return CODE_VALID;
+		if (commandWord.equals("TIMEOUT"))
+			return CODE_VALID;
 		if (commandWord.equals("123"))
 			return CODE_VALID;
+		if (commandWord.length() > 3)
+			return CODE_UNKNOWN;
 		return CODE_PREFIX;
 	}
 

@@ -3,6 +3,7 @@
 	<name>AlphaMobileUI</name>
 	<comment></comment>
 	<projects>
+		<project>AlphaLogic</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

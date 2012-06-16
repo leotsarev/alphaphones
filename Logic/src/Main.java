@@ -7,6 +7,7 @@ import java.util.Date;
 import alpha.AlphaIM;
 
 import phones.InteractionModel;
+import phones.InteractionModelCheckDecorator;
 import phones.Utils;
 import phones.InteractionModel.*;
 
@@ -96,7 +97,7 @@ public class Main {
 		in = new BufferedReader(new InputStreamReader(System.in));
 		out = new PrintStream(System.out, true, "utf-8"/*"866"*/);
 		
-		im = new AlphaIM();
+		im = new InteractionModelCheckDecorator(new AlphaIM());
 		
 		prevTime = currentTime = new Date(); 
 		next();

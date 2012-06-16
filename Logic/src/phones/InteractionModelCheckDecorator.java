@@ -33,7 +33,7 @@ public class InteractionModelCheckDecorator extends InteractionModel {
 	}
 	
 	public void assertCommandWord(String code) {
-		Utils.assert_(innerModel.checkCommandWord(code) == CODE_VALID);
+		Utils.assert_(innerModel.checkCommandWord(code) == CODE_VALID, code);
 		Utils.assert_(!commandWordAlreadyAsserted, "received two command words in a row");
 		innerModel.assertCommandWord(code);
 		commandWordAlreadyAsserted = true;
