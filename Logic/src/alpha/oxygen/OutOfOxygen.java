@@ -1,4 +1,4 @@
-package alpha;
+package alpha.oxygen;
 
 import phones.InteractionModel.*;
 import phones.ProcessModelBase;

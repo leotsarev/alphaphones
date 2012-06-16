@@ -31,4 +31,8 @@ public interface ISerializer {
 
 	public abstract Hashtable readDict();
 
+	public abstract void writeBool(boolean bool);
+
+	public abstract boolean readBool();
+
 }

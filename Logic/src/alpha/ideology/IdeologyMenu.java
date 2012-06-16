@@ -1,4 +1,4 @@
-package alpha;
+package alpha.ideology;
 
 import phones.InteractionModel.MenuDescriptor;
 import phones.MenuBase;

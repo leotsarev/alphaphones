@@ -84,7 +84,7 @@ public class ProcessModelBase extends InteractionModel{
 	private class FixedCommandWord extends CommandWordDefBase
 	{
 		private String fixedWord;
-		public FixedCommandWord(String fixedWord, Process processTemplate)
+		public FixedCommandWord(String fixedWord, IProcess processTemplate)
 		{
 			super(processTemplate);
 			this.fixedWord = fixedWord;
@@ -180,6 +180,20 @@ public class ProcessModelBase extends InteractionModel{
 		{
 			return (Hashtable) ProcessData.clone();
 		}
+		protected void addMenuItemAndBind(MenuDescriptor menu, String itemName,
+				IProcess process)
+		{
+					if (model.checkCommandWord(process.getName()) == InteractionModel.CODE_UNKNOWN)
+					{
+						model.bindFixedCommandWord(process);
+					}
+					menu.addItem(itemName, process.getName());
+		}
+		
+		protected void unscheduleAll(IProcess process) {
+			model.scheduler.unscheduleAll(process.getName());
+			
+		}
 	}
 	
 	protected static class StatusContainer
@@ -228,6 +242,24 @@ public class ProcessModelBase extends InteractionModel{
 				return null;
 			}
 			return (IProcess) currentStack.pop();
+		}
+
+		public void unscheduleAll(String name) {
+			for (int i = 0; i <list.size(); i++)
+			{
+				unscheduleFromStack((Stack)list.get(i), name);
+			}
+		}
+
+		private void unscheduleFromStack(Stack stack, String name) {
+			for (int i = stack.size() - 1; i >= 0; i--)
+			{
+				Process item = (Process) stack.get(i);
+				if (item.getName() == name)
+				{
+					stack.remove(i);
+				}
+			}
 		}
 
 		private Stack getCurrentStack() {
@@ -318,12 +350,24 @@ public class ProcessModelBase extends InteractionModel{
 		
 	}
 	
-	protected void bindFixedCommandWord(String commandWord, Process process)
+	private void checkCreatePossible(IProcess process) {
+		Process sampleProcess = createProcessByName(process.getName());
+		Utils.assert_(sampleProcess != null, "Don't know how to create " + process.getName() + " bind failed.");
+		Utils.assert_(sampleProcess.getName().equals(process.getName()), "Try create " + process.getName() + ", but got: " + sampleProcess.getName());
+	}
+	
+	protected void bindFixedCommandWord(String commandWord, IProcess process)
 	{
+		checkCreatePossible(process);
 		commandWordDefs.add(new FixedCommandWord(commandWord, process));
 	}
 	
+	protected void bindFixedCommandWord(IProcess process) {
+		bindFixedCommandWord(process.getName(), process);
+	}
+
 	protected void bindPrefixCommandWord(String commandWordPrefix, IPrefixHandler process) {
+		checkCreatePossible(process);
 		commandWordDefs.add(new MenuPrefixCommandWord(commandWordPrefix, process));
 	}
 	

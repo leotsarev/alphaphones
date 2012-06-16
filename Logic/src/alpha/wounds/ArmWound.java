@@ -1,5 +1,6 @@
-package alpha;
+package alpha.wounds;
 
+import alpha.AlphaProcess;
 import phones.InteractionModel.Descriptor;
 import phones.ProcessModelBase;
 

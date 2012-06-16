@@ -1,4 +1,4 @@
-package alpha;
+package alpha.ideology;
 
 import phones.ISerializer;
 import phones.ProcessModelBase;
