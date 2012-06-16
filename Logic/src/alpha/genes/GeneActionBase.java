@@ -1,7 +1,6 @@
 package alpha.genes;
 
 import alpha.AlphaProcess;
-import alpha.AlphaIM.GeneContainer.Gene;
 import phones.IPrefixHandler;
 import phones.ProcessModelBase;
 import phones.Utils;
@@ -17,7 +16,7 @@ public abstract class GeneActionBase extends  AlphaProcess implements IPrefixHan
 	}
 
 	public boolean isValidSuffix(String suffix) {
-		return getAlphaModel().Genes.isValidGeneName(suffix);
+		return Gene.isValidGeneName(suffix);
 	}
 
 	public void setSuffixValue(String suffix) {
@@ -26,7 +25,7 @@ public abstract class GeneActionBase extends  AlphaProcess implements IPrefixHan
 	}
 
 	protected Gene getTargetGene() {
-		return getAlphaModel().Genes.getGene(getStringArg("gene"));
+		return getAlphaModel().Genes.get(getStringArg("gene"));
 	}
 
 }

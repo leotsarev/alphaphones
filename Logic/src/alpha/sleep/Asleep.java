@@ -3,7 +3,6 @@ package alpha.sleep;
 import alpha.AlphaProcess;
 import phones.InteractionModel.Descriptor;
 import phones.ProcessModelBase;
-import phones.Utils;
 
 public class Asleep extends AlphaProcess {
 
