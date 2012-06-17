@@ -225,11 +225,11 @@ public class ProcessModelBase extends InteractionModel{
 		
 		private String get() {
 			StringBuffer buffer = new StringBuffer();
-			Object[] statusValues = table.values().toArray();
-			for (int i=0; i < statusValues.length; i++)
+			Enumeration statusValues = table.elements();
+			while (statusValues.hasMoreElements())
 			{
-				buffer.append((String)statusValues[i]);
-				buffer.append('\n');
+				buffer.append((String)statusValues.nextElement());
+				buffer.append('n');
 			}
 			return buffer.toString();
 		}
@@ -281,7 +281,7 @@ public class ProcessModelBase extends InteractionModel{
 				ser.writeInt(stack.size());
 				for (int i = stack.size() - 1; i >= 0; i--)
 				{
-					Process item = (Process) stack.get(i);
+					Process item = (Process) stack.elementAt(i);
 					ser.writeString(item.getName());
 					item.serializeData(ser);
 				}
@@ -415,7 +415,7 @@ public class ProcessModelBase extends InteractionModel{
 	protected void bindFixedCommandWord(String commandWord, IProcess process)
 	{
 		checkCreatePossible(process);
-		commandWordDefs.add(new FixedCommandWord(commandWord, process));
+		commandWordDefs.addElement(new FixedCommandWord(commandWord, process));
 	}
 	
 	protected void bindFixedCommandWord(IProcess process) {
@@ -424,7 +424,7 @@ public class ProcessModelBase extends InteractionModel{
 
 	protected void bindPrefixCommandWord(String commandWordPrefix, IPrefixHandler process) {
 		checkCreatePossible(process);
-		commandWordDefs.add(new MenuPrefixCommandWord(commandWordPrefix, process));
+		commandWordDefs.addElement(new MenuPrefixCommandWord(commandWordPrefix, process));
 	}
 	
 	private void scheduleOn(IProcess process, int time) {
@@ -511,7 +511,7 @@ public class ProcessModelBase extends InteractionModel{
 	private IProcess getProcessForCode(String code) {
 		for (int i = 0; i < commandWordDefs.size(); i++)
 		{
-			CommandWordDefBase def = (CommandWordDefBase) commandWordDefs.get(i);
+			CommandWordDefBase def = (CommandWordDefBase) commandWordDefs.elementAt(i);
 			if (def.isValidWord(code))
 			{
 				if (def.isOneTimeCode(code))
@@ -540,7 +540,7 @@ public class ProcessModelBase extends InteractionModel{
 		Utils.assert_(commandWordDefs.size() > 0);
 		for (int i = 0; i < commandWordDefs.size(); i++)
 		{
-			CommandWordDefBase def = (CommandWordDefBase) commandWordDefs.get(i);
+			CommandWordDefBase def = (CommandWordDefBase) commandWordDefs.elementAt(i);
 			if (def.isValidWord(commandWord))
 			{
 				return CODE_VALID;
