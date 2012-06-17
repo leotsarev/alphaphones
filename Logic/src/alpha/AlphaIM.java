@@ -1,5 +1,6 @@
 package alpha;
 
+import alpha.food.*;
 import alpha.genes.*;
 import alpha.ideology.Faction;
 import alpha.ideology.IdeologyChange;
@@ -29,6 +30,8 @@ public class AlphaIM extends ProcessModelBase{
 	public static final int RIGHT_LIMB = 1;
 	
 	public final GeneContainer Genes = new GeneContainer();
+	public final NutrientContainer Nutrients = new NutrientContainer();
+	
 	public boolean initCompleted;
 	public boolean gender;
 	public boolean inHouse;
@@ -71,6 +74,8 @@ public class AlphaIM extends ProcessModelBase{
 		
 		bindPrefixCommandWord(TOGGLE_GENE, new MasterToggleGene(this));
 		bindPrefixCommandWord(ANALYZE_GENE, new AnalyzeGene(this));
+		
+		bindPrefixCommandWord("_food_", new SetNutrient(this));
 	}
 	
 	public Process createProcessByName(String name) {
@@ -101,6 +106,8 @@ public class AlphaIM extends ProcessModelBase{
 				new PutMaskOff(this),
 				new EnterBase(this),
 				new ExitBase(this),
+				new SetNutrient(this),
+				new RemoveNutrient(this)
 			};
 		for (int i = 0; i < process.length; i++)
 		{
@@ -124,6 +131,7 @@ public class AlphaIM extends ProcessModelBase{
 			factions[i].serialize(ser);
 		}
 		Genes.serialize(ser);
+		Nutrients.serialize(ser);
 	}
 
 	public void unserialize(ISerializer ser) {
@@ -138,6 +146,7 @@ public class AlphaIM extends ProcessModelBase{
 			factions[i].unserialize(ser);
 		}
 		Genes.unserialize(ser);
+		Nutrients.unserialize(ser);
 	}
 
 	
