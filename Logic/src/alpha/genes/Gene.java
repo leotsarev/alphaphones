@@ -1,9 +1,10 @@
 package alpha.genes;
 
+import alpha.genes.concrete.*;
 import phones.ISerializer;
 import phones.Utils;
 
-public class Gene
+public abstract class Gene
 {
 	private static final int GENE_MIN_VALUE = 0;
 	private static final int GENE_aa = 0;
@@ -11,19 +12,14 @@ public class Gene
 	private static final int GENE_AA = 2;
 	private static final int GENE_MAX_VALUE = 2;
 	
-	private final int geneNum;
 	private int geneValue = GENE_AA;
-	private static final char[] geneChars = 
-	new char[]
-			{
-			'a', 'b', 'g', 'd', 'f','h','k','e','x','p','r','y','l','m','u','n','t','s'
-			};
+	private final GeneContainer containter;
+	private final char myChar;
 
-	private Gene(int geneNum)
+	protected Gene(GeneContainer containter, char myChar)
 	{
-		Utils.assert_(geneNum >= 0);
-		Utils.assert_(geneNum < geneChars.length);
-		this.geneNum = geneNum;
+		this.containter = containter;
+		this.myChar = myChar;
 	}
 	
 	public void serialize(ISerializer ser) {
@@ -35,10 +31,26 @@ public class Gene
 		checkGeneValue(geneValue);
 	}
 	
-	public String toString()
+	public String getValueString()
 	{
+		return convertGeneToString(geneValue);
+	}
+	
+	/** Ген с учетом того, выключают ли его другие гены
+	 * */
+	public int getCondition()
+	{
+		return geneValue;
+	}
+	
+	public String getConditionString()
+	{
+		return convertGeneToString(getCondition());
+	}
+
+	private String convertGeneToString(int val) {
 		String result = getMyChar();
-		switch (geneValue) {
+		switch (val) {
 		case GENE_aa:	
 				return result + result;
 		case GENE_Aa:
@@ -53,7 +65,7 @@ public class Gene
 	}
 
 	private String getMyChar() {
-		return "" + Gene.geneChars[geneNum];
+		return ""+ myChar;
 	}
 
 	public void toggle() {
@@ -71,15 +83,29 @@ public class Gene
 	}
 
 	public String getAnalyzeResult() {
-		return "ANALYZE RESULT SHOULD UPDATE " + toString();
+		switch (geneValue) {
+		case GENE_aa:	
+				return getRecessiveAnalysis() + getRecessiveAnalysis();
+		case GENE_Aa:
+			return getDominantAnalysis() + getRecessiveAnalysis();
+		case GENE_AA:
+			return getDominantAnalysis() + getDominantAnalysis();
+		default:
+			Utils.assert_(false);
+			break;
+		}
+		return null;
 	}
 	
-	static Gene[] createAll() {
-		Gene[] result = new Gene[geneChars.length];
-		for (int i = 0; i<geneChars.length;i++)
-		{
-			result[i] = new Gene(i);
-		}
+	protected abstract String getDominantAnalysis();
+
+	protected abstract String getRecessiveAnalysis();
+
+	static Gene[] createAll(GeneContainer container) {
+		Gene[] result = {
+				new Gene_A(container),
+				new Gene_B(container)
+		};
 		return result;
 	}
 	

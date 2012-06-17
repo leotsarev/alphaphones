@@ -4,7 +4,7 @@ import phones.ISerializer;
 
 public class GeneContainer
 {
-	private Gene[] genes = Gene.createAll();
+	private Gene[] genes = Gene.createAll(this);
 
 	public Gene get(String geneName) {
 		for (int i = 0; i <genes.length; i++)

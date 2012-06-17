@@ -15,7 +15,7 @@ public class MasterGeneMenu extends GeneMenuBase {
 	}
 
 	protected void bindGeneMenuItem(MenuDescriptor menu, Gene gene) {
-		menu.addItem(gene.toString(), AlphaIM.TOGGLE_GENE + gene.getName());
+		menu.addItem(gene.getValueString(), AlphaIM.TOGGLE_GENE + gene.getName());
 	}
 
 	protected String getMenuHeader() {
