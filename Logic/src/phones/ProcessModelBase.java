@@ -180,7 +180,14 @@ public class ProcessModelBase extends InteractionModel{
 		
 		public Hashtable cloneData()
 		{
-			return (Hashtable) ProcessData.clone();
+			Enumeration keys = ProcessData.keys();
+			Hashtable result = new Hashtable();
+			while (keys.hasMoreElements())
+			{
+				Object key = keys.nextElement();
+				result.put(key, result.get(key));
+			}
+			return result;
 		}
 		
 		protected void addMenuItemAndBind(MenuDescriptor menu, String itemName,
