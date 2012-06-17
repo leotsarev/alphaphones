@@ -6,7 +6,7 @@ import phones.Utils;
 public class Nutrient {
 
 	private final int nutrientNum;
-	private static final String[] names = {"Альфа", "Бета", "Гамма", "Дельта", "Фи", "Хи"};
+	private static final String[] names = {"Alpha", "Beta", "Gamma", "Delta", "Phi", "Chi"};
 	public static final int VANISH_MINS = 3 * 60;
 	private boolean nutrientValue;
 	
@@ -50,6 +50,14 @@ public class Nutrient {
 
 	public String getName() {
 		return names[nutrientNum];
+	}
+
+	public int getNum() {
+		return nutrientNum;
+	}
+
+	public String getDeficitName() {
+		return getName() + "Deficit";
 	}
 	
 }

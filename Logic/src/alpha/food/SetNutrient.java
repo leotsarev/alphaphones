@@ -3,7 +3,7 @@ package alpha.food;
 import phones.InteractionModel.Descriptor;
 import phones.ProcessModelBase;
 
-public class SetNutrient extends NutrientActionBase {
+public class SetNutrient extends NutrientPrefixBase  {
 
 	public SetNutrient(ProcessModelBase model) {
 		super(model);
