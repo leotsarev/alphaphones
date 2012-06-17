@@ -16,7 +16,7 @@ public abstract class GeneActionBase extends  AlphaProcess implements IPrefixHan
 	}
 
 	public boolean isValidSuffix(String suffix) {
-		return Gene.isValidGeneName(suffix);
+		return getAlphaModel().Genes.get(suffix) != null;
 	}
 
 	public void setSuffixValue(String suffix) {
@@ -25,7 +25,13 @@ public abstract class GeneActionBase extends  AlphaProcess implements IPrefixHan
 	}
 
 	protected Gene getTargetGene() {
-		return getAlphaModel().Genes.get(getStringArg("gene"));
+		Gene targetGene = getAlphaModel().Genes.get(getGeneName());
+		Utils.assert_(targetGene != null, "Can't find gen:" + getGeneName());
+		return targetGene;
+	}
+
+	private String getGeneName() {
+		return getStringArg("gene");
 	}
 
 }

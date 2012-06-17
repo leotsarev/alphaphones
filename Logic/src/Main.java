@@ -25,6 +25,7 @@ public class Main {
 	
 	static String prevStatus = null;
 	static Date prevTime, currentTime;
+	private static Date startTime;
 	
 	static void next() {
 		while (true) {
@@ -99,11 +100,12 @@ public class Main {
 		
 		im = new InteractionModelCheckDecorator(new AlphaIM());
 		
-		prevTime = currentTime = new Date(); 
+		
+		startTime = prevTime = currentTime = new Date(); 
 		next();
 
 		while (true) {
-			out.print(remainingTimeout +  ">>> ");
+			out.print((currentTime.getTime() -  startTime.getTime())/1000 +  ">>> ");
 			String input = in.readLine();
 			
 			if (input.equals("exit"))

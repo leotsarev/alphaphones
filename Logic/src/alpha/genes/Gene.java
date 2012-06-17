@@ -5,11 +5,11 @@ import phones.Utils;
 
 public class Gene
 {
-	public static final int GENE_MIN_VALUE = 0;
-	public static final int GENE_aa = 0;
-	public static final int GENE_Aa = 1;
-	public static final int GENE_AA = 2;
-	public static final int GENE_MAX_VALUE = 2;
+	private static final int GENE_MIN_VALUE = 0;
+	private static final int GENE_aa = 0;
+	private static final int GENE_Aa = 1;
+	private static final int GENE_AA = 2;
+	private static final int GENE_MAX_VALUE = 2;
 	
 	private final int geneNum;
 	private int geneValue = GENE_AA;
@@ -22,7 +22,7 @@ public class Gene
 	private Gene(int geneNum)
 	{
 		Utils.assert_(geneNum >= 0);
-		Utils.assert_(geneNum < Gene.geneChars.length);
+		Utils.assert_(geneNum < geneChars.length);
 		this.geneNum = geneNum;
 	}
 	
@@ -73,30 +73,10 @@ public class Gene
 	public String getAnalyzeResult() {
 		return "ANALYZE RESULT SHOULD UPDATE " + toString();
 	}
-
-	static int findGenePos(char ch) {
-		for (int i = 0; i<Gene.geneChars.length;i++)
-		{
-			if (Gene.geneChars[i] == ch)
-			{
-				return i;
-			}
-		}
-		return -1;
-	}
-
-	public static boolean isValidGeneName(String suffix) {
-		if (suffix.length() != 1)
-		{
-			return false;
-		}
-		char ch = suffix.toLowerCase().charAt(0);
-		return Gene.findGenePos(ch) != -1;
-	}
-
+	
 	static Gene[] createAll() {
-		Gene[] result = new Gene[Gene.geneChars.length];
-		for (int i = 0; i<Gene.geneChars.length;i++)
+		Gene[] result = new Gene[geneChars.length];
+		for (int i = 0; i<geneChars.length;i++)
 		{
 			result[i] = new Gene(i);
 		}

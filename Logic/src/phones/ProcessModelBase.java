@@ -130,11 +130,6 @@ public class ProcessModelBase extends InteractionModel{
 			ProcessData.put(key, value);
 		}
 		
-		protected void rescheduleAgain()
-		{
-			model.schedule(this, 1);
-		}
-		
 		public final void serializeData(ISerializer ser)
 		{
 			for (int i = 0; i < ProcessData.size(); i ++)
@@ -147,21 +142,26 @@ public class ProcessModelBase extends InteractionModel{
 		{
 			ProcessData = ser.readDict();
 		}
+		
 		protected int getIntArg(String key) {
 			return Integer.parseInt(getStringArg(key));
 		}
+		
 		public void setIntArg(String key, int coord) {
 			setStringArg(key, Integer.toString(coord));
 		}
+		
 		protected void scheduleNow(IProcess process) {
 			model.scheduleNow(process);
 		}
+		
 		public Descriptor createMessage(String message) {
 			SleepDescriptor result = new SleepDescriptor();
 			result.status = message;
 			result.timeout = 0;
 			return result;
 		}
+		
 		protected void addStatusMessage(String statusTag, String message) {
 			model.status.addMessage(statusTag, message);
 			
@@ -170,7 +170,7 @@ public class ProcessModelBase extends InteractionModel{
 			scheduleAfterSecs(process, mins * 60);
 		}
 		protected void scheduleAfterSecs(IProcess process, int secs) {
-			model.schedule(process, secs);
+			model.scheduleAfterSecs(process, secs);
 			
 		}
 		protected void removeStatusMessage(String tag) {
@@ -181,19 +181,32 @@ public class ProcessModelBase extends InteractionModel{
 		{
 			return (Hashtable) ProcessData.clone();
 		}
+		
 		protected void addMenuItemAndBind(MenuDescriptor menu, String itemName,
 				IProcess process)
 		{
-					if (model.checkCommandWord(process.getName()) == InteractionModel.CODE_UNKNOWN)
-					{
-						model.bindFixedCommandWord(process);
-					}
-					menu.addItem(itemName, process.getName());
+			if (model.checkCommandWord(process.getName()) == InteractionModel.CODE_UNKNOWN)
+			{
+				model.bindFixedCommandWord(process);
+			}
+			menu.addItem(itemName, process.getName());
 		}
 		
-		protected void unscheduleAll(IProcess process) {
-			model.scheduler.unscheduleAll(process.getName());
+		protected void unscheduleByName(IProcess process) {
+			model.scheduler.unscheduleByName(process.getName());
 			
+		}
+		protected void unscheduleEqual(IProcess process) {
+			model.scheduler.unscheduleEqual(process);
+		}
+		
+		public boolean equals(Process process) {
+			return getName().equals(process.getName())  && ProcessData.equals(((Process)process).ProcessData);
+		}
+		
+		public boolean equals(Object obj)
+		{
+			return obj !=null && obj instanceof Process && equals((Process)obj);
 		}
 	}
 	
@@ -238,11 +251,22 @@ public class ProcessModelBase extends InteractionModel{
 		{
 			private Stack stack = new Stack();
 
-			public void unscheduleAll(String name) {
+			public void unscheduleByName(String name) {
 				ListIterator it = stack.listIterator();
 				while (it.hasNext())
 				{
-					if (((IProcess) it.next()).getName() == name)
+					if (((IProcess) it.next()).getName().equals(name))
+					{
+						it.remove();
+					}
+				}
+			}
+
+			public void unscheduleEqual(IProcess process) {
+				ListIterator it = stack.listIterator();
+				while (it.hasNext())
+				{
+					if (it.next().equals(process))
 					{
 						it.remove();
 					}
@@ -284,13 +308,13 @@ public class ProcessModelBase extends InteractionModel{
 		}
 		Hashtable processStacks = new Hashtable();
 
-		public void unscheduleAll(String name) {
+		public void unscheduleByName(String name) {
 			Enumeration enm = processStacks.keys();
 			while (enm.hasMoreElements())
 			{
 				String timeKey = (String) enm.nextElement();
 				ProcessStack stack = ((ProcessStack)processStacks.get(timeKey));
-				stack.unscheduleAll(name);
+				stack.unscheduleByName(name);
 				if (stack.empty())
 				{
 					processStacks.remove(timeKey);
@@ -298,7 +322,21 @@ public class ProcessModelBase extends InteractionModel{
 			}
 		}
 
-		public void schedule(IProcess process, int time) {
+		public void unscheduleEqual(IProcess process) {
+			Enumeration enm = processStacks.keys();
+			while (enm.hasMoreElements())
+			{
+				String timeKey = (String) enm.nextElement();
+				ProcessStack stack = ((ProcessStack)processStacks.get(timeKey));
+				stack.unscheduleEqual(process);
+				if (stack.empty())
+				{
+					processStacks.remove(timeKey);
+				}
+			}
+		}
+
+		public void scheduleAtTime(IProcess process, int time) {
 			ProcessStack stack = getStackForTime(time);
 			stack.push(process);
 		}
@@ -389,16 +427,21 @@ public class ProcessModelBase extends InteractionModel{
 		commandWordDefs.add(new MenuPrefixCommandWord(commandWordPrefix, process));
 	}
 	
+	private void scheduleOn(IProcess process, int time) {
+		scheduler.scheduleAtTime(process, time);
+	}
+	
 	protected void scheduleNow(IProcess process)
 	{
 		Utils.assert_(process.getName() != null);
-		schedule(process, 0);
+		scheduleAfterSecs(process, 0);
 	}
-	
-	protected void schedule(IProcess process, int offset)
+	int count = 2;
+	protected void scheduleAfterSecs(IProcess process, int offset)
 	{
 		Utils.assert_(process.getName() != null);
-		scheduler.schedule(process, offset + currentSec);
+		Utils.assert_(offset >=0);
+		scheduleOn(process, offset + currentSec);
 	}
 	
 	protected void reset() {
@@ -410,33 +453,59 @@ public class ProcessModelBase extends InteractionModel{
 	
 	private int currentSec;
 	private int targetSec;
+	private int prevSecs;
+	private String code;
 	
 	public Descriptor whatNext(int passedSecs, Date currentTime) {
+		Utils.assert_(prevSecs <= currentSec);
+		prevSecs = currentSec;
+		
 		targetSec += passedSecs;
-		currentSec = Math.min(targetSec, scheduler.getNextEventTime());
+		
+		if (code != null)
+		{
+			IProcess process = getProcessForCode(code);
+			if (process != null)
+			{
+				scheduleOn(process, targetSec);
+			}
+			code = null;
+		}
+		
 		Descriptor result = null;
 		while (result == null)
 		{
+			advanceTime();
 			IProcess process = scheduler.popForTime(currentSec);
 			if (process == null)
 			{
-				result = new SleepDescriptor(status.get());
-				result.timeout = scheduler.getNextEventTime() == Integer.MAX_VALUE ? -1 : ( scheduler.getNextEventTime() - targetSec);
-				return result;
+				return sleepToNextEvent();
 			}
 			result = process.handle();
 		}
+		advanceTime();
 		return result;
 	}
 
 
 
+	private void advanceTime() {
+		int nextTime = Math.min(targetSec, scheduler.getNextEventTime());
+		Utils.assert_(currentSec <= nextTime);
+		currentSec = nextTime;
+	}
+
+	private Descriptor sleepToNextEvent() {
+		Utils.assert_(currentSec == targetSec);
+		Descriptor result = new SleepDescriptor(status.get());
+		int nextEventTime = scheduler.getNextEventTime();
+		
+		result.timeout = nextEventTime == Integer.MAX_VALUE ? -1 : ( nextEventTime - targetSec);
+		return result;
+	}
+
 	public void assertCommandWord(String code) {
-		IProcess process = getProcessForCode(code);
-		if (process != null)
-		{
-			scheduleNow(process);
-		}
+		this.code = code;
 	}
 
 	private IProcess getProcessForCode(String code) {
