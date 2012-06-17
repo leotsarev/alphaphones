@@ -17,14 +17,14 @@ public class RemoveNutrient extends NutrientPrefixBase {
 	
 	
 	public static double calculateDeficitRisk(Nutrient targetNutrient) {
-		return 0.1;
+		return 10;
 	}
 
 
 	public Descriptor handle() {
 		targetNutrient().setNutrientValue(false);
 		
-		if (Math.random() > calculateDeficitRisk(targetNutrient()))
+		if (model.randomInt(100) > calculateDeficitRisk(targetNutrient()))
 		{
 			Process process = model.createProcessByName(targetNutrient().getDeficitName());
 			

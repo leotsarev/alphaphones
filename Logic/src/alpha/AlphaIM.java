@@ -1,5 +1,6 @@
 package alpha;
 
+
 import alpha.food.*;
 import alpha.genes.*;
 import alpha.ideology.Faction;
@@ -40,8 +41,6 @@ public class AlphaIM extends ProcessModelBase{
 	public static final String TOGGLE_GENE = "toggle_gene_";
 	public static final String ANALYZE_GENE = "analyze_gene_";
 	
-	
-
 	protected void reset()
 	{
 		super.reset();
@@ -174,7 +173,7 @@ public class AlphaIM extends ProcessModelBase{
 	}
 
 	public void selectFactionForFirstTime() {
-		boolean skipFirst = Math.random() > 0.5;
+		boolean skipFirst = randomInt(2) > 1;
 		for (int i =0; i<factions.length; i++)
 		{
 			Faction fct = factions[i];
@@ -205,7 +204,7 @@ public class AlphaIM extends ProcessModelBase{
 	}
 
 	public int calculateOxygenPause() {
-		return (int) Math.floor((10 + oxygenLevel * 5) * (Math.random() + 1));
+		return (int) ((10 + oxygenLevel * 5) * (randomInt(100)/100.0 + 1));
 	}
 
 	public boolean isBadAtmoshere() {

@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.ListIterator;
+import java.util.Random;
 import java.util.Stack;
 import java.util.Vector;
 
@@ -455,6 +456,7 @@ public class ProcessModelBase extends InteractionModel{
 	private int targetSec;
 	private int prevSecs;
 	private String code;
+	private Random random = new Random(System.currentTimeMillis());
 	
 	public Descriptor whatNext(int passedSecs, Date currentTime) {
 		Utils.assert_(prevSecs <= currentSec);
@@ -579,6 +581,10 @@ public class ProcessModelBase extends InteractionModel{
 			}
 		}
 		return null;
+	}
+
+	public int randomInt(int n) {
+		return random.nextInt() % n;
 	}
 	
 }
