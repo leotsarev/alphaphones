@@ -276,7 +276,7 @@ public class ProcessModelBase extends InteractionModel{
 				Enumeration remove = elementsToRemove.elements();
 				while (remove.hasMoreElements())
 				{
-					stack.remove(remove.nextElement());
+					stack.removeElement(remove.nextElement());
 				}
 			}
 

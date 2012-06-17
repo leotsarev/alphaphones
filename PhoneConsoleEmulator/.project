@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>AlphaMobileUI</name>
+	<name>PhoneConsoleEmulator</name>
 	<comment></comment>
 	<projects>
-		<project>AlphaLogic</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
@@ -11,19 +10,8 @@
 			<arguments>
 			</arguments>
 		</buildCommand>
-		<buildCommand>
-			<name>org.eclipse.mtj.core.preverifier</name>
-			<arguments>
-			</arguments>
-		</buildCommand>
-		<buildCommand>
-			<name>org.eclipse.mtj.core.packageBuilder</name>
-			<arguments>
-			</arguments>
-		</buildCommand>
 	</buildSpec>
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
-		<nature>org.eclipse.mtj.core.nature</nature>
 	</natures>
 </projectDescription>
