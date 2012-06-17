@@ -13,9 +13,9 @@ public class ScheduleNextOxygen extends AlphaProcess {
 	public Descriptor handle() {
 		int oxygenPauseInMins =  getAlphaModel().calculateOxygenPause();
 		
-		unscheduleAll(this);
-		unscheduleAll(new CanBreathAgain(model));
-		unscheduleAll(new OutOfOxygen(model));
+		unscheduleByName(this);
+		unscheduleByName(new CanBreathAgain(model));
+		unscheduleByName(new OutOfOxygen(model));
 		
 		if (getAlphaModel().isBadAtmoshere())
 		{

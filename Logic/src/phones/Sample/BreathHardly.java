@@ -14,7 +14,7 @@ public class BreathHardly extends ProcessModelBase.Process{
 		SleepDescriptor result = new SleepDescriptor();
 		result.status = "Немного не хватает воздуха. Вы тяжело дышите.";
 		result.timeout = 30;
-		rescheduleAgain();
+		scheduleAfterSecs(this, 1);
 		return result;
 	}
 
