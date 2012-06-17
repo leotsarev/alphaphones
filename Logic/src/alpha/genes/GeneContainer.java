@@ -1,7 +1,6 @@
 package alpha.genes;
 
 import phones.ISerializer;
-import phones.Utils;
 
 public class GeneContainer
 {
@@ -10,12 +9,11 @@ public class GeneContainer
 	public Gene get(String geneName) {
 		for (int i = 0; i <genes.length; i++)
 		{
-			if (genes[i].getName() == geneName)
+			if (genes[i].getName().equals(geneName))
 			{
 				return genes[i];
 			}
 		}
-		Utils.assert_(false, "Can't find gen:" + geneName);
 		return null;
 	}
 
