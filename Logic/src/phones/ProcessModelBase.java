@@ -3,7 +3,6 @@ package phones;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.ListIterator;
 import java.util.Random;
 import java.util.Stack;
 import java.util.Vector;
@@ -260,25 +259,39 @@ public class ProcessModelBase extends InteractionModel{
 			private Stack stack = new Stack();
 
 			public void unscheduleByName(String name) {
-				ListIterator it = stack.listIterator();
-				while (it.hasNext())
+				Vector elementsToRemove = new Vector();
+				Enumeration e = stack.elements();
+				while (e.hasMoreElements())
 				{
-					if (((IProcess) it.next()).getName().equals(name))
+					IProcess next = (IProcess) e.nextElement();
+					if (next.getName().equals(name))
 					{
-						it.remove();
+						elementsToRemove.addElement(next);
 					}
+				}
+				removeElements(elementsToRemove);
+			}
+
+			private void removeElements(Vector elementsToRemove) {
+				Enumeration remove = elementsToRemove.elements();
+				while (remove.hasMoreElements())
+				{
+					stack.remove(remove.nextElement());
 				}
 			}
 
 			public void unscheduleEqual(IProcess process) {
-				ListIterator it = stack.listIterator();
-				while (it.hasNext())
+				Vector elementsToRemove = new Vector();
+				Enumeration e = stack.elements();
+				while (e.hasMoreElements())
 				{
-					if (it.next().equals(process))
+					IProcess next = (IProcess) e.nextElement();
+					if (next.equals(process))
 					{
-						it.remove();
+						elementsToRemove.addElement(next);
 					}
 				}
+				removeElements(elementsToRemove);
 			}
 
 			public void push(IProcess process) {
