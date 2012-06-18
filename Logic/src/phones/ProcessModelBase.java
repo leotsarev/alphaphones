@@ -226,7 +226,7 @@ public class ProcessModelBase extends InteractionModel{
 		}
 		
 
-		protected void removeMessage(String tag) {
+		public void removeMessage(String tag) {
 			table.remove(tag);
 		}
 		

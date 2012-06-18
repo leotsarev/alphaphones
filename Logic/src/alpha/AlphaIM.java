@@ -16,6 +16,7 @@ import alpha.wounds.ArmWound;
 import alpha.wounds.WoundMenu;
 import phones.ISerializer;
 import phones.ProcessModelBase;
+import phones.Utils;
 import phones.Sample.HitMeProcess;
 
 public class AlphaIM extends ProcessModelBase{
@@ -37,8 +38,59 @@ public class AlphaIM extends ProcessModelBase{
 	public boolean inHouse;
 	public boolean wearingMask;
 	public boolean sleeping;
+	
 	public static final String TOGGLE_GENE = "toggle_gene_";
 	public static final String ANALYZE_GENE = "analyze_gene_";
+	
+	public static final int LOCATION_KNEE = 1;
+	
+	public PainAggregator Pain;
+	public static final int PAIN_POWER_WEAK = 1;
+	public static final int PAIN_POWER_NORMAL = 2;
+	public static final int PAIN_POWER_STRONG = 3;
+	
+	public final class PainAggregator
+	{
+		//TODO Сильные источники боли подавляют слабые, etc
+		public void serialize(ISerializer ser) {
+		}
+
+		public void unserialize(ISerializer ser) {
+		}
+
+		public void add(String tag, int location, int painPower) {
+			status.addMessage(tag+location, getPainPowerString(painPower) + " в " + getLocationString(location));
+		}
+
+		private String getLocationString(int location) {
+			switch (location)
+			{
+			case LOCATION_KNEE: 
+				return "колене";
+			default:
+				Utils.assert_(false, "Wrong location " + location);
+				return null;
+			}
+		}
+
+		private String getPainPowerString(int painPower) {
+			switch (painPower) {
+			case PAIN_POWER_WEAK:
+				return "Слабая боль";
+			case PAIN_POWER_NORMAL:
+				return "Боль";
+			case PAIN_POWER_STRONG:
+				return "Сильная БОЛЬ";
+			default:
+				Utils.assert_(false, "Wrong pain level " + painPower);
+				return null;
+			}
+		}
+
+		public void remove(String tag, int location) {
+			status.removeMessage(tag+String.valueOf(location));
+		}
+	}
 	
 	public void reset()
 	{
@@ -129,6 +181,7 @@ public class AlphaIM extends ProcessModelBase{
 			factions[i].serialize(ser);
 		}
 		Chemistry.serialize(ser);
+		Pain.serialize(ser);
 	}
 
 	public void unserialize(ISerializer ser) {
@@ -143,6 +196,7 @@ public class AlphaIM extends ProcessModelBase{
 			factions[i].unserialize(ser);
 		}
 		Chemistry.unserialize(ser);
+		Pain.unserialize(ser);
 	}
 
 	
