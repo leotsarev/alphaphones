@@ -80,13 +80,7 @@ public class Main extends MIDlet implements ItemStateListener {
 			mainScreen = new Form(" ");
 			System.out.println(sleepDescriptor.status);
 			mainScreen.append(sleepDescriptor.status);
-			display.setCurrent(mainScreen);
-			
-			if (timerTask != null)
-				timerTask.cancel();
-			timerTask = new TestTimerTask();
-			timer.schedule(timerTask, sleepDescriptor.timeout*1000);
-			
+			display.setCurrent(mainScreen);			
 		} else {
 			menuDescriptor = (MenuDescriptor)descriptor;
 			
@@ -102,6 +96,11 @@ public class Main extends MIDlet implements ItemStateListener {
 			mainScreen.setItemStateListener(this);
 			display.setCurrent(mainScreen);
 		}
+		
+		if (timerTask != null)
+			timerTask.cancel();
+		timerTask = new TestTimerTask();
+		timer.schedule(timerTask, descriptor.timeout*1000);
 	}
 	
 	public Main() {
@@ -135,6 +134,12 @@ public class Main extends MIDlet implements ItemStateListener {
 		public final void run() {
 			synchronized (Main.this) {
 				if (sleepDescriptor != null) {
+					// send timeout?
+					whatNext();
+					processDescriptor();
+				}
+				else {
+					im.assertCommandWord(menuDescriptor.timeoutCommand);
 					whatNext();
 					processDescriptor();
 				}
