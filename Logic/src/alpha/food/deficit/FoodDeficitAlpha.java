@@ -1,7 +1,6 @@
 package alpha.food.deficit;
 
 import alpha.AlphaIM;
-import alpha.chem.Chemistry.Nutrien;
 import phones.ProcessModelBase;
 import phones.Utils;
 
