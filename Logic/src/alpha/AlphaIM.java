@@ -2,11 +2,9 @@ package alpha;
 
 
 import alpha.food.*;
+import alpha.food.deficit.*;
 import alpha.genes.*;
-import alpha.ideology.Faction;
-import alpha.ideology.IdeologyChange;
-import alpha.ideology.IdeologyCheck;
-import alpha.ideology.IdeologyMenu;
+import alpha.ideology.*;
 import alpha.menu.AlphaMenu;
 import alpha.menu.MasterMenu;
 import alpha.oxygen.*;
@@ -99,6 +97,7 @@ public class AlphaIM extends ProcessModelBase{
 		bindCommandWords();
 		
 		factions = Faction.createFactions(this);
+		Pain = new PainAggregator();
 	}
 
 	private void bindCommandWords() {
@@ -157,7 +156,8 @@ public class AlphaIM extends ProcessModelBase{
 				new EnterBase(this),
 				new ExitBase(this),
 				new SetNutrient(this),
-				new RemoveNutrient(this)
+				new RemoveNutrient(this),
+				new FoodDeficitAlpha(this)
 			};
 		for (int i = 0; i < process.length; i++)
 		{

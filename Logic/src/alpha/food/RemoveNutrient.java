@@ -1,9 +1,11 @@
 package alpha.food;
 
+import alpha.chem.ChemActionBase;
 import alpha.chem.Chemistry.Nutrien;
 import phones.InteractionModel.Descriptor;
 import phones.ProcessModelBase.Process;
 import phones.ProcessModelBase;
+import phones.Utils;
 
 public class RemoveNutrient extends NutrientPrefixBase {
 
@@ -25,10 +27,11 @@ public class RemoveNutrient extends NutrientPrefixBase {
 	public Descriptor handle() {
 		targetNutrient().setNotPresent();
 		
-		if (model.randomInt(100) > calculateDeficitRisk(targetNutrient()))
+		if (model.randomInt(100) < calculateDeficitRisk(targetNutrient()))
 		{
 			Process process = model.createProcessByName(targetNutrient().getDeficitName());
-			
+			Utils.assert_(process instanceof ChemActionBase);
+			((ChemActionBase)process).setTargetChemObj(targetNutrient());
 			scheduleNow(process);
 		}
 		
