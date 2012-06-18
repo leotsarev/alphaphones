@@ -236,7 +236,7 @@ public class ProcessModelBase extends InteractionModel{
 			while (statusValues.hasMoreElements())
 			{
 				buffer.append((String)statusValues.nextElement());
-				buffer.append('n');
+				buffer.append('\n');
 			}
 			return buffer.toString();
 		}
