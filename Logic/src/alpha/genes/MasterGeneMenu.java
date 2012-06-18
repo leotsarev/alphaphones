@@ -1,6 +1,7 @@
 package alpha.genes;
 
 import alpha.AlphaIM;
+import alpha.chem.Chemistry.Gene;
 import phones.InteractionModel.MenuDescriptor;
 import phones.ProcessModelBase;
 
@@ -15,7 +16,7 @@ public class MasterGeneMenu extends GeneMenuBase {
 	}
 
 	protected void bindGeneMenuItem(MenuDescriptor menu, Gene gene) {
-		menu.addItem(gene.getValueString(), AlphaIM.TOGGLE_GENE + gene.getName());
+		menu.addItem(gene.toString(), AlphaIM.TOGGLE_GENE + gene.getName());
 	}
 
 	protected String getMenuHeader() {

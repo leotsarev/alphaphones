@@ -1,6 +1,7 @@
 package alpha.genes;
 
 import alpha.AlphaProcess;
+import alpha.chem.Chemistry.Gene;
 import phones.InteractionModel.Descriptor;
 import phones.InteractionModel.MenuDescriptor;
 import phones.ProcessModelBase;
@@ -15,7 +16,7 @@ public abstract class GeneMenuBase extends AlphaProcess {
 		MenuDescriptor menu = new MenuDescriptor();
 		menu.menuHeader = getMenuHeader();
 		menu.addItem("Закрыть", "");
-		Gene[] genes = getAlphaModel().Genes.asArray();
+		Gene[] genes = getAlphaModel().Chemistry.getGeneArray();
 		for (int i =0; i < genes.length; i++)
 		{
 			Gene gene = genes[i];

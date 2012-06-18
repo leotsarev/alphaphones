@@ -30,8 +30,7 @@ public class AlphaIM extends ProcessModelBase{
 	public static final int LEFT_LIMB = 1;
 	public static final int RIGHT_LIMB = 1;
 	
-	public final GeneContainer Genes = new GeneContainer();
-	public final NutrientContainer Nutrients = new NutrientContainer();
+	public final alpha.chem.Chemistry Chemistry = new alpha.chem.Chemistry();
 	
 	public boolean initCompleted;
 	public boolean gender;
@@ -129,8 +128,7 @@ public class AlphaIM extends ProcessModelBase{
 		{
 			factions[i].serialize(ser);
 		}
-		Genes.serialize(ser);
-		Nutrients.serialize(ser);
+		Chemistry.serialize(ser);
 	}
 
 	public void unserialize(ISerializer ser) {
@@ -144,8 +142,7 @@ public class AlphaIM extends ProcessModelBase{
 		{
 			factions[i].unserialize(ser);
 		}
-		Genes.unserialize(ser);
-		Nutrients.unserialize(ser);
+		Chemistry.unserialize(ser);
 	}
 
 	

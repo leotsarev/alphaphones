@@ -1,12 +1,13 @@
 package alpha.food;
 
+import alpha.chem.Chemistry.Nutrien;
 import phones.ProcessModelBase;
 
-public abstract class FoodDeficitBase extends NutrientActionBase {
+public abstract class FoodDeficitBase extends NutrienActionBase {
 
-	public FoodDeficitBase(ProcessModelBase model, Nutrient targetNutrient) {
+	public FoodDeficitBase(ProcessModelBase model, Nutrien targetNutrient) {
 		super(model);
-		setNutrientNum(targetNutrient.getNum());
+		setChemObj(targetNutrient);
 	}
 
 }
