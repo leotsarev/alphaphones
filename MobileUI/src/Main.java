@@ -1,3 +1,6 @@
+import java.util.Timer;
+import java.util.TimerTask;
+
 import javax.microedition.lcdui.Alert;
 import javax.microedition.lcdui.AlertType;
 import javax.microedition.lcdui.Choice;
@@ -14,6 +17,7 @@ import javax.microedition.midlet.MIDletStateChangeException;
 import alpha.AlphaIM;
 
 import phones.InteractionModel;
+import phones.InteractionModel.Descriptor;
 import phones.InteractionModelCheckDecorator;
 import phones.Utils;
 import phones.InteractionModel.MenuDescriptor;
@@ -25,13 +29,18 @@ public class Main extends MIDlet implements ItemStateListener {
 
 	private Display display;
 	private Form mainScreen;
-	private Form menuScreen;
 	ChoiceGroup choiceGroup;
 	
 	InteractionModel im;
-	InteractionModel.Descriptor descriptor;
+	Descriptor descriptor;
+	MenuDescriptor menuDescriptor;
+	SleepDescriptor sleepDescriptor;
 	
-	public void itemStateChanged(Item item) {
+	Timer timer;
+	TimerTask timerTask = null;
+	
+	
+	synchronized public void itemStateChanged(Item item) {
 		boolean[] flags = new boolean[choiceGroup.size()];
 		choiceGroup.getSelectedFlags(flags);
 		
@@ -47,52 +56,73 @@ public class Main extends MIDlet implements ItemStateListener {
 				flags[i] = false;
 			choiceGroup.setSelectedFlags(flags);
 
-			Alert a = new Alert(" ", "Item "+index+" was chosen!", null, AlertType.ALARM);
-			a.setTimeout(1000);
+			String command = menuDescriptor.getCommand(index);
+			im.assertCommandWord(command);
+			
+			Alert a = new Alert(" ", "Item "+command+" was chosen!", null, AlertType.ALARM);
+			a.setTimeout(100);
 			
 			display.setCurrent(a, mainScreen);
+			
+			whatNext();
+			processDescriptor();
 		}
 	}
 	
-	void processDescriptor() {
+	synchronized void whatNext() {
+		descriptor = im.whatNext(0, null);
+	}
+	
+ 	synchronized void processDescriptor() {
 		if (descriptor instanceof SleepDescriptor) {
-			SleepDescriptor sleep = (SleepDescriptor)descriptor;
-			Utils.assert_(false, "not implemented yet");
+			sleepDescriptor = (SleepDescriptor)descriptor;
+			
+			mainScreen = new Form(" ");
+			System.out.println(sleepDescriptor.status);
+			mainScreen.append(sleepDescriptor.status);
+			display.setCurrent(mainScreen);
+			
+			if (timerTask != null)
+				timerTask.cancel();
+			timerTask = new TestTimerTask();
+			timer.schedule(timerTask, sleepDescriptor.timeout*1000);
+			
 		} else {
-			MenuDescriptor menu = (MenuDescriptor)descriptor;
-			choiceGroup = new ChoiceGroup(menu.menuHeader, Choice.MULTIPLE);
-			choiceGroup.setLabel(menu.menuHeader);
-			choiceGroup.deleteAll();
-			String[] names = menu.getNames();
+			menuDescriptor = (MenuDescriptor)descriptor;
+			
+			choiceGroup = new ChoiceGroup(menuDescriptor.menuHeader, Choice.MULTIPLE);
+			String[] names = menuDescriptor.getNames();
 			for (int i = 0; i < names.length; i++) {
 				choiceGroup.append(names[i], null);
 			}
 
-			menuScreen = new Form(" ");
-			menuScreen.append(choiceGroup);
+			mainScreen = new Form(" ");
+			mainScreen.append(choiceGroup);
 
-			menuScreen.setItemStateListener(this);
+			mainScreen.setItemStateListener(this);
+			display.setCurrent(mainScreen);
 		}
 	}
 	
 	public Main() {
 		
 		display = Display.getDisplay(this);
-		//menuScreen = new Form(" ");
-		//mainScreen.append("Select option:");
-		
-		
+		timer = new Timer();
 
 		im = new InteractionModelCheckDecorator(new SampleIM());
-		descriptor = im.whatNext(0, null);
+		im.reset();
+		
 		//descriptor = new InteractionModel.SleepDescriptor("initial");
 		//descriptor.timeout = 10;
 	
+		whatNext();
+		
 		processDescriptor();
+		display.setCurrent(mainScreen);
 	}
 
 	protected void startApp() throws MIDletStateChangeException {
-		display.setCurrent(menuScreen);
+		display.setCurrent(mainScreen);
 	}
 	
 	protected void destroyApp(boolean arg0) throws MIDletStateChangeException {
@@ -101,4 +131,16 @@ public class Main extends MIDlet implements ItemStateListener {
 	protected void pauseApp() {
 	}
 
+	private class TestTimerTask extends TimerTask {
+		public final void run() {
+			synchronized (Main.this) {
+				if (sleepDescriptor != null) {
+					whatNext();
+					processDescriptor();
+				}
+			}
+		}
+	}
+	
+	
 }

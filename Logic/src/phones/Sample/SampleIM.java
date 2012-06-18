@@ -15,9 +15,9 @@ public class SampleIM extends InteractionModel {
 
 	public Descriptor whatNext(int timePassed, Date currentTime) {
 		state = !state;
-		if (state && false) {
+		if (state) {
 			SleepDescriptor result = new SleepDescriptor();
-			result.timeout = 60;
+			result.timeout = 10;
 			String time = "fucking jme";//DateFormat.getTimeInstance().format(currentTime); 
 			result.status = "It's " + time + ".";
 			return result;

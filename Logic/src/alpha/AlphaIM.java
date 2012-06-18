@@ -41,7 +41,7 @@ public class AlphaIM extends ProcessModelBase{
 	public static final String TOGGLE_GENE = "toggle_gene_";
 	public static final String ANALYZE_GENE = "analyze_gene_";
 	
-	protected void reset()
+	public void reset()
 	{
 		super.reset();
 		
