@@ -8,7 +8,7 @@ public abstract class InteractionModel {
     public static final int ALARM_SINGLE = 50;
     public static final int ALARM_SILENT = 1;
     
-	protected abstract void reset();
+	public abstract void reset();
 
 	public static abstract class Descriptor {
 		public int timeout; // in seconds; -1 for infinity, 0 for now

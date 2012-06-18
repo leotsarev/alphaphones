@@ -465,7 +465,7 @@ public class ProcessModelBase extends InteractionModel{
 		scheduleOn(process, offset + currentSec);
 	}
 	
-	protected void reset() {
+	public void reset() {
 		scheduler = new ProcessScheduler();
 		commandWordDefs = new Vector();
 		usedCodes = new Hashtable();

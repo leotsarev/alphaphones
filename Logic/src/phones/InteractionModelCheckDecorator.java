@@ -14,7 +14,7 @@ public class InteractionModelCheckDecorator extends InteractionModel {
 		innerModel = model;
 	}
 
-	protected void reset() {
+	public void reset() {
 		innerModel.reset();
 		commandWordAlreadyAsserted = false;
 	}
