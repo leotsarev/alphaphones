@@ -1,37 +1,20 @@
 package alpha.genes;
 
-import alpha.AlphaProcess;
-import phones.IPrefixHandler;
+import alpha.chem.ChemActionBase;
+import alpha.chem.IChemObject;
+import alpha.chem.Chemistry.Gene;
 import phones.ProcessModelBase;
 import phones.Utils;
 
-public abstract class GeneActionBase extends  AlphaProcess implements IPrefixHandler {
+public abstract class GeneActionBase extends  ChemActionBase {
 
 	public GeneActionBase(ProcessModelBase model) {
 		super(model);
 	}
 
-	public boolean isStartOfSuffix(String suffix) {
-		return suffix == "";
-	}
-
-	public boolean isValidSuffix(String suffix) {
-		return getAlphaModel().Genes.get(suffix) != null;
-	}
-
-	public void setSuffixValue(String suffix) {
-		Utils.assert_(isValidSuffix(suffix));
-		setStringArg("gene", suffix);
-	}
-
 	protected Gene getTargetGene() {
-		Gene targetGene = getAlphaModel().Genes.get(getGeneName());
-		Utils.assert_(targetGene != null, "Can't find gen:" + getGeneName());
-		return targetGene;
+		IChemObject targetGene = getChemObj();
+		Utils.assert_(targetGene instanceof Gene, getChemName() + "isn't gene!");
+		return (Gene) targetGene;
 	}
-
-	private String getGeneName() {
-		return getStringArg("gene");
-	}
-
 }

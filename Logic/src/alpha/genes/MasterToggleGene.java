@@ -10,7 +10,7 @@ public class MasterToggleGene extends GeneActionBase {
 	}
 
 	public Descriptor handle() {
-		getTargetGene().toggle();
+		getTargetGene().masterToggle();
 		scheduleNow(new MasterGeneMenu(model));
 		return null;
 	}

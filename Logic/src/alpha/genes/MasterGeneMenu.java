@@ -1,6 +1,7 @@
 package alpha.genes;
 
 import alpha.AlphaIM;
+import alpha.chem.Chemistry.Gene;
 import phones.InteractionModel.MenuDescriptor;
 import phones.ProcessModelBase;
 

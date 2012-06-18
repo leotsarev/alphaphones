@@ -2,3 +2,5 @@ Logic/bin
 MobileUI/bin
 MobileUI/.mtj.tmp
 PhoneConsoleEmulator/bin
+
+/Logic/.settings/org.eclipse.core.runtime.prefs
