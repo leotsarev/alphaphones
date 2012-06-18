@@ -35,7 +35,8 @@ public class RemoveNutrient extends NutrientPrefixBase {
 			scheduleNow(process);
 		}
 		
-		return createMessage("nutrient vanished:" + targetNutrient().getName());
+		scheduleAfterMins(this, 10);
+		return null;
 	}
 
 	public String getName() {
