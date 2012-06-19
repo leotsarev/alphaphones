@@ -122,14 +122,11 @@ public class Main {
 			}
 			
 			if (input.startsWith("dump")) {
-				try {
+				
 					StringSerializer ser = new StringSerializer();
 					im.serialize(ser);
 					ser.print();
 					continue;
-				}
-				catch (NumberFormatException e) {
-				}
 			}
 			
 			if (input.startsWith("wait ")) {
