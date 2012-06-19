@@ -109,6 +109,13 @@ public class ProcessModelBase extends InteractionModel{
 		}
 	}
 	
+	class FixedPhoneWord extends FixedCommandWord
+	{
+		public FixedPhoneWord(String fixedWord, IProcess processTemplate) {
+			super(PhoneWordTransformer.transformToPhoneWord(fixedWord), processTemplate);
+		}
+	}
+	
 	public static abstract class Process implements IProcess
 	{
 		public Process (ProcessModelBase model)
@@ -446,6 +453,11 @@ public class ProcessModelBase extends InteractionModel{
 	protected void bindPrefixCommandWord(String commandWordPrefix, IPrefixHandler process) {
 		checkCreatePossible(process);
 		commandWordDefs.addElement(new MenuPrefixCommandWord(commandWordPrefix, process));
+	}
+	
+	protected void bindFixedPhoneWord(String string, IProcess process) {
+		checkCreatePossible(process);
+		commandWordDefs.addElement(new FixedPhoneWord(string, process));
 	}
 	
 	private void scheduleOn(IProcess process, int time) {
