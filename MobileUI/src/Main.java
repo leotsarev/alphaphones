@@ -19,6 +19,8 @@ import javax.microedition.rms.RecordEnumeration;
 import javax.microedition.rms.RecordStore;
 import javax.microedition.rms.RecordStoreException;
 
+import alpha.AlphaIM;
+
 import phones.InteractionModel;
 import phones.InteractionModel.Descriptor;
 import phones.InteractionModelCheckDecorator;
@@ -164,7 +166,7 @@ public class Main extends MIDlet implements ItemStateListener {
 		
 		code = "";
 
-		im = new InteractionModelCheckDecorator(new SampleIM());
+		im = new InteractionModelCheckDecorator(new AlphaIM());
 
 		try {
 			StringSerializer ser = new StringSerializer();
