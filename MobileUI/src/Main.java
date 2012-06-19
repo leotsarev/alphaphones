@@ -16,12 +16,16 @@ import javax.microedition.lcdui.ItemStateListener;
 import javax.microedition.lcdui.StringItem;
 import javax.microedition.midlet.MIDlet;
 import javax.microedition.midlet.MIDletStateChangeException;
+import javax.microedition.rms.RecordEnumeration;
+import javax.microedition.rms.RecordStore;
+import javax.microedition.rms.RecordStoreException;
 
 import alpha.AlphaIM;
 
 import phones.InteractionModel;
 import phones.InteractionModel.Descriptor;
 import phones.InteractionModelCheckDecorator;
+import phones.StringSerializer;
 import phones.Utils;
 import phones.InteractionModel.MenuDescriptor;
 import phones.InteractionModel.SleepDescriptor;
@@ -73,7 +77,10 @@ public class Main extends MIDlet implements ItemStateListener {
 	}
 	
 	synchronized void whatNext() {
-		// TODO: serialize
+		StringSerializer ser = new StringSerializer();
+		im.serialize(ser);
+		saveRecord(ser.getBytes());
+		
 		Date time = new Date();
 		long dt = (time.getTime()-prevTime.getTime()+500)/1000;
 		prevTime = time;
@@ -157,14 +164,28 @@ public class Main extends MIDlet implements ItemStateListener {
 		code = "";
 
 		im = new InteractionModelCheckDecorator(new SampleIM());
-		im.reset();
+
+		try {
+			StringSerializer ser = new StringSerializer();
+			byte[] data = loadRecord();
+			if (data == null)
+				System.out.println("record not found");
+			System.out.println("loaded "+data.length+" bytes");
+			ser.setBytes(data);
+			im.unserialize(ser);
+			System.out.println("deserialization ok");
+			
+		} catch (Exception e) {
+			System.out.println("Loading or deserialization error: "+e);
+			im.reset();
+		}
+
 		
-		// TODO: attempt to deserialize
-		
-		descriptor = new InteractionModel.SleepDescriptor("initial");
-		descriptor.timeout = 1;
+		//descriptor = new InteractionModel.SleepDescriptor("initial");
+		//descriptor.timeout = 1;
 		
 		prevTime = new Date();
+		whatNext();
 	
 		processDescriptor();
 		display.setCurrent(mainScreen);
@@ -265,6 +286,47 @@ public class Main extends MIDlet implements ItemStateListener {
 		protected void paint(Graphics g, int w, int h) {
 		}
 
+	}
+
+	
+	byte[] loadRecord() {
+		byte[] result = null;
+		try {
+			RecordStore rs = RecordStore.openRecordStore("state", true);
+			
+			RecordEnumeration re = rs.enumerateRecords(null, null, false);
+			while (re.hasNextElement()) {
+				System.out.println("reading record");
+				result = re.nextRecord();
+				break;
+			}
+			rs.closeRecordStore();
+		} catch (RecordStoreException e) {
+			System.out.println("RS read problem "+e);
+		}
+		return result;
+	}
+	
+	void saveRecord(byte[] data) {
+		try {
+			RecordStore rs = RecordStore.openRecordStore("state", true);
+			
+			RecordEnumeration re = rs.enumerateRecords(null, null, false);
+			int cnt = 0;
+			while (re.hasNextElement()) {
+				int id = re.nextRecordId();
+				System.out.println("writing record");
+				rs.setRecord(id, data, 0, data.length);
+				cnt++;
+			}
+			if (cnt == 0) {
+				System.out.println("creating record");
+				rs.addRecord(data, 0, data.length);
+			}
+			rs.closeRecordStore();
+		} catch (RecordStoreException e) {
+			System.out.println("RS write problem "+e);
+		}
 	}
 	
 }
