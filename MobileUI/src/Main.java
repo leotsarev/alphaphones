@@ -38,6 +38,7 @@ public class Main extends MIDlet implements ItemStateListener {
 	MenuDescriptor menuDescriptor;
 	SleepDescriptor sleepDescriptor;
 	
+	String prevStatus = null;
 	String code;
 	
 	Timer timer;
@@ -63,34 +64,46 @@ public class Main extends MIDlet implements ItemStateListener {
 			String command = menuDescriptor.getCommand(index);
 			im.assertCommandWord(command);
 			
-			Alert a = new Alert(" ", "Item "+command+" was chosen!", null, AlertType.ALARM);
-			a.setTimeout(100);
-			
-			display.setCurrent(a, mainScreen);
-			
 			whatNext();
 			processDescriptor();
 		}
 	}
 	
 	synchronized void whatNext() {
+		// TODO: pass proper time
+		// TODO: serialize
 		descriptor = im.whatNext(0, null);
 	}
 	
  	synchronized void processDescriptor() {
 		if (descriptor instanceof SleepDescriptor) {
+			menuDescriptor = null;
 			sleepDescriptor = (SleepDescriptor)descriptor;
 			
-			mainScreen = new Form(" ");
-			mainScreen.append(new KeyCatcher());
-			mainScreen.append(sleepDescriptor.status);
-			mainScreen.append(new KeyCatcher());
+			if (!sleepDescriptor.status.equals(prevStatus)) {
+				code = "";
+				prevStatus = sleepDescriptor.status;
+				
+				mainScreen = new Form(" ");
+				mainScreen.append(new KeyCatcher());
+				mainScreen.append(sleepDescriptor.status);
+				mainScreen.append(new KeyCatcher());
+				
+				display.setCurrent(mainScreen);
+			}
 			
-			display.setCurrent(mainScreen);			
+			// this check is for unlikely situation when code reported as valid
+			// prefix at the previous tick was now given different status
+			if (im.checkCommandWord(code) != im.CODE_PREFIX) {
+				code = "";
+				setMainText(sleepDescriptor.status);
+			}
 		} else {
-			code = "";
-			
+			sleepDescriptor = null;
 			menuDescriptor = (MenuDescriptor)descriptor;
+			
+			prevStatus = null;
+			code = "";
 			
 			choiceGroup = new ChoiceGroup(menuDescriptor.menuHeader, Choice.MULTIPLE);
 			String[] names = menuDescriptor.getNames();
@@ -103,6 +116,14 @@ public class Main extends MIDlet implements ItemStateListener {
 
 			mainScreen.setItemStateListener(this);
 			display.setCurrent(mainScreen);
+
+			if (menuDescriptor.alarm != im.ALARM_SILENT) {
+				Alert a = new Alert(" ", " ", null, AlertType.ALARM);
+				a.setTimeout(300);
+				display.setCurrent(a, mainScreen);
+			}
+		
+			// TODO: recurring alarms
 		}
 		
 		if (timerTask != null)
@@ -110,6 +131,7 @@ public class Main extends MIDlet implements ItemStateListener {
 		timerTask = new TestTimerTask();
 		// TODO: -1
 		timer.schedule(timerTask, descriptor.timeout*1000);
+		
 	}
  	
 	void setMainText(String s) {
@@ -132,11 +154,11 @@ public class Main extends MIDlet implements ItemStateListener {
 		im = new InteractionModelCheckDecorator(new SampleIM());
 		im.reset();
 		
-		//descriptor = new InteractionModel.SleepDescriptor("initial");
-		//descriptor.timeout = 10;
-	
-		whatNext();
+		// TODO: attempt to deserialize
 		
+		descriptor = new InteractionModel.SleepDescriptor("initial");
+		descriptor.timeout = 1;
+	
 		processDescriptor();
 		display.setCurrent(mainScreen);
 	}
