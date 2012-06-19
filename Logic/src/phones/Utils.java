@@ -4,8 +4,10 @@ package phones;
 public class Utils {
 
 	public static void assert_(boolean condition, String msg) {
-		if (!condition)
+		if (!condition) {
+			System.out.println(msg);
 			throw new RuntimeException(msg);
+		}
 	}
 	public static void assert_(boolean condition) {
 		assert_(condition, "assert_");
