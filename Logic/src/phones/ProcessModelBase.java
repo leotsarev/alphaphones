@@ -201,9 +201,11 @@ public class ProcessModelBase extends InteractionModel{
 		}
 		
 		public Descriptor createMessage(String message) {
-			SleepDescriptor result = new SleepDescriptor();
-			result.status = message;
+			MenuDescriptor result = new MenuDescriptor();
+			result.menuHeader = message;
 			result.timeout = 0;
+			result.alarm = ALARM_SINGLE;
+			result.addItem("ОК", "");
 			return result;
 		}
 		
@@ -518,6 +520,7 @@ public class ProcessModelBase extends InteractionModel{
 		commandWordDefs = new Vector();
 		usedCodes = new Hashtable();
 		status = new StatusContainer();
+		bindFixedCommandWord("", new DoNothingProcess(this));
 	}
 	
 	private int currentSec;
@@ -579,6 +582,10 @@ public class ProcessModelBase extends InteractionModel{
 	}
 
 	private IProcess getProcessForCode(String code) {
+		if (code.equals(""))
+		{
+			return new DoNothingProcess(this);
+		}
 		for (int i = 0; i < commandWordDefs.size(); i++)
 		{
 			CommandWordDefBase def = (CommandWordDefBase) commandWordDefs.elementAt(i);
@@ -591,17 +598,20 @@ public class ProcessModelBase extends InteractionModel{
 				return def.get(code);
 			}
 		}
-		Utils.assert_(false, "Не удалось привязать код: " + code);
+		Utils.assert_(false, "Failed to bind code '" + code + "'");
 		return null;
 	}
 	
 	public ProcessModelBase()
 	{
 		reset();
-		bindFixedCommandWord("", new DoNothingProcess(this));
 	}
 	
-	public int checkCommandWord(String commandWord) {
+	public final int checkCommandWord(String commandWord) {
+		if (commandWord == "")
+		{
+			return CODE_VALID;
+		}
 		if (usedCodes.containsKey(commandWord))
 		{
 			return CODE_USED;
