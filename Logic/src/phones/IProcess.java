@@ -12,4 +12,8 @@ public interface IProcess {
 
 	public abstract Hashtable cloneData();
 
+	public abstract void unserializeData(ISerializer ser);
+
+	public abstract void serializeData(ISerializer ser);
+
 }

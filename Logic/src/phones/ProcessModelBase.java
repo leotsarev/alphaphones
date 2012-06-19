@@ -17,10 +17,12 @@ public class ProcessModelBase extends InteractionModel{
 	private abstract class CommandWordDefBase
 	{
 		protected final IProcess processTemplate;
+		protected final String param;
 		
-		protected CommandWordDefBase(IProcess processTemplate)
+		protected CommandWordDefBase(IProcess processTemplate, String param)
 		{
 			this.processTemplate = processTemplate;
+			this.param = param;
 		}
 		
 		public abstract boolean isValidWord(String word);
@@ -36,6 +38,37 @@ public class ProcessModelBase extends InteractionModel{
 			process.ProcessData = processTemplate.cloneData();
 			return process;
 		}
+
+		public abstract String getName();
+
+		public void serialize(ISerializer ser) {
+			ser.writeString(getName());
+			serializeProcess(ser, processTemplate);
+			ser.writeString(param);
+		}
+		
+	}
+	
+	private CommandWordDefBase unserializeCommandWord(ISerializer ser) {
+		String name = ser.readString();
+		IProcess template = unserializeProcess(ser);
+		String param = ser.readString();
+		
+		IPrefixHandler prefixHandler = template instanceof IPrefixHandler ?  (IPrefixHandler) template : null;
+		CommandWordDefBase[] cwd =
+			{
+				new MenuPrefixCommandWord(param, prefixHandler),
+				new FixedCommandWord(param, template),
+				new FixedPhoneWord(param, template)
+			};
+		for (int i = 0; i < cwd.length; i++)
+		{
+			if (name.equals(cwd[i].getName()))
+			{
+				return cwd[i];
+			}
+		}
+		return null;
 	}
 	
 	private class MenuPrefixCommandWord extends CommandWordDefBase
@@ -44,7 +77,7 @@ public class ProcessModelBase extends InteractionModel{
 		private final String commandWordPrefix;
 
 		public MenuPrefixCommandWord(String commandWordPrefix, IPrefixHandler processTemplate) {
-			super(processTemplate);
+			super(processTemplate, commandWordPrefix);
 			this.commandWordPrefix = commandWordPrefix;
 		}
 
@@ -79,7 +112,10 @@ public class ProcessModelBase extends InteractionModel{
 			process.setSuffixValue(getSuffix(word));
 			return process;
 		}
-		
+
+		public String getName() {
+			return "MenuPrefixCommandWord";
+		}		
 	}
 	
 	private class FixedCommandWord extends CommandWordDefBase
@@ -87,7 +123,7 @@ public class ProcessModelBase extends InteractionModel{
 		private String fixedWord;
 		public FixedCommandWord(String fixedWord, IProcess processTemplate)
 		{
-			super(processTemplate);
+			super(processTemplate, fixedWord);
 			this.fixedWord = fixedWord;
 		}
 		
@@ -107,6 +143,10 @@ public class ProcessModelBase extends InteractionModel{
 		public boolean isValidPrefix(String word) {
 			return fixedWord.startsWith(word);
 		}
+
+		public String getName() {
+			return "FixedCommandWord";
+		}
 	}
 	
 	class FixedPhoneWord extends FixedCommandWord
@@ -121,6 +161,7 @@ public class ProcessModelBase extends InteractionModel{
 		public Process (ProcessModelBase model)
 		{
 			this.model = model;
+			Utils.assert_(getName() != null);
 		}
 		public abstract Descriptor handle();
 		private Hashtable ProcessData = new Hashtable();
@@ -139,10 +180,7 @@ public class ProcessModelBase extends InteractionModel{
 		
 		public final void serializeData(ISerializer ser)
 		{
-			for (int i = 0; i < ProcessData.size(); i ++)
-			{
-				ser.writeDict(ProcessData);
-			}
+			ser.writeDict(ProcessData);
 		}
 		
 		public final void unserializeData (ISerializer ser)
@@ -307,11 +345,10 @@ public class ProcessModelBase extends InteractionModel{
 
 			public void serialize(ISerializer ser) {
 				ser.writeInt(stack.size());
-				for (int i = stack.size() - 1; i >= 0; i--)
+				for (int i =0; i < stack.size(); i++)
 				{
 					Process item = (Process) stack.elementAt(i);
-					ser.writeString(item.getName());
-					item.serializeData(ser);
+					serializeProcess(ser, item);
 				}
 			}
 
@@ -319,10 +356,7 @@ public class ProcessModelBase extends InteractionModel{
 				int size = ser.readInt();
 				for (int i =0; i< size; i++)
 				{
-					String name = ser.readString();
-					Process process = createProcessByName(name);
-					process.unserializeData(ser);
-					stack.push(process);
+					stack.push(unserializeProcess(ser));
 				}
 			}
 
@@ -380,23 +414,25 @@ public class ProcessModelBase extends InteractionModel{
 
 		public void serialize(ISerializer ser) {
 			ser.writeInt(processStacks.size());
-			Enumeration enm = processStacks.keys();
-			while (enm.hasMoreElements())
-			{
-				String timeKey = (String) enm.nextElement();
-				ser.writeString(timeKey);
-				((ProcessStack)processStacks.get(timeKey)).serialize(ser);
+			
+			String[] keys = SerializeUtils.getSortedDictKeys(processStacks);
+			for (int j = 0; j < keys.length; j++) {
+				ser.writeString(keys[j]);
+				((ProcessStack)processStacks.get(keys[j])).serialize(ser);
+				ser.writeInt(j);
 			}
 		}
 
 		public void unserialize(ISerializer ser) {
 			int size = ser.readInt();
+
 			for (int i = 0; i <size; i++)
 			{
 				String timeKey = ser.readString();
 				ProcessStack stack = new ProcessStack();
 				stack.unserialize(ser);
 				processStacks.put(timeKey, stack);
+				Utils.assert_(i == ser.readInt(), "Fail on unserialize stack " + i);
 			}
 		}
 		
@@ -592,12 +628,37 @@ public class ProcessModelBase extends InteractionModel{
 		scheduler.unserialize(ser);
 		usedCodes = ser.readDict();
 		status.unserialize(ser);
+		
+		int cmdWordSize = ser.readInt();
+
+		commandWordDefs = new Vector(cmdWordSize);
+		for (int i =0; i<cmdWordSize; i++)
+		{
+			Utils.assert_(ser.readInt () == i, "Failed to unserialize CWD on " + i);
+			commandWordDefs.addElement(unserializeCommandWord(ser));
+			Utils.assert_(ser.readString ().equals("" + i), "Failed to unserialize CWD on " + i);
+			
+		}
 	}
 
 	public void serialize(ISerializer ser) {
 		scheduler.serialize(ser);
+		
 		ser.writeDict(usedCodes);
+
 		status.serialize(ser);
+		
+		ser.writeInt(commandWordDefs.size());
+		
+		for (int i =0; i<commandWordDefs.size(); i++)
+		{
+			ser.writeInt(i);
+			CommandWordDefBase cmdDef = (CommandWordDefBase) commandWordDefs.elementAt(i);
+
+			cmdDef.serialize(ser);
+			ser.writeInt(i);
+			
+		}
 	}
 	
 	public Process createProcessByName(String name)
@@ -607,7 +668,7 @@ public class ProcessModelBase extends InteractionModel{
 		};
 		for (int i = 0; i < process.length; i++)
 		{
-			if (name == process[i].getName())
+			if (process[i].getName().equals(name))
 			{
 				return process[i];
 			}
@@ -617,6 +678,21 @@ public class ProcessModelBase extends InteractionModel{
 
 	public int randomInt(int n) {
 		return random.nextInt() % n;
+	}
+
+	private void serializeProcess(ISerializer ser, IProcess item) {
+		ser.writeString(item.getName());
+		ser.writeString("PR_DATA");
+		item.serializeData(ser);
+	}
+	
+	private Process unserializeProcess(ISerializer ser) {
+		String name = ser.readString();
+		Process process = createProcessByName(name);
+		Utils.assert_(process != null, "Failed to unserialize process: " + name);
+		Utils.assert_(ser.readString().equals("PR_DATA"), "Failed to read process header on " + name);
+		process.unserializeData(ser);
+		return process;
 	}
 	
 }
