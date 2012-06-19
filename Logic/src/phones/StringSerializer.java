@@ -121,13 +121,7 @@ public class StringSerializer implements ISerializer {
 	 */
 	public void writeDict(Hashtable dict) {
 		writeInt("dict size", dict.size());
-		String[] keys = new String[dict.size()];
-		int i = 0;
-		Enumeration e = dict.keys();
-		while (e.hasMoreElements()) {
-			keys[i++] = (String) e.nextElement();
-		}
-		bubbleSort(keys);
+		String[] keys = SerializeUtils.getSortedDictKeys(dict);
 		for (int j = 0; j < dict.size(); j++) {
 			writeString(keys[j]);
 			writeString((String) dict.get(keys[j]));
@@ -181,7 +175,7 @@ public class StringSerializer implements ISerializer {
 		else if (s.equals(f))
 			return false;
 		else
-			throw new RuntimeException("Can't read bool " + t + "/" + f);
+			throw new RuntimeException("Can't read bool " + t + "/" + f + ", got : " + s);
 	}
 
 	/*
@@ -208,30 +202,16 @@ public class StringSerializer implements ISerializer {
 		writeBool(bool, "true", "false");
 	}
 
-	// J2ME DON'T HAVE SORT
-	// THIS IS A FUCKING SORT FROM THE FUCKING INTERNETS
-	// SO IT'S LIKELY TO BE RETARDED AND PLAIN WRONG, BUT IDC
-	static void bubbleSort(String[] p_array) {
-		boolean anyCellSorted;
-		int length = p_array.length;
-		String tmp;
-		for (int i = length; --i >= 0;) {
-			anyCellSorted = false;
-			for (int j = 0; j < i; j++) {
-				if (p_array[j].compareTo(p_array[j + 1]) > 0) {
-					tmp = p_array[j];
-					p_array[j] = p_array[j + 1];
-					p_array[j + 1] = tmp;
-					anyCellSorted = true;
-				}
-
-			}
-			if (anyCellSorted == false) {
-				return;
-			}
+	public String toString()
+	{
+		Enumeration en = strings.elements();
+		StringBuffer sb = new StringBuffer();
+		while (en.hasMoreElements())
+		{
+			sb.append(en.nextElement());
+			sb.append('\n');
 		}
+		return sb.toString();
 	}
-	// IT'S TWO THOUSAND-TWELVE GODDAMMIT!
-	// WHEN ARE THESE MORONS GONNA JOIN US IN THE 21ST CENTURY?
 
 }
