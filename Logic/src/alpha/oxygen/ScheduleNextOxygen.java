@@ -1,10 +1,9 @@
 package alpha.oxygen;
 
-import alpha.AlphaProcess;
 import phones.InteractionModel.Descriptor;
 import phones.ProcessModelBase;
 
-public class ScheduleNextOxygen extends AlphaProcess {
+public class ScheduleNextOxygen extends OxygenProcess {
 
 	public ScheduleNextOxygen(ProcessModelBase model) {
 		super(model);
@@ -20,6 +19,10 @@ public class ScheduleNextOxygen extends AlphaProcess {
 		if (getAlphaModel().isBadAtmoshere())
 		{
 			scheduleAfterMins(new OutOfOxygen(model), oxygenPauseInMins);
+		}
+		else
+		{
+			removeStatusMessage(BREATH);
 		}
 		return null;
 	}
