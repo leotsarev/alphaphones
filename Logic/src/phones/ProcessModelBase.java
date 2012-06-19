@@ -203,8 +203,18 @@ public class ProcessModelBase extends InteractionModel{
 		public Descriptor createMessage(String message) {
 			MenuDescriptor result = new MenuDescriptor();
 			result.menuHeader = message;
-			result.timeout = 0;
+			result.timeout = 30;
 			result.alarm = ALARM_SINGLE;
+			result.addItem("ОК", "");
+			return result;
+		}
+		
+		public Descriptor createChangeStatusMessage(String message)
+		{
+			MenuDescriptor result = new MenuDescriptor();
+			result.menuHeader = message;
+			result.timeout = 10;
+			result.alarm = ALARM_SILENT;
 			result.addItem("ОК", "");
 			return result;
 		}
