@@ -50,18 +50,30 @@ public class InteractionModelCheckDecorator extends InteractionModel {
 		StringSerializer tmp = new StringSerializer();
 		innerModel.serialize(tmp);
 		byte[] bytes = tmp.getBytes();
+		String firstTry = tmp.toString();
+		
 		tmp = new StringSerializer();
 		tmp.setBytes(bytes);
 		innerModel.unserialize(tmp);
 		tmp = new StringSerializer();
 		innerModel.serialize(tmp);
+		
+		String secondTry = tmp.toString();
 		byte[] bytes2 = tmp.getBytes();
 		
-		Utils.assert_(bytes.length == bytes2.length, 
-				"serialization/deserialization inconsistency");
+		Utils.assert_(bytes.length == bytes2.length && firstTry.length() == secondTry.length(), 
+				"serialization/deserialization inconsistency (first " +bytes.length + " but second is " + bytes2.length+ " in bytes)");
+		
+		Utils.assert_(firstTry.length() == secondTry.length(), 
+				"serialization/deserialization inconsistency (first " +firstTry.length() + " but second is " + secondTry.length() + " in chars)");
+		
+		for (int i =0; i<firstTry.length(); i++)
+		{
+			Utils.assert_(firstTry.charAt(i) == secondTry.charAt(i), "serialization/deserialization inconsistency \n" + firstTry.substring(i) + "\n:::\n" + secondTry.substring(i));
+		}
 		for (int i = 0; i < bytes.length; i++)
 			Utils.assert_(bytes[i] == bytes2[i], 
-					"serialization/deserialization inconsistency");
+					"serialization/deserialization inconsistency ");
 		
 		
 		innerModel.serialize(ser);
