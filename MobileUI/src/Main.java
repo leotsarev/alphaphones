@@ -9,8 +9,10 @@ import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.CustomItem;
 import javax.microedition.lcdui.Display;
 import javax.microedition.lcdui.Form;
+import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Item;
 import javax.microedition.lcdui.ItemStateListener;
+import javax.microedition.lcdui.StringItem;
 import javax.microedition.midlet.MIDlet;
 import javax.microedition.midlet.MIDletStateChangeException;
 
@@ -35,6 +37,8 @@ public class Main extends MIDlet implements ItemStateListener {
 	Descriptor descriptor;
 	MenuDescriptor menuDescriptor;
 	SleepDescriptor sleepDescriptor;
+	
+	String code;
 	
 	Timer timer;
 	TimerTask timerTask = null;
@@ -78,10 +82,14 @@ public class Main extends MIDlet implements ItemStateListener {
 			sleepDescriptor = (SleepDescriptor)descriptor;
 			
 			mainScreen = new Form(" ");
-			System.out.println(sleepDescriptor.status);
+			mainScreen.append(new KeyCatcher());
 			mainScreen.append(sleepDescriptor.status);
+			mainScreen.append(new KeyCatcher());
+			
 			display.setCurrent(mainScreen);			
 		} else {
+			code = "";
+			
 			menuDescriptor = (MenuDescriptor)descriptor;
 			
 			choiceGroup = new ChoiceGroup(menuDescriptor.menuHeader, Choice.MULTIPLE);
@@ -100,13 +108,26 @@ public class Main extends MIDlet implements ItemStateListener {
 		if (timerTask != null)
 			timerTask.cancel();
 		timerTask = new TestTimerTask();
+		// TODO: -1
 		timer.schedule(timerTask, descriptor.timeout*1000);
+	}
+ 	
+	void setMainText(String s) {
+		if (mainScreen.size() != 3) {
+			System.out.println("Can't set main text because!!!");
+			return;
+		}
+		StringItem textItem = (StringItem) mainScreen.get(1);
+		if (!textItem.getText().equals(s)) // to avoid autorewind
+			textItem.setText(s); 
 	}
 	
 	public Main() {
 		
 		display = Display.getDisplay(this);
 		timer = new Timer();
+		
+		code = "";
 
 		im = new InteractionModelCheckDecorator(new SampleIM());
 		im.reset();
@@ -118,6 +139,45 @@ public class Main extends MIDlet implements ItemStateListener {
 		
 		processDescriptor();
 		display.setCurrent(mainScreen);
+	}
+	
+	synchronized void keyPressed(int keyCode) {
+		if (sleepDescriptor == null)
+			return;
+		if (keyCode >= '0' && keyCode <= '9') {
+			code += (char)keyCode;
+			
+			int status = im.checkCommandWord(code);
+			if (status == im.CODE_UNKNOWN || status == im.CODE_USED) {
+				Alert a = new Alert(" ", 
+						status == im.CODE_UNKNOWN ? "Code is too long" : "Code was already used", 
+						null, AlertType.ERROR);
+				a.setTimeout(1000);
+				display.setCurrent(a, mainScreen);
+				code = "";
+			}
+			if (status == im.CODE_VALID) {
+				System.out.println("Valid code "+code);
+				// TODO:
+				im.assertCommandWord(code);
+				whatNext();
+				processDescriptor();
+				code = "";
+			}
+		}
+		if (keyCode == (int)'#' || keyCode == (int)'*') {
+			code = "";
+		}
+		if (keyCode < 0) {
+			if (code.length() > 0)
+				code = code.substring(0, code.length()-1);
+		}
+		if (sleepDescriptor == null) // this check is repeated because there would be a new descriptor if code was valid
+			return;
+		if (code.equals(""))
+			setMainText(sleepDescriptor.status);
+		else
+			setMainText("Code: "+code+"...");
 	}
 
 	protected void startApp() throws MIDletStateChangeException {
@@ -147,5 +207,28 @@ public class Main extends MIDlet implements ItemStateListener {
 		}
 	}
 	
+	class KeyCatcher extends CustomItem {
+		protected void keyPressed(int keyCode) {
+			Main.this.keyPressed(keyCode);
+		}
+		public KeyCatcher() {
+			super("");
+		}
+		public int getMinContentWidth() {
+			return 1;
+		}
+		public int getMinContentHeight() {
+			return 1;
+		}
+		public int getPrefContentWidth(int width) {
+			return getMinContentWidth();
+		}
+		public int getPrefContentHeight(int height) {
+			return getMinContentHeight();
+		}
+		protected void paint(Graphics g, int w, int h) {
+		}
+
+	}
 	
 }
