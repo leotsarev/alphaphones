@@ -5,14 +5,13 @@ import java.util.Date;
 
 import phones.ISerializer;
 import phones.InteractionModel;
+import phones.Utils;
 
 public class SampleIM extends InteractionModel {
 
-	boolean state;
 	String command;
 	
 	public void reset() {
-		state = true;
 		command = null;
 	}
 
@@ -59,13 +58,17 @@ public class SampleIM extends InteractionModel {
 		command = code;
 	}
 
-	public void unserialize(ISerializer serializedData) {
-		// TODO Auto-generated method stub
-		
+	public void unserialize(ISerializer ser) {
+		command = ser.readString();
+		if (command.equals("null"))
+			command = null;
+		String end = ser.readString();
+		Utils.assert_(end.equals("end"));
 	}
 
-	public void serialize(ISerializer serializedData) {
-		// TODO Auto-generated method stub
+	public void serialize(ISerializer ser) {
+		ser.writeString(command == null ? "null" : command);
+		ser.writeString("end");
 	}
 
 }
