@@ -31,35 +31,13 @@ public class SampleIM extends InteractionModel {
 		
 		SleepDescriptor result = new SleepDescriptor();
 		result.timeout = 10;
+		result.status = "Code 123 for menu.\nIt's "+timePassed+"s since last whatNext.";
 		if (command != null) {
-			result.status = command+" was entered!";
+			result.status += "\n"+command+" was entered!";
 			command = null;
-		} else {
-			String time = "fucking jme";//DateFormat.getTimeInstance().format(currentTime); 
-			result.status = "It's " + time + ".";
 		}
+
 		return result;
-		
-		/*state = !state;
-		if (state) {
-			SleepDescriptor result = new SleepDescriptor();
-			result.timeout = 10;
-			String time = "fucking jme";//DateFormat.getTimeInstance().format(currentTime); 
-			result.status = "It's " + time + ".";
-			if (command != null)
-				result.status = command+" was entered!";
-			command = null;
-			return result;
-		} else {
-			MenuDescriptor result = new MenuDescriptor();
-			result.timeout = 10;
-			result.menuHeader = "Choose one option:";
-			result.addItem("Apples","APPLE");
-			result.addItem("bananas", "BANANA");
-			result.timeoutCommand = "TIMEOUT";
-			command = null;
-			return result;
-		}*/
 	}
 
 	public int checkCommandWord(String commandWord) {
