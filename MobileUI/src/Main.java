@@ -1,3 +1,4 @@
+import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -38,6 +39,8 @@ public class Main extends MIDlet implements ItemStateListener {
 	MenuDescriptor menuDescriptor;
 	SleepDescriptor sleepDescriptor;
 	
+	Date prevTime;
+	
 	String prevStatus = null;
 	String code;
 	
@@ -70,9 +73,11 @@ public class Main extends MIDlet implements ItemStateListener {
 	}
 	
 	synchronized void whatNext() {
-		// TODO: pass proper time
 		// TODO: serialize
-		descriptor = im.whatNext(0, null);
+		Date time = new Date();
+		long dt = (time.getTime()-prevTime.getTime()+500)/1000;
+		prevTime = time;
+		descriptor = im.whatNext((int)dt, time);
 	}
 	
  	synchronized void processDescriptor() {
@@ -158,6 +163,8 @@ public class Main extends MIDlet implements ItemStateListener {
 		
 		descriptor = new InteractionModel.SleepDescriptor("initial");
 		descriptor.timeout = 1;
+		
+		prevTime = new Date();
 	
 		processDescriptor();
 		display.setCurrent(mainScreen);
@@ -215,6 +222,13 @@ public class Main extends MIDlet implements ItemStateListener {
 	private class TestTimerTask extends TimerTask {
 		public final void run() {
 			synchronized (Main.this) {
+				
+				// this check is for unlikely event that task was cancelled right
+				// after run method started executing but before it entered
+				// critical section
+				if (timerTask == null)
+					return;
+				
 				if (sleepDescriptor != null) {
 					// send timeout?
 					whatNext();
