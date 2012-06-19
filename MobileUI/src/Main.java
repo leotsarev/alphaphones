@@ -23,6 +23,7 @@ import phones.InteractionModel;
 import phones.InteractionModel.Descriptor;
 import phones.InteractionModelCheckDecorator;
 import phones.StringSerializer;
+import phones.Utils;
 import phones.InteractionModel.MenuDescriptor;
 import phones.InteractionModel.SleepDescriptor;
 import phones.Sample.SampleIM;
@@ -133,11 +134,15 @@ public class Main extends MIDlet implements ItemStateListener {
 		
 			// TODO: recurring alarms
 		}
+
+		if (descriptor.timeout == -1)
+			descriptor.timeout = 500000; // should be enough for anyone
+
+		Utils.assert_(descriptor.timeout >= 0);
 		
 		if (timerTask != null)
 			timerTask.cancel();
 		timerTask = new TestTimerTask();
-		// TODO: -1
 		timer.schedule(timerTask, descriptor.timeout*1000);
 		
 	}
@@ -176,15 +181,10 @@ public class Main extends MIDlet implements ItemStateListener {
 			im.reset();
 		}
 
-		
-		//descriptor = new InteractionModel.SleepDescriptor("initial");
-		//descriptor.timeout = 1;
-		
 		prevTime = new Date();
 		whatNext();
 	
 		processDescriptor();
-		display.setCurrent(mainScreen);
 	}
 	
 	synchronized void keyPressed(int keyCode) {
