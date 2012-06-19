@@ -34,7 +34,8 @@ public class InteractionModelCheckDecorator extends InteractionModel {
 	
 	public void assertCommandWord(String code) {
 		Utils.assert_(innerModel.checkCommandWord(code) == CODE_VALID, code);
-		Utils.assert_(!commandWordAlreadyAsserted, "received two command words in a row");
+		Utils.assert_(!commandWordAlreadyAsserted, 
+				"received two command words in a row");
 		innerModel.assertCommandWord(code);
 		commandWordAlreadyAsserted = true;
 	}
@@ -45,7 +46,24 @@ public class InteractionModelCheckDecorator extends InteractionModel {
 	}
 
 	public void serialize(ISerializer ser) {
-		// TODO: try to deserialize shit immediately and check it's the same
+		// try to deserialize shit immediately and check it's the same
+		StringSerializer tmp = new StringSerializer();
+		innerModel.serialize(tmp);
+		byte[] bytes = tmp.getBytes();
+		tmp = new StringSerializer();
+		tmp.setBytes(bytes);
+		innerModel.unserialize(tmp);
+		tmp = new StringSerializer();
+		innerModel.serialize(tmp);
+		byte[] bytes2 = tmp.getBytes();
+		
+		Utils.assert_(bytes.length == bytes2.length, 
+				"serialization/deserialization inconsistency");
+		for (int i = 0; i < bytes.length; i++)
+			Utils.assert_(bytes[i] == bytes2[i], 
+					"serialization/deserialization inconsistency");
+		
+		
 		innerModel.serialize(ser);
 	}
 

@@ -1,3 +1,4 @@
+import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -9,16 +10,22 @@ import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.CustomItem;
 import javax.microedition.lcdui.Display;
 import javax.microedition.lcdui.Form;
+import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Item;
 import javax.microedition.lcdui.ItemStateListener;
+import javax.microedition.lcdui.StringItem;
 import javax.microedition.midlet.MIDlet;
 import javax.microedition.midlet.MIDletStateChangeException;
+import javax.microedition.rms.RecordEnumeration;
+import javax.microedition.rms.RecordStore;
+import javax.microedition.rms.RecordStoreException;
 
 import alpha.AlphaIM;
 
 import phones.InteractionModel;
 import phones.InteractionModel.Descriptor;
 import phones.InteractionModelCheckDecorator;
+import phones.StringSerializer;
 import phones.Utils;
 import phones.InteractionModel.MenuDescriptor;
 import phones.InteractionModel.SleepDescriptor;
@@ -35,6 +42,11 @@ public class Main extends MIDlet implements ItemStateListener {
 	Descriptor descriptor;
 	MenuDescriptor menuDescriptor;
 	SleepDescriptor sleepDescriptor;
+	
+	Date prevTime;
+	
+	String prevStatus = null;
+	String code;
 	
 	Timer timer;
 	TimerTask timerTask = null;
@@ -59,36 +71,51 @@ public class Main extends MIDlet implements ItemStateListener {
 			String command = menuDescriptor.getCommand(index);
 			im.assertCommandWord(command);
 			
-			Alert a = new Alert(" ", "Item "+command+" was chosen!", null, AlertType.ALARM);
-			a.setTimeout(100);
-			
-			display.setCurrent(a, mainScreen);
-			
 			whatNext();
 			processDescriptor();
 		}
 	}
 	
 	synchronized void whatNext() {
-		descriptor = im.whatNext(0, null);
+		StringSerializer ser = new StringSerializer();
+		im.serialize(ser);
+		saveRecord(ser.getBytes());
+		
+		Date time = new Date();
+		long dt = (time.getTime()-prevTime.getTime()+500)/1000;
+		prevTime = time;
+		descriptor = im.whatNext((int)dt, time);
 	}
 	
  	synchronized void processDescriptor() {
 		if (descriptor instanceof SleepDescriptor) {
+			menuDescriptor = null;
 			sleepDescriptor = (SleepDescriptor)descriptor;
 			
-			mainScreen = new Form(" ");
-			System.out.println(sleepDescriptor.status);
-			mainScreen.append(sleepDescriptor.status);
-			display.setCurrent(mainScreen);
+			if (!sleepDescriptor.status.equals(prevStatus)) {
+				code = "";
+				prevStatus = sleepDescriptor.status;
+				
+				mainScreen = new Form(" ");
+				mainScreen.append(new KeyCatcher());
+				mainScreen.append(sleepDescriptor.status);
+				mainScreen.append(new KeyCatcher());
+				
+				display.setCurrent(mainScreen);
+			}
 			
-			if (timerTask != null)
-				timerTask.cancel();
-			timerTask = new TestTimerTask();
-			timer.schedule(timerTask, sleepDescriptor.timeout*1000);
-			
+			// this check is for unlikely situation when code reported as valid
+			// prefix at the previous tick was now given different status
+			if (im.checkCommandWord(code) != im.CODE_PREFIX) {
+				code = "";
+				setMainText(sleepDescriptor.status);
+			}
 		} else {
+			sleepDescriptor = null;
 			menuDescriptor = (MenuDescriptor)descriptor;
+			
+			prevStatus = null;
+			code = "";
 			
 			choiceGroup = new ChoiceGroup(menuDescriptor.menuHeader, Choice.MULTIPLE);
 			String[] names = menuDescriptor.getNames();
@@ -101,24 +128,106 @@ public class Main extends MIDlet implements ItemStateListener {
 
 			mainScreen.setItemStateListener(this);
 			display.setCurrent(mainScreen);
+
+			if (menuDescriptor.alarm != im.ALARM_SILENT) {
+				Alert a = new Alert(" ", " ", null, AlertType.ALARM);
+				a.setTimeout(300);
+				display.setCurrent(a, mainScreen);
+			}
+		
+			// TODO: recurring alarms
 		}
+		
+		if (timerTask != null)
+			timerTask.cancel();
+		timerTask = new TestTimerTask();
+		// TODO: -1
+		timer.schedule(timerTask, descriptor.timeout*1000);
+		
+	}
+ 	
+	void setMainText(String s) {
+		if (mainScreen.size() != 3) {
+			System.out.println("Can't set main text because!!!");
+			return;
+		}
+		StringItem textItem = (StringItem) mainScreen.get(1);
+		if (!textItem.getText().equals(s)) // to avoid autorewind
+			textItem.setText(s); 
 	}
 	
 	public Main() {
 		
 		display = Display.getDisplay(this);
 		timer = new Timer();
+		
+		code = "";
 
 		im = new InteractionModelCheckDecorator(new SampleIM());
-		im.reset();
+
+		try {
+			StringSerializer ser = new StringSerializer();
+			byte[] data = loadRecord();
+			if (data == null)
+				System.out.println("record not found");
+			System.out.println("loaded "+data.length+" bytes");
+			ser.setBytes(data);
+			im.unserialize(ser);
+			System.out.println("deserialization ok");
+			
+		} catch (Exception e) {
+			System.out.println("Loading or deserialization error: "+e);
+			im.reset();
+		}
+
 		
 		//descriptor = new InteractionModel.SleepDescriptor("initial");
-		//descriptor.timeout = 10;
-	
-		whatNext();
+		//descriptor.timeout = 1;
 		
+		prevTime = new Date();
+		whatNext();
+	
 		processDescriptor();
 		display.setCurrent(mainScreen);
+	}
+	
+	synchronized void keyPressed(int keyCode) {
+		if (sleepDescriptor == null)
+			return;
+		if (keyCode >= '0' && keyCode <= '9') {
+			code += (char)keyCode;
+			
+			int status = im.checkCommandWord(code);
+			if (status == im.CODE_UNKNOWN || status == im.CODE_USED) {
+				Alert a = new Alert(" ", 
+						status == im.CODE_UNKNOWN ? "Code is too long" : "Code was already used", 
+						null, AlertType.ERROR);
+				a.setTimeout(1000);
+				display.setCurrent(a, mainScreen);
+				code = "";
+			}
+			if (status == im.CODE_VALID) {
+				System.out.println("Valid code "+code);
+				// TODO:
+				im.assertCommandWord(code);
+				whatNext();
+				processDescriptor();
+				code = "";
+			}
+		}
+		if (keyCode == (int)'#' || keyCode == (int)'*') {
+			code = "";
+		}
+		if (keyCode < 0) {
+			if (code.length() > 0)
+				code = code.substring(0, code.length()-1);
+		}
+		if (sleepDescriptor == null) // this check is repeated because there would be a new descriptor if code was valid
+			return;
+		if (code.equals(""))
+			setMainText(sleepDescriptor.status);
+		else
+			setMainText("Code: "+code+"...");
 	}
 
 	protected void startApp() throws MIDletStateChangeException {
@@ -134,7 +243,20 @@ public class Main extends MIDlet implements ItemStateListener {
 	private class TestTimerTask extends TimerTask {
 		public final void run() {
 			synchronized (Main.this) {
+				
+				// this check is for unlikely event that task was cancelled right
+				// after run method started executing but before it entered
+				// critical section
+				if (timerTask == null)
+					return;
+				
 				if (sleepDescriptor != null) {
+					// send timeout?
+					whatNext();
+					processDescriptor();
+				}
+				else {
+					im.assertCommandWord(menuDescriptor.timeoutCommand);
 					whatNext();
 					processDescriptor();
 				}
@@ -142,5 +264,69 @@ public class Main extends MIDlet implements ItemStateListener {
 		}
 	}
 	
+	class KeyCatcher extends CustomItem {
+		protected void keyPressed(int keyCode) {
+			Main.this.keyPressed(keyCode);
+		}
+		public KeyCatcher() {
+			super("");
+		}
+		public int getMinContentWidth() {
+			return 1;
+		}
+		public int getMinContentHeight() {
+			return 1;
+		}
+		public int getPrefContentWidth(int width) {
+			return getMinContentWidth();
+		}
+		public int getPrefContentHeight(int height) {
+			return getMinContentHeight();
+		}
+		protected void paint(Graphics g, int w, int h) {
+		}
+
+	}
+
+	
+	byte[] loadRecord() {
+		byte[] result = null;
+		try {
+			RecordStore rs = RecordStore.openRecordStore("state", true);
+			
+			RecordEnumeration re = rs.enumerateRecords(null, null, false);
+			while (re.hasNextElement()) {
+				System.out.println("reading record");
+				result = re.nextRecord();
+				break;
+			}
+			rs.closeRecordStore();
+		} catch (RecordStoreException e) {
+			System.out.println("RS read problem "+e);
+		}
+		return result;
+	}
+	
+	void saveRecord(byte[] data) {
+		try {
+			RecordStore rs = RecordStore.openRecordStore("state", true);
+			
+			RecordEnumeration re = rs.enumerateRecords(null, null, false);
+			int cnt = 0;
+			while (re.hasNextElement()) {
+				int id = re.nextRecordId();
+				System.out.println("writing record");
+				rs.setRecord(id, data, 0, data.length);
+				cnt++;
+			}
+			if (cnt == 0) {
+				System.out.println("creating record");
+				rs.addRecord(data, 0, data.length);
+			}
+			rs.closeRecordStore();
+		} catch (RecordStoreException e) {
+			System.out.println("RS write problem "+e);
+		}
+	}
 	
 }
