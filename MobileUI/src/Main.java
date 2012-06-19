@@ -6,7 +6,6 @@ import javax.microedition.lcdui.Alert;
 import javax.microedition.lcdui.AlertType;
 import javax.microedition.lcdui.Choice;
 import javax.microedition.lcdui.ChoiceGroup;
-import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.CustomItem;
 import javax.microedition.lcdui.Display;
 import javax.microedition.lcdui.Form;
@@ -19,8 +18,6 @@ import javax.microedition.midlet.MIDletStateChangeException;
 import javax.microedition.rms.RecordEnumeration;
 import javax.microedition.rms.RecordStore;
 import javax.microedition.rms.RecordStoreException;
-
-import alpha.AlphaIM;
 
 import phones.InteractionModel;
 import phones.InteractionModel.Descriptor;
@@ -106,7 +103,7 @@ public class Main extends MIDlet implements ItemStateListener {
 			
 			// this check is for unlikely situation when code reported as valid
 			// prefix at the previous tick was now given different status
-			if (im.checkCommandWord(code) != im.CODE_PREFIX) {
+			if (im.checkCommandWord(code) != InteractionModel.CODE_PREFIX) {
 				code = "";
 				setMainText(sleepDescriptor.status);
 			}
@@ -129,7 +126,7 @@ public class Main extends MIDlet implements ItemStateListener {
 			mainScreen.setItemStateListener(this);
 			display.setCurrent(mainScreen);
 
-			if (menuDescriptor.alarm != im.ALARM_SILENT) {
+			if (menuDescriptor.alarm != InteractionModel.ALARM_SILENT) {
 				Alert a = new Alert(" ", " ", null, AlertType.ALARM);
 				a.setTimeout(300);
 				display.setCurrent(a, mainScreen);
@@ -137,11 +134,15 @@ public class Main extends MIDlet implements ItemStateListener {
 		
 			// TODO: recurring alarms
 		}
+
+		if (descriptor.timeout == -1)
+			descriptor.timeout = 500000; // should be enough for anyone
+
+		Utils.assert_(descriptor.timeout >= 0);
 		
 		if (timerTask != null)
 			timerTask.cancel();
 		timerTask = new TestTimerTask();
-		// TODO: -1
 		timer.schedule(timerTask, descriptor.timeout*1000);
 		
 	}
@@ -180,15 +181,10 @@ public class Main extends MIDlet implements ItemStateListener {
 			im.reset();
 		}
 
-		
-		//descriptor = new InteractionModel.SleepDescriptor("initial");
-		//descriptor.timeout = 1;
-		
 		prevTime = new Date();
 		whatNext();
 	
 		processDescriptor();
-		display.setCurrent(mainScreen);
 	}
 	
 	synchronized void keyPressed(int keyCode) {
@@ -198,17 +194,19 @@ public class Main extends MIDlet implements ItemStateListener {
 			code += (char)keyCode;
 			
 			int status = im.checkCommandWord(code);
-			if (status == im.CODE_UNKNOWN || status == im.CODE_USED) {
+			if (status == InteractionModel.CODE_UNKNOWN || 
+				status == InteractionModel.CODE_USED) {
 				Alert a = new Alert(" ", 
-						status == im.CODE_UNKNOWN ? "Code is too long" : "Code was already used", 
+						status == InteractionModel.CODE_UNKNOWN ? 
+							"Code is too long" : 
+							"Code was already used", 
 						null, AlertType.ERROR);
 				a.setTimeout(1000);
 				display.setCurrent(a, mainScreen);
 				code = "";
 			}
-			if (status == im.CODE_VALID) {
+			if (status == InteractionModel.CODE_VALID) {
 				System.out.println("Valid code "+code);
-				// TODO:
 				im.assertCommandWord(code);
 				whatNext();
 				processDescriptor();
@@ -222,7 +220,10 @@ public class Main extends MIDlet implements ItemStateListener {
 			if (code.length() > 0)
 				code = code.substring(0, code.length()-1);
 		}
-		if (sleepDescriptor == null) // this check is repeated because there would be a new descriptor if code was valid
+		
+		// this check is repeated because there 
+		// would be a new descriptor if code was valid
+		if (sleepDescriptor == null) 
 			return;
 		if (code.equals(""))
 			setMainText(sleepDescriptor.status);
