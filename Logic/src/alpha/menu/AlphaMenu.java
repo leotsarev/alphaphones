@@ -25,17 +25,17 @@ public class AlphaMenu extends MenuBase {
 	}
 	
 	public void addMenuItems(MenuDescriptor menu) {
-		addMenuItemAndBind(menu, "Выбор идеологии", new IdeologyCheck(model));
-		addMenuItemAndBind(menu, "Ранение", new WoundMenu(model));
-		addMenuItemAndBind(menu, "(Под код) Генетический анализ", new GeneAnalyzeMenu(model)); 
 		if (((AlphaIM)model).sleeping)
 		{
 			addMenuItemAndBind(menu, "Проснуться", new Awake(model));
+			return;
 		}
-		else
-		{
-			addMenuItemAndBind(menu, "Лечь спать", new Asleep(model));
-		}
+
+		addMenuItemAndBind(menu, "Выбор идеологии", new IdeologyCheck(model));
+		addMenuItemAndBind(menu, "Ранение", new WoundMenu(model));
+		addMenuItemAndBind(menu, "(Под код) Генетический анализ", new GeneAnalyzeMenu(model)); 
+		addMenuItemAndBind(menu, "Лечь спать", new Asleep(model));
+		
 		if (((AlphaIM)model).wearingMask)
 		{
 			addMenuItemAndBind(menu, "Снять маску", new PutMaskOff(model));
@@ -52,6 +52,7 @@ public class AlphaMenu extends MenuBase {
 		{
 			addMenuItemAndBind(menu, "Войти в поселение", new EnterBase(model));
 		}
+
 	}
 
 }

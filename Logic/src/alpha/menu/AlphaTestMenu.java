@@ -19,15 +19,15 @@ public class AlphaTestMenu extends MenuBase {
 	}
 
 	public void addMenuItems(MenuDescriptor menu) {
-		addMenuItemAndBind(menu, "Старт теста", new TestInit(model));
 		if (((AlphaIM)model).sleeping)
 		{
 			addMenuItemAndBind(menu, "Проснуться", new Awake(model));
+			return;
 		}
-		else
-		{
-			addMenuItemAndBind(menu, "Лечь спать", new Asleep(model));
-		}
+		
+		addMenuItemAndBind(menu, "Старт теста", new TestInit(model));
+		addMenuItemAndBind(menu, "Лечь спать", new Asleep(model));
+
 		if (((AlphaIM)model).wearingMask)
 		{
 			addMenuItemAndBind(menu, "Снять маску", new PutMaskOff(model));
