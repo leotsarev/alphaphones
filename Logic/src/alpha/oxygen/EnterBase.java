@@ -18,7 +18,7 @@ public class EnterBase extends AlphaProcess {
 		}
 		getAlphaModel().inHouse = true;
 		scheduleNow(new ScheduleNextOxygen(model));
-		return createMessage("Вхожу в поселение...");
+		return createChangeStatusMessage("Вхожу в поселение...");
 	}
 
 	public String getName() {

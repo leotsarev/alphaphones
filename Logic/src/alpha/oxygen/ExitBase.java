@@ -17,7 +17,7 @@ public class ExitBase extends alpha.AlphaProcess{
 		}
 		getAlphaModel().inHouse = false;
 		scheduleNow(new ScheduleNextOxygen(model));
-		return createMessage("Покидаю поселение...");
+		return createChangeStatusMessage("Покидаю поселение...");
 	}
 
 	public String getName() {

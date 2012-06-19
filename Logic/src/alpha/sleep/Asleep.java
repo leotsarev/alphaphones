@@ -25,7 +25,7 @@ public class Asleep extends AlphaProcess {
 		}
 		getAlphaModel().sleeping = true;
 		addStatusMessage("sleep", "Сплю");
-		return createMessage("Я потихоньку засыпаю...");
+		return createChangeStatusMessage("Я потихоньку засыпаю...");
 	}
 
 	public String getName() {

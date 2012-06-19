@@ -10,14 +10,14 @@ public class OutOfOxygen extends OxygenProcess {
 	}
 
 	public Descriptor handle() {
-		int oxygenPauseInMins = 3 - getAlphaModel().oxygenLevel;
+		int oxygenPauseInMins = 1 - getAlphaModel().oxygenLevel;
 		if (oxygenPauseInMins <= 0)
 		{
 			return null;
 		}
-		addStatusMessage(BREATH, "Тяжело дышать: надо сидеть");
+		addStatusMessage(BREATH, "Мне тяжело дышать: сижу, отдыхаю.");
 		scheduleAfterMins(new CanBreathAgain(model), oxygenPauseInMins);
-		return createMessage("Вам стало тяжело дышать, не хватает воздуха. Присядьте, отдохните пару минут.");
+		return createMessage("Я закашлялся, стало тяжело дышать. Сяду, отдохну пока не полегчает.");
 	}
 
 	public String getName() {

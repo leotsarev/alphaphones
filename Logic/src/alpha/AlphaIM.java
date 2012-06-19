@@ -260,7 +260,7 @@ public class AlphaIM extends ProcessModelBase{
 	}
 
 	public int calculateOxygenPause() {
-		return (int) ((10 + oxygenLevel * 5) * (randomInt(100)/100.0 + 1));
+		return (int) (((10 + oxygenLevel * 5) * (randomInt(100)/100.0 + 1)) /5);
 	}
 
 	public boolean isBadAtmoshere() {

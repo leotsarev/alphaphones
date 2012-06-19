@@ -18,7 +18,7 @@ public class PutMaskOff extends AlphaProcess {
 		}
 		getAlphaModel().wearingMask = false;
 		scheduleNow(new ScheduleNextOxygen(model));
-		return createMessage("Снимаю маску...");
+		return createChangeStatusMessage("Снимаю маску...");
 	}
 
 	public String getName() {
