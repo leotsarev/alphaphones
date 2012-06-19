@@ -226,7 +226,7 @@ public class ProcessModelBase extends InteractionModel{
 		}
 		
 
-		protected void removeMessage(String tag) {
+		public void removeMessage(String tag) {
 			table.remove(tag);
 		}
 		
@@ -236,7 +236,7 @@ public class ProcessModelBase extends InteractionModel{
 			while (statusValues.hasMoreElements())
 			{
 				buffer.append((String)statusValues.nextElement());
-				buffer.append('n');
+				buffer.append('\n');
 			}
 			return buffer.toString();
 		}

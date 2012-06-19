@@ -21,7 +21,11 @@ public abstract class ChemActionBase extends AlphaProcess implements IPrefixHand
 
 	public final void setSuffixValue(String suffix) {
 		Utils.assert_(isValidSuffix(suffix));
-		setStringArg("chemName", suffix);
+		setChemName(suffix);
+	}
+
+	private void setChemName(String chemName) {
+		setStringArg("chemName", chemName);
 	}
 
 	protected final IChemObject getChemObj() {
@@ -36,6 +40,10 @@ public abstract class ChemActionBase extends AlphaProcess implements IPrefixHand
 
 	protected final void setChemObj(IChemObject obj) {
 		setStringArg("chemName", obj.getName());
+	}
+
+	public void setTargetChemObj(IChemObject chemObj) {
+		setChemName(chemObj.getName());
 	}
 
 }
