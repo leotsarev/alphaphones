@@ -44,23 +44,23 @@ public class IdeologyChange extends AlphaProcess {
 		}
 		else if (currentFaction != newFaction)
 		{
-			message = "Решение далось вам непросто. В фракции «" + currentFaction.getName() 
-					+"» вас бы не одобрили, но вы-то знаете, что поступили как лучше.  Кстати, кто вас поймет, так это " + newFaction.getName();
+			message = "Пусть в фракции «" + currentFaction.getName() 
+					+"» меня бы не одобрили, но я-то знаю, что поступил как лучше.  Кстати, «" + newFaction.getName() + "» поняли бы меня...";
 		}
 		else if (currentFactionUpdated)
 		{
 			if (currentFaction.isFanatic())
 			{
-				message = "Окончательное решение принято, хватит рассусоливать. Теперь вы навсегда связали свою судьбу с фракцией «" + currentFaction.getName();
+				message = "Окончательное решение принято, хватит рассусоливать. Я навсегда буду верен фракции «" + currentFaction.getName();
 			}
 			else
 			{
-				message = "Ваша приверженность идеалам фракции «" + currentFaction.getName() + "» укрепилась. Только вы точно знаете, как построить идеальное общество";
+				message = "Моя приверженность идеалам фракции «" + currentFaction.getName() + "» укрепилась. Только мы точно знаем, как построить идеальное общество.";
 			}
 		}
 		else
 		{
-			message = "Решение далось вам непросто. Надо обдумать на досуге, какие из этого возникают последствия";
+			message = "Решение далось непросто. Надо обдумать на досуге, какие из этого возникают последствия";
 		}
 		
 		return createMessage(message);

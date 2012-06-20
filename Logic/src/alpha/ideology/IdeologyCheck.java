@@ -13,7 +13,7 @@ public class IdeologyCheck extends AlphaProcess {
 	public Descriptor handle() {
 		if (getAlphaModel().isFanatic())
 		{
-			return createMessage("Вы уже тверды в своем выборе и никогда не сойдете с избранного пути! Отмечать поступки больше не надо");
+			return createMessage("Не к чему вести учет поступкам — я никогда уже не сойду с избранного пути! Отмечать поступки больше не надо");
 		}
 		scheduleNow(new IdeologyMenu(model));
 		return null;
