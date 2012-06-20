@@ -50,7 +50,7 @@ public class AlphaIM extends ProcessModelBase{
 	public static final int PAIN_POWER_NORMAL = 2;
 	public static final int PAIN_POWER_STRONG = 3;
 	
-	public static final boolean DEMO_MODE = false;
+	public static final boolean DEMO_MODE = true;
 	
 	public final class PainAggregator
 	{
@@ -273,7 +273,7 @@ public class AlphaIM extends ProcessModelBase{
 	}
 
 	public int calculateOxygenPause() {
-		return (int) ((10 + oxygenLevel * 5) * (randomInt(100)/100.0 + 1) * getOoxygenGeneCoef() * getDemoCoef());
+		return (int) ((10.0 + oxygenLevel * 5) * (randomInt(100)/100.0 + 1) * getOoxygenGeneCoef() * getDemoCoef());
 	}
 
 	private double getDemoCoef() {

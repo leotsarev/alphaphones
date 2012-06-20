@@ -1,6 +1,7 @@
 package alpha.menu;
 
 import alpha.AlphaIM;
+import alpha.TestInit;
 import alpha.genes.GeneAnalyzeMenu;
 import alpha.ideology.IdeologyCheck;
 import alpha.oxygen.EnterBase;
@@ -28,7 +29,7 @@ public class AlphaMenu extends MenuBase {
 		
 		if (AlphaIM.DEMO_MODE)
 		{
-			scheduleNow(new AlphaTestMenu(model));
+			bindDemoMenu(menu);
 			return;
 		}
 		
@@ -60,6 +61,34 @@ public class AlphaMenu extends MenuBase {
 			addMenuItemAndBind(menu, "Войти в поселение", new EnterBase(model));
 		}
 
+	}
+
+	private void bindDemoMenu(MenuDescriptor menu) {
+		if (((AlphaIM)model).sleeping)
+		{
+			addMenuItemAndBind(menu, "Проснуться", new Awake(model));
+			return;
+		}
+		
+		addMenuItemAndBind(menu, "Старт теста", new TestInit(model));
+		addMenuItemAndBind(menu, "Лечь спать", new Asleep(model));
+
+		if (((AlphaIM)model).wearingMask)
+		{
+			addMenuItemAndBind(menu, "Снять маску", new PutMaskOff(model));
+		}
+		else
+		{
+			addMenuItemAndBind(menu, "Одеть маску", new PutMaskOn(model));
+		}
+		if (((AlphaIM)model).inHouse)
+		{
+			addMenuItemAndBind(menu, "Выйти из поселения", new ExitBase(model));
+		}
+		else
+		{
+			addMenuItemAndBind(menu, "Войти в поселение", new EnterBase(model));
+		}
 	}
 
 }
