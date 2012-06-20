@@ -13,11 +13,11 @@ public abstract class FoodDeficitBase extends NutrienActionBase {
 
 	protected int getMinsToDeficitProgress()
 	{
-		return 10;
+		return 20;
 	}
 	
 	protected int getMinsToDeficitHeal() {
-		return 10;
+		return 5;
 	}
 
 	public final Descriptor handle() {
@@ -32,6 +32,7 @@ public abstract class FoodDeficitBase extends NutrienActionBase {
 		cleanupStatus();
 		
 		if (nextStage == 0) {
+			getAlphaModel().sick = false;
 			return null;
 		} 
 		

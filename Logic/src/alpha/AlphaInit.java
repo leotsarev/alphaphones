@@ -1,5 +1,6 @@
 package alpha;
 
+import alpha.food.CheckFoodDeficits;
 import alpha.oxygen.*;
 import alpha.sleep.Awake;
 import phones.InteractionModel.Descriptor;
@@ -19,6 +20,9 @@ public class AlphaInit extends AlphaProcess {
 		scheduleNow(new PutMaskOff(model));
 		scheduleNow(new Awake(model));
 		scheduleNow(new ScheduleNextOxygen(model));
+		scheduleAfterMins(new CheckFoodDeficits(model), 0);
+		
+		getAlphaModel().Chemistry.setAllNutrients();
 		return null;
 	}
 

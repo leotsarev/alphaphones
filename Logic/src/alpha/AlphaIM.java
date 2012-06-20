@@ -1,6 +1,8 @@
 package alpha;
 
 
+import alpha.chem.Chemistry.Gene;
+import alpha.chem.IChemObject;
 import alpha.food.*;
 import alpha.food.deficit.*;
 import alpha.genes.*;
@@ -35,10 +37,13 @@ public class AlphaIM extends ProcessModelBase{
 	public boolean inHouse;
 	public boolean wearingMask;
 	public boolean sleeping;
+	public boolean sick;
 	
 	public static final String TOGGLE_GENE = "toggle_gene_";
+	public static final String TOGGLE_NUTRIEN = "toggle_nutrien_";
 	public static final String ANALYZE_GENE = "analyze_gene_";
 	
+	public static final int LOCATION_WHOLE_BODY = 0;
 	public static final int LOCATION_KNEE = 1;
 	
 	public PainAggregator Pain;
@@ -56,14 +61,16 @@ public class AlphaIM extends ProcessModelBase{
 		}
 
 		public void add(String tag, int location, int painPower) {
-			status.addMessage(tag+location, getPainPowerString(painPower) + " в " + getLocationString(location));
+			status.addMessage(tag+location, getPainPowerString(painPower) + " " + getLocationString(location));
 		}
 
 		private String getLocationString(int location) {
 			switch (location)
 			{
 			case LOCATION_KNEE: 
-				return "колене";
+				return "в колене";
+			case LOCATION_WHOLE_BODY:
+				return "во всем теле";
 			default:
 				Utils.assert_(false, "Wrong location " + location);
 				return null;
@@ -122,6 +129,7 @@ public class AlphaIM extends ProcessModelBase{
 		
 		bindPrefixCommandWord(TOGGLE_GENE, new MasterToggleGene(this));
 		bindPrefixCommandWord(ANALYZE_GENE, new AnalyzeGene(this));
+		bindPrefixCommandWord(TOGGLE_NUTRIEN, new MasterToggleNutrien(this));
 		
 		bindPrefixCommandWord("_food_", new SetNutrient(this));
 		
@@ -162,6 +170,8 @@ public class AlphaIM extends ProcessModelBase{
 				new AlphaTestMenu(this),
 				new TestInit(this),
 				new AlphaMasterChemMenu(this),
+				new MasterToggleNutrien(this),
+				new NutrienMenu(this)
 			};
 		for (int i = 0; i < process.length; i++)
 		{
@@ -180,6 +190,7 @@ public class AlphaIM extends ProcessModelBase{
 		ser.writeBool(inHouse);
 		ser.writeBool(sleeping);
 		ser.writeBool(wearingMask);
+		ser.writeBool(sick);
 		for (int i =0; i<factions.length; i++)
 		{
 			factions[i].serialize(ser);
@@ -195,6 +206,7 @@ public class AlphaIM extends ProcessModelBase{
 		inHouse = ser.readBool();
 		sleeping = ser.readBool();
 		wearingMask = ser.readBool();
+		sick = ser.readBool();
 		for (int i =0; i<factions.length; i++)
 		{
 			factions[i].unserialize(ser);
@@ -259,7 +271,20 @@ public class AlphaIM extends ProcessModelBase{
 	}
 
 	public int calculateOxygenPause() {
-		return (int) (((10 + oxygenLevel * 5) * (randomInt(100)/100.0 + 1)) /5);
+		return (int) ((10 + oxygenLevel * 5) * (randomInt(100)/100.0 + 1)) * getOoxygenGeneCoef();
+	}
+
+	private int getOoxygenGeneCoef() {
+		IChemObject gene = Chemistry.getGene("o");
+		if (gene.isStrictlyPresent())
+		{
+			return 3;
+		}
+		if (gene.isPresent())
+		{
+			return 2;
+		}
+		return 1;
 	}
 
 	public boolean isBadAtmoshere() {

@@ -1,24 +1,25 @@
 package alpha.chem;
 
+import java.util.Enumeration;
 import java.util.Vector;
 
 import phones.ISerializer;
 import phones.Utils;
 
 public class Chemistry {
-	private static final String XI = "XI";
-	private static final String PI = "PI";
-	private static final String KAPPA = "Kappa";
-	private static final String EPSILON = "Epsilon";
-	private static final String YOTA = "Yota";
-	private static final String MU = "Mu";
-	private static final String GAMMA = "Gamma";
-	private static final String RO = "Ro";
-	private static final String DELTA = "Delta";
-	private static final String PHI = "Phi";
-	private static final String CHI = "Chi";
-	private static final String BETA = "Beta";
-	private static final String ALPHA = "Alpha";
+	public static final String XI = "XI";
+	public static final String PI = "PI";
+	public static final String KAPPA = "Kappa";
+	public static final String EPSILON = "Epsilon";
+	public static final String YOTA = "Yota";
+	public static final String MU = "Mu";
+	public static final String GAMMA = "Gamma";
+	public static final String RO = "Ro";
+	public static final String DELTA = "Delta";
+	public static final String PHI = "Phi";
+	public static final String CHI = "Chi";
+	public static final String BETA = "Beta";
+	public static final String ALPHA = "Alpha";
 	private static final String PSEUDO_NUTRIEN = "PseudoNutrien";
 	private static final String NUTRIEN = "Nutrien";
 	private static final String GENE = "GENE_";
@@ -503,6 +504,23 @@ public class Chemistry {
 		}
 		return result;
 	}
+	
+	public Nutrien[] getNutrienArray() {
+		Vector interim = new Vector();
+		for (int i = 0; i < data.length; i++)
+		{
+			if (data[i] instanceof Nutrien)
+			{
+				interim.addElement(data[i]);
+			}
+		}
+		Nutrien[] result = new Nutrien[interim.size()];
+		for (int i = 0; i < interim.size(); i++)
+		{
+			result[i] = (Nutrien) interim.elementAt(i);
+		}
+		return result;
+	}
 
 	public IChemObject[] getSubstanceArray() {
 		Vector interim = new Vector();
@@ -532,7 +550,7 @@ public class Chemistry {
 		return false;
 	}
 
-	private IChemObject getGene(String geneName) {
+	public IChemObject getGene(String geneName) {
 		return getByName(GENE + geneName);
 	}
 
@@ -548,11 +566,20 @@ public class Chemistry {
 		return has(NUTRIEN + nutrienName);
 	}
 
-	private boolean has(String chemObjName) {
+	public boolean has(String chemObjName) {
 		return getByName(chemObjName).isPresent();
 	}
 
 	private boolean hasGene(String geneName) {
 		return getGene(geneName).isPresent();
+	}
+
+	public void setAllNutrients() {
+		Nutrien[] n = getNutrienArray();
+		for (int i=0;i<n.length;i++)
+		{
+			n[i].setPresent();
+		}
+		
 	}
 }

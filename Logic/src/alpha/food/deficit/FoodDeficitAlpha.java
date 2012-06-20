@@ -58,8 +58,8 @@ public class FoodDeficitAlpha extends alpha.food.FoodDeficitBase {
 			getAlphaModel().Pain.add(getName(), AlphaIM.LOCATION_KNEE, AlphaIM.PAIN_POWER_STRONG);
 			addStatusMessage(ALPHA_DEFICIT_STAY, "Не могу стоять");
 			addStatusMessage(ALPHA_DEFICIT_PSI, "Апатия");
+			break;
 		default:
-			
 			break;
 		}
 	}
