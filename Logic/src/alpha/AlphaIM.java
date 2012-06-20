@@ -1,6 +1,8 @@
 package alpha;
 
 
+import java.util.Date;
+
 import alpha.chem.IChemObject;
 import alpha.food.*;
 import alpha.food.deficit.*;
@@ -37,6 +39,7 @@ public class AlphaIM extends ProcessModelBase{
 	public boolean wearingMask;
 	public boolean sleeping;
 	public boolean sick;
+	public boolean dead;
 	
 	public static final String TOGGLE_GENE = "toggle_gene_";
 	public static final String TOGGLE_NUTRIEN = "toggle_nutrien_";
@@ -97,6 +100,16 @@ public class AlphaIM extends ProcessModelBase{
 		}
 	}
 	
+	public Descriptor whatNext(int passedSecs, Date currentTime) {
+		if (dead)
+		{
+			SleepDescriptor sleepDescriptor = new SleepDescriptor("Я мертв, иду к мастерам");
+			sleepDescriptor.timeout = 100;
+			return sleepDescriptor;
+		}
+		return super.whatNext(passedSecs, currentTime);
+	}
+	
 	public void reset()
 	{
 		super.reset();
@@ -132,6 +145,11 @@ public class AlphaIM extends ProcessModelBase{
 		bindPrefixCommandWord(TOGGLE_NUTRIEN, new MasterToggleNutrien(this));
 		
 		bindFixedPhoneWord("MENU", new AlphaMenu(this));
+		
+		bindFixedPhoneWord("DEATH4EVER1251", new Killed(this));
+		bindFixedPhoneWord("DEATH4EVER2456", new Killed(this));
+		bindFixedPhoneWord("DEATH4EVER3028", new Killed(this));
+		bindFixedPhoneWord("DEATH4EVER4453", new Killed(this));
 	}
 	
 	public Process createProcessByName(String name) {
@@ -169,7 +187,8 @@ public class AlphaIM extends ProcessModelBase{
 				new TestInit(this),
 				new AlphaMasterChemMenu(this),
 				new MasterToggleNutrien(this),
-				new NutrienMenu(this)
+				new NutrienMenu(this),
+				new Killed(this)
 			};
 		for (int i = 0; i < process.length; i++)
 		{
@@ -189,6 +208,7 @@ public class AlphaIM extends ProcessModelBase{
 		ser.writeBool(sleeping);
 		ser.writeBool(wearingMask);
 		ser.writeBool(sick);
+		ser.writeBool(dead);
 		
 		ser.writeString("faction_start");
 		for (int i =0; i<factions.length; i++)
@@ -207,6 +227,7 @@ public class AlphaIM extends ProcessModelBase{
 		sleeping = ser.readBool();
 		wearingMask = ser.readBool();
 		sick = ser.readBool();
+		dead = ser.readBool();
 		
 		Utils.assert_(ser.readString().equals("faction_start"));
 		for (int i =0; i<factions.length; i++)
