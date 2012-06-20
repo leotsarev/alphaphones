@@ -25,6 +25,13 @@ public class AlphaMenu extends MenuBase {
 	}
 	
 	public void addMenuItems(MenuDescriptor menu) {
+		
+		if (AlphaIM.DEMO_MODE)
+		{
+			scheduleNow(new AlphaTestMenu(model));
+			return;
+		}
+		
 		if (((AlphaIM)model).sleeping)
 		{
 			addMenuItemAndBind(menu, "Проснуться", new Awake(model));
