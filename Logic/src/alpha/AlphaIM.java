@@ -218,6 +218,7 @@ public class AlphaIM extends ProcessModelBase{
 		{
 			factions[i].serialize(ser);
 		}
+		ser.writeString(currentFaction == null ? "" : currentFaction.getName());
 		Chemistry.serialize(ser);
 		Pain.serialize(ser);
 	}
@@ -238,15 +239,18 @@ public class AlphaIM extends ProcessModelBase{
 		{
 			factions[i].unserialize(ser);
 		}
+		
+		String curFactionName = ser.readString();
+		for (int i =0; i<factions.length; i++)
+		{
+			if (factions[i].getName().equals(curFactionName))
+			{
+				currentFaction = factions[i];
+			}
+		}
+		
 		Chemistry.unserialize(ser);
 		Pain.unserialize(ser);
-	}
-
-	
-
-	public Faction getCurrentFaction() {
-		updateCurrentFaction();
-		return currentFaction;
 	}
 
 	public void updateCurrentFaction() {

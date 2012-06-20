@@ -1,5 +1,6 @@
 package alpha.ideology;
 
+import alpha.AlphaIM;
 import phones.ISerializer;
 import phones.ProcessModelBase;
 import phones.Utils;
@@ -8,9 +9,11 @@ public class Faction {
 	private String name;
 	private int[] coords;
 	private int track = 0;
+	private final AlphaIM model;
 	
-	private Faction(ProcessModelBase model, String name, int coord0, int coord1, int coord2, int coord3)
+	private Faction(AlphaIM model, String name, int coord0, int coord1, int coord2, int coord3)
 	{
+		this.model = model;
 		Utils.assert_(isValidCoord(coord0));
 		Utils.assert_(isValidCoord(coord1));
 		Utils.assert_(isValidCoord(coord2));
@@ -26,6 +29,7 @@ public class Faction {
 	
 	public boolean apply (int coord, int sign)
 	{
+		Utils.assert_(isValidCoord(sign));
 		boolean correct = coords[coord] == sign;
 		if (correct)
 		{
@@ -34,7 +38,7 @@ public class Faction {
 		return correct;
 	}
 	
-	public static Faction[] createFactions(ProcessModelBase model)
+	public static Faction[] createFactions(AlphaIM model)
 	{
 		Faction[] r = { 
 				new Faction(model, "Флора", 
@@ -73,6 +77,6 @@ public class Faction {
 	
 	public String toString()
 	{
-		return getName() + " " + getTrack();
+		return getName() + " " + getTrack() + ((model.currentFaction == this) ? "*" : "");
 	}
 }

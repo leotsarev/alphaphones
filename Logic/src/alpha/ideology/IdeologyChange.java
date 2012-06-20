@@ -21,19 +21,21 @@ public class IdeologyChange extends AlphaProcess {
 		int sign = getIntArg("sign");
 		
 		Faction[] factions = getAlphaModel().factions;
-		boolean currentFactionUpdated = false; 
-		Faction currentFaction = getAlphaModel().getCurrentFaction();
+		 
+		Faction currentFaction = getAlphaModel().currentFaction;
+		int currentTrack = (currentFaction != null) ? currentFaction.getTrack() : 0;
 		String message;
 		
 		for (int i =0; i<factions.length; i++)
 		{
-			 if (factions[i].apply(coord, sign) && factions[i] == currentFaction)
-			 {
-				 currentFactionUpdated = true;
-			 }
+			factions[i].apply(coord, sign);
 		}
 		
-		Faction newFaction = getAlphaModel().getCurrentFaction();
+		boolean currentFactionUpdated = (currentFaction != null) && currentFaction.getTrack() > currentTrack;
+		
+		getAlphaModel().updateCurrentFaction();
+		
+		Faction newFaction = getAlphaModel().currentFaction;
 		
 		if (currentFaction == null)
 		{

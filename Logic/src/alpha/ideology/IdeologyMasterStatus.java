@@ -12,7 +12,7 @@ public class IdeologyMasterStatus extends alpha.AlphaProcess {
 
 	public Descriptor handle() {
 		MenuDescriptor menu = new MenuDescriptor();
-		menu.menuHeader = "МАСТЕР Статус идеологии";
+		menu.menuHeader = "МАСТЕР Статус идеологии ";
 		menu.addItem("Закрыть", "");
 		Faction[] fct = getAlphaModel().factions;
 		for (int i =0; i < fct.length; i++)
