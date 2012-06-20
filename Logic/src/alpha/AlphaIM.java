@@ -1,7 +1,6 @@
 package alpha;
 
 
-import alpha.chem.Chemistry.Gene;
 import alpha.chem.IChemObject;
 import alpha.food.*;
 import alpha.food.deficit.*;

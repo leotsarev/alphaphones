@@ -1,6 +1,5 @@
 package alpha.chem;
 
-import java.util.Enumeration;
 import java.util.Vector;
 
 import phones.ISerializer;
