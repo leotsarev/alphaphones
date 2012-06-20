@@ -138,7 +138,7 @@ public class AlphaIM extends ProcessModelBase{
 		bindFixedCommandWord("wound_left_arm", new ArmWound(this, LEFT_LIMB));
 		bindFixedCommandWord("wound_right_arm", new ArmWound(this, RIGHT_LIMB));
 		
-		bindFixedCommandWord("menu_master", new MasterMenu(this));
+		bindFixedPhoneWord("IDDQD", new MasterMenu(this));
 		
 		bindPrefixCommandWord(TOGGLE_GENE, new MasterToggleGene(this));
 		bindPrefixCommandWord(ANALYZE_GENE, new AnalyzeGene(this));

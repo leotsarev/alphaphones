@@ -33,6 +33,8 @@ public class AlphaMenu extends MenuBase {
 			return;
 		}
 		
+		menu.addItem("Закрыть", "");
+		
 		if (((AlphaIM)model).sleeping)
 		{
 			addMenuItemAndBind(menu, "Проснуться", new Awake(model));
@@ -64,6 +66,7 @@ public class AlphaMenu extends MenuBase {
 	}
 
 	private void bindDemoMenu(MenuDescriptor menu) {
+		menu.addItem("Закрыть", "");
 		if (((AlphaIM)model).sleeping)
 		{
 			addMenuItemAndBind(menu, "Проснуться", new Awake(model));
