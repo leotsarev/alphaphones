@@ -43,7 +43,6 @@ public class AlphaMenu extends MenuBase {
 
 		addMenuItemAndBind(menu, "Выбор идеологии", new IdeologyCheck(model));
 		addMenuItemAndBind(menu, "Ранение", new WoundMenu(model));
-		addMenuItemAndBind(menu, "(Под код) Генетический анализ", new GeneAnalyzeMenu(model)); 
 		addMenuItemAndBind(menu, "Лечь спать", new Asleep(model));
 		
 		if (((AlphaIM)model).wearingMask)

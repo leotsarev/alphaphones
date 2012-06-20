@@ -15,7 +15,7 @@ public abstract class ChemMenuBase extends AlphaProcess {
 	public Descriptor handle() {
 		MenuDescriptor menu = new MenuDescriptor();
 		menu.menuHeader = getMenuHeader();
-		addMenuItemAndBind(menu, "Закрыть", new MasterMenu(model));
+		menu.addItem("Закрыть", "");
 		IPersistentChemObject[] chemObjs = getChemObjects();
 		for (int i =0; i < chemObjs.length; i++)
 		{
