@@ -70,4 +70,9 @@ public class Faction {
 	public int getTrack() {
 		return track;
 	}
+	
+	public String toString()
+	{
+		return getName() + " " + getTrack();
+	}
 }

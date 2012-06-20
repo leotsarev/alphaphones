@@ -189,7 +189,8 @@ public class AlphaIM extends ProcessModelBase{
 				new NutrienMenu(this),
 				new Killed(this),
 				new KillSomeOne(this),
-				new MasterToggleAlreadyGetChip(this)
+				new MasterToggleAlreadyGetChip(this),
+				new IdeologyMasterStatus(this)
 			};
 		for (int i = 0; i < process.length; i++)
 		{
