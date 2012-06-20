@@ -121,8 +121,6 @@ public class AlphaIM extends ProcessModelBase{
 	}
 
 	private void bindCommandWords() {
-		bindFixedCommandWord("HITME", new HitMeProcess(this));
-		
 		bindFixedCommandWord("INDIVIDUAL", new IdeologyChange(this, 0, 1));
 		bindFixedCommandWord("COMMONS", new IdeologyChange(this, 0, -1));
 		
@@ -184,7 +182,6 @@ public class AlphaIM extends ProcessModelBase{
 				new SetNutrient(this),
 				new RemoveNutrient(this),
 				new FoodDeficitAlpha(this),
-				new AlphaTestMenu(this),
 				new TestInit(this),
 				new AlphaMasterChemMenu(this),
 				new MasterToggleNutrien(this),

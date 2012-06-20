@@ -2,7 +2,6 @@ package alpha.menu;
 
 import alpha.AlphaIM;
 import alpha.TestInit;
-import alpha.genes.GeneAnalyzeMenu;
 import alpha.ideology.IdeologyCheck;
 import alpha.oxygen.EnterBase;
 import alpha.oxygen.ExitBase;
