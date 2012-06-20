@@ -37,14 +37,14 @@ public class Faction {
 	public static Faction[] createFactions(ProcessModelBase model)
 	{
 		Faction[] r = { 
-				new Faction(model, "Флора", -1, 
-						-1, -1, 1),
-				new Faction(model, "Дети Господа", +1, 
-						-1, 1, -1),
-				new Faction(model, "Полдень", +1, 
-						1, -1, 1),
-				new Faction(model, "Воля Человека", -1, 
-						1, 1, -1),
+				new Faction(model, "Флора", 
+					-1,	-1, -1, +1),
+				new Faction(model, "Дети Господа", 
+					+1,	-1, +1, -1),
+				new Faction(model, "Полдень", 
+					+1,	+1, -1, +1),
+				new Faction(model, "Воля Человека", 
+					-1,	+1, +1, -1),
 		};
 		return r;
 	}
