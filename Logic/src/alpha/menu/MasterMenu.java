@@ -20,6 +20,7 @@ public class MasterMenu extends MenuBase {
 
 	public void addMenuItems(MenuDescriptor menu) {
 		addMenuItemAndBind(menu, "Гены", new MasterGeneMenu(model));
+		addMenuItemAndBind(menu, "Хим.анализ", new AlphaMasterChemMenu(model));
 		AlphaIM alphaIM = (AlphaIM)model;
 		if (!alphaIM.initCompleted)
 		{

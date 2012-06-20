@@ -1,5 +1,6 @@
 package alpha.genes;
 
+import alpha.chem.IPersistentChemObject;
 import phones.InteractionModel.Descriptor;
 import phones.ProcessModelBase;
 
@@ -10,7 +11,7 @@ public class MasterToggleGene extends GeneActionBase {
 	}
 
 	public Descriptor handle() {
-		getTargetGene().masterToggle();
+		((IPersistentChemObject)getChemObj()).masterToggle();
 		scheduleNow(new MasterGeneMenu(model));
 		return null;
 	}

@@ -5,9 +5,7 @@ import alpha.food.*;
 import alpha.food.deficit.*;
 import alpha.genes.*;
 import alpha.ideology.*;
-import alpha.menu.AlphaMenu;
-import alpha.menu.AlphaTestMenu;
-import alpha.menu.MasterMenu;
+import alpha.menu.*;
 import alpha.oxygen.*;
 import alpha.sleep.Asleep;
 import alpha.sleep.Awake;
@@ -120,14 +118,14 @@ public class AlphaIM extends ProcessModelBase{
 		bindFixedCommandWord("wound_left_arm", new ArmWound(this, LEFT_LIMB));
 		bindFixedCommandWord("wound_right_arm", new ArmWound(this, RIGHT_LIMB));
 		
-		//bindFixedCommandWord("menu_master", new MasterMenu(this));
+		bindFixedCommandWord("menu_master", new MasterMenu(this));
 		
 		bindPrefixCommandWord(TOGGLE_GENE, new MasterToggleGene(this));
 		bindPrefixCommandWord(ANALYZE_GENE, new AnalyzeGene(this));
 		
-		//bindPrefixCommandWord("_food_", new SetNutrient(this));
+		bindPrefixCommandWord("_food_", new SetNutrient(this));
 		
-		bindFixedPhoneWord("MENU", new AlphaTestMenu(this));
+		bindFixedPhoneWord("MENU", new AlphaMenu(this));
 	}
 	
 	public Process createProcessByName(String name) {
@@ -162,7 +160,8 @@ public class AlphaIM extends ProcessModelBase{
 				new RemoveNutrient(this),
 				new FoodDeficitAlpha(this),
 				new AlphaTestMenu(this),
-				new TestInit(this)
+				new TestInit(this),
+				new AlphaMasterChemMenu(this),
 			};
 		for (int i = 0; i < process.length; i++)
 		{

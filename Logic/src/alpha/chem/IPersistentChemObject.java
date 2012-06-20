@@ -9,4 +9,5 @@ public interface IPersistentChemObject extends IChemObject{
 	public void setPresent();
 	public void setNotPresent();
 	public void setHalfPresent();
+	public boolean eligbleForAnalysis();
 }

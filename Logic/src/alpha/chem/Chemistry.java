@@ -6,7 +6,25 @@ import phones.ISerializer;
 import phones.Utils;
 
 public class Chemistry {
+	private static final String XI = "XI";
+	private static final String PI = "PI";
+	private static final String KAPPA = "Kappa";
+	private static final String EPSILON = "Epsilon";
+	private static final String YOTA = "Yota";
+	private static final String MU = "Mu";
+	private static final String GAMMA = "Gamma";
+	private static final String RO = "Ro";
+	private static final String DELTA = "Delta";
+	private static final String PHI = "Phi";
+	private static final String CHI = "Chi";
+	private static final String BETA = "Beta";
+	private static final String ALPHA = "Alpha";
+	private static final String PSEUDO_NUTRIEN = "PseudoNutrien";
+	private static final String NUTRIEN = "Nutrien";
+	private static final String GENE = "GENE_";
+
 	private IChemObject[] data;
+
 	
 	public static final int NUTRIEN_VANISH_MINS = 3 * 60;
 	
@@ -39,14 +57,201 @@ public class Chemistry {
 				new Gene("z", "ANALYSIS_FAILED_CALL_MASTER", "ANALYSIS_FAILED_CALL_MASTER", Gene.aa),
 				new Gene("w", "ANALYSIS_FAILED_CALL_MASTER", "ANALYSIS_FAILED_CALL_MASTER", Gene.aa),
 				
+				new Gene("v1", "ANALYSIS_FAILED_CALL_MASTER", "ANALYSIS_FAILED_CALL_MASTER", Gene.aa),
+				new Gene("v2", "ANALYSIS_FAILED_CALL_MASTER", "ANALYSIS_FAILED_CALL_MASTER", Gene.aa),
+				new Gene("v3", "ANALYSIS_FAILED_CALL_MASTER", "ANALYSIS_FAILED_CALL_MASTER", Gene.aa),
+				
 				//Nutriens
-				new Nutrien("Alpha"),
-				new Nutrien("Beta"),
-				new Nutrien("Gamma"),
-				new Nutrien("Delta"),
-				new Nutrien("Phi"),
-				new Nutrien("Chi"),
+				new Nutrien(ALPHA),
+				new Nutrien(BETA),
+				new Nutrien(GAMMA),
+				new Nutrien(DELTA),
+				new Nutrien(PHI),
+				new Nutrien(CHI),
+				
+				new Substance(ALPHA+"1"){
+					public boolean isPresent()
+					{
+						return hasGene("a") && hasNutrienOrPseudoNutrien(ALPHA);
+					}
+				},
+				
+				new Substance(BETA+"11") {
+					public boolean isPresent() {
+						return has(BETA +"1") && has(GAMMA+"1");
+					}
+				},
+				
+				new Substance(GAMMA+"2") {
+					public boolean isPresent() {
+						return (hasGene("g") && hasNutrienOrPseudoNutrien(GAMMA))
+								|| (hasGene("t") && has(GAMMA+"1"));
+					}
+				},
+				
+				new Substance(DELTA+"11") {
+					public boolean isPresent() {
+						return (has(DELTA+"1") && has(PHI+"1")) || has(RO+"2");
+					}
+				},
+				
+				new Substance(PHI+"11") {
+					public boolean isPresent() {
+						return has(PHI+1);
+					}
+				},
+				
+				new Substance(CHI+"1") {
+					public boolean isPresent() {
+						return hasGene("h") && hasNutrienOrPseudoNutrien(CHI);
+					}
+				},
+				
+				new Substance(BETA+"1") {
+					public boolean isPresent() {
+						return hasGene("b") && hasNutrienOrPseudoNutrien(BETA);
+					}
+				},
+				
+				new Substance(GAMMA+"1") {
+					public boolean isPresent() {
+						boolean var1 = (hasGene("g") || hasGene("s")) &&  hasNutrienOrPseudoNutrien(GAMMA);
+						boolean var2 = hasGene("u") && has(ALPHA + "1");
+						return var1 || var2;
+					}
+				},
+				
+				new Substance(DELTA + "1") {
+					public boolean isPresent() {
+						return hasGene("d") && !has(MU + 1) && hasNutrienOrPseudoNutrien(DELTA);
+					}
+				},
+				
+				new Substance(MU + "1") {
+					public boolean isPresent() {
+						return hasGene("n") && hasGene("m") && !hasGene("l");
+					}
+				},
+				
+				new Substance(PHI + 1) {
+					public boolean isPresent() {
+						return hasGene("f") && hasNutrienOrPseudoNutrien(PHI) && has(DELTA + 1);
+					}
+				},
+				
+				new Substance(YOTA + 1) {
+					public boolean isPresent() {
+						return hasGene("y") && !hasGene("l");
+					}
+				},
+				
+				new Substance(EPSILON + 1) {
+					public boolean isPresent() {
+						return getGene("e").isStrictlyPresent() && has(YOTA+1) && hasGene("u");
+					}
+				},
+				
+				new Substance(KAPPA + 1) {
+					public boolean isPresent() {
+						return hasGene("k") && !hasGene("x") && !hasGene("g") && has(PI + 1);
+					}
+				},
+				
+				new Substance(PI + 1) {
+					public boolean isPresent() {
+						return hasGene("p") && !hasGene("x");
+					}
+				},
+				
+				new Substance(XI + 1) {
+					public boolean isPresent() {
+						return hasGene("c") && has(RO + 1);
+					}
+				},
+				
+				new Substance(RO + 1) {
+					public boolean isPresent() {
+						return hasGene("r") && !hasGene("o");
+					}
+				},
+				
+				new Substance(RO + 2) {
+					public boolean isPresent() {
+						return has(RO+1) && hasNutrienOrPseudoNutrien(BETA) && hasNutrienOrPseudoNutrien(CHI);
+					}
+				},
+				
+				new PseudoNutrien(ALPHA) {
+					public boolean isPresent() {
+						return hasGene("v1") || (hasNutrien(GAMMA) && has(EPSILON+1));
+					}
+				},
+				
+				new PseudoNutrien(GAMMA) {
+					public boolean isPresent() {
+						return hasGene("v1");
+					}
+				},
+				
+				new PseudoNutrien(BETA) {
+					public boolean isPresent() {
+						return hasGene("v2");
+					}
+				},
+				
+				new PseudoNutrien(CHI) {
+					public boolean isPresent() {
+						return hasGene("v2");
+					}
+				},
+				
+				new PseudoNutrien(DELTA) {
+					public boolean isPresent() {
+						return hasGene("v3");
+					}
+				},
+				
+				new PseudoNutrien(PHI) {
+					public boolean isPresent() {
+						return hasGene("v3");
+					}
+				},
 		};
+	}
+	
+	private abstract class PseudoNutrien extends Substance
+	{
+		public PseudoNutrien(String name) {
+			super(PSEUDO_NUTRIEN +  name);
+		}
+		
+	}
+	
+	private abstract class Substance implements IChemObject
+	{
+		private final String name;
+
+		public Substance(String name)
+		{
+			this.name = name;
+		}
+		
+		public final boolean isNotPresent() {
+			return !isPresent();
+		}
+
+		public final boolean isStrictlyPresent() {
+			return isPresent();
+		}
+
+		public final String getName() {
+			return name;
+		}
+		
+		public final String toString()
+		{
+			return name + (isPresent() ? "+" : "-");
+		}
 	}
 	
 	public void serialize(ISerializer ser)
@@ -105,7 +310,7 @@ public class Chemistry {
 		}
 
 		public String getName() {
-			return nutrienName;
+			return Chemistry.NUTRIEN + nutrienName;
 		}
 
 		public void serialize(ISerializer ser) {
@@ -140,6 +345,10 @@ public class Chemistry {
 		public String getDeficitName() {
 			return "FoodDeficit" + getName();
 		}
+
+		public boolean eligbleForAnalysis() {
+			return false;
+		}
 		
 	}
 	
@@ -161,6 +370,7 @@ public class Chemistry {
 			this.myChar = myChar.toLowerCase();
 			this.dominantAnalysis = dominantAnalysis;
 			this.recessiveAnalysis = recessiveAnalysis;
+			this.geneValue = geneValue;
 		}
 		
 		private Gene (String myChar, String dominantAnalysis, String recessiveAnalysis)
@@ -181,7 +391,7 @@ public class Chemistry {
 		}
 
 		public String getName() {
-			return "GENE_" + myChar;
+			return Chemistry.GENE + myChar;
 		}
 
 		public final void serialize(ISerializer ser) {
@@ -259,6 +469,22 @@ public class Chemistry {
 		protected String getRecessiveAnalysis() {
 			return recessiveAnalysis;
 		}
+
+		public boolean eligbleForAnalysis() {
+			return isPresent() || !isSecretGene();
+		}
+
+		private boolean isSecretGene() {
+			final String[] secretGenes = new String[]{"q", "w", "z", "v1", "v2", "v3"};
+			for (int i = 0; i< secretGenes.length; i++)
+			{
+				if (secretGenes[i].equals(myChar))
+				{
+					return true;
+				}
+			}
+			return false;
+		}
 	}
 
 	public Gene[] getGeneArray() {
@@ -278,6 +504,23 @@ public class Chemistry {
 		return result;
 	}
 
+	public IChemObject[] getSubstanceArray() {
+		Vector interim = new Vector();
+		for (int i = 0; i < data.length; i++)
+		{
+			if (data[i] instanceof Substance)
+			{
+				interim.addElement(data[i]);
+			}
+		}
+		IChemObject[] result = new IChemObject[interim.size()];
+		for (int i = 0; i < interim.size(); i++)
+		{
+			result[i] = (IChemObject) interim.elementAt(i);
+		}
+		return result;
+	}
+
 	public boolean isCorrectNamePrefix(String suffix) {
 		for (int i = 0; i <data.length; i++)
 		{
@@ -287,5 +530,29 @@ public class Chemistry {
 			}
 		}
 		return false;
+	}
+
+	private IChemObject getGene(String geneName) {
+		return getByName(GENE + geneName);
+	}
+
+	private boolean hasNutrienOrPseudoNutrien(String nutrienName) {
+		return hasNutrien(nutrienName) || hasPseudoNutrien(nutrienName);
+	}
+
+	private boolean hasPseudoNutrien(String nutrienName) {
+		return has(PSEUDO_NUTRIEN + nutrienName);
+	}
+
+	private boolean hasNutrien(String nutrienName) {
+		return has(NUTRIEN + nutrienName);
+	}
+
+	private boolean has(String chemObjName) {
+		return getByName(chemObjName).isPresent();
+	}
+
+	private boolean hasGene(String geneName) {
+		return getGene(geneName).isPresent();
 	}
 }
