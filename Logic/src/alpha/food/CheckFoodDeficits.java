@@ -1,5 +1,6 @@
 package alpha.food;
 
+import alpha.AlphaIM;
 import alpha.chem.*;
 import alpha.food.deficit.*;
 import phones.InteractionModel.Descriptor;
@@ -12,7 +13,7 @@ public class CheckFoodDeficits extends alpha.AlphaProcess {
 	}
 
 	public Descriptor handle() {
-		if (!getAlphaModel().sick)
+		if (!getAlphaModel().sick && !AlphaIM.DEMO_MODE)
 		{
 			boolean deficitStarted = startDeficitIfNeeded(new FoodDeficitAlpha(model), Chemistry.ALPHA + 1)
 					|| startDeficitIfNeeded(new FoodDeficitBeta(model), Chemistry.BETA + 11)

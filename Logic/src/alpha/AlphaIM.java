@@ -273,7 +273,11 @@ public class AlphaIM extends ProcessModelBase{
 	}
 
 	public int calculateOxygenPause() {
-		return (int) ((10 + oxygenLevel * 5) * (randomInt(100)/100.0 + 1)) * getOoxygenGeneCoef();
+		return (int) ((10 + oxygenLevel * 5) * (randomInt(100)/100.0 + 1) * getOoxygenGeneCoef() * getDemoCoef());
+	}
+
+	private double getDemoCoef() {
+		return DEMO_MODE ? 0.2 : 1;
 	}
 
 	private int getOoxygenGeneCoef() {
