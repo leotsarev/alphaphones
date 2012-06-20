@@ -49,7 +49,7 @@ public class FoodDeficitGamma extends alpha.food.FoodDeficitBase {
 			addStatusMessage(getName(), "Ноги не слушаются. Хочу лежать");
 			break;
 		case 4:
-			addStatusMessage(getName(), "Ноги не слушаются, не могу стоять. Срочно нужна помощь");
+			addStatusMessage(getName(), "Ноги не слушаются, не могу стоять. Заставлю их помочь мне!");
 		default:
 			break;
 		}
