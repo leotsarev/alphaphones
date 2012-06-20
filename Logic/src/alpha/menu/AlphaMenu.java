@@ -3,6 +3,7 @@ package alpha.menu;
 import alpha.AlphaIM;
 import alpha.TestInit;
 import alpha.ideology.IdeologyCheck;
+import alpha.ideology.KillSomeOne;
 import alpha.oxygen.EnterBase;
 import alpha.oxygen.ExitBase;
 import alpha.oxygen.PutMaskOff;
@@ -41,6 +42,10 @@ public class AlphaMenu extends MenuBase {
 		}
 
 		addMenuItemAndBind(menu, "Выбор идеологии", new IdeologyCheck(model));
+		if (((AlphaIM) model).canGetKillChip())
+		{
+			addMenuItemAndBind(menu, "Совершить убийство", new KillSomeOne(model));
+		}
 		addMenuItemAndBind(menu, "Ранение", new WoundMenu(model));
 		addMenuItemAndBind(menu, "Лечь спать", new Asleep(model));
 		

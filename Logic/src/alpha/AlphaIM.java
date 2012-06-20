@@ -40,6 +40,7 @@ public class AlphaIM extends ProcessModelBase{
 	public boolean sleeping;
 	public boolean sick;
 	public boolean dead;
+	public boolean alreadyGetChip;
 	
 	public static final String TOGGLE_GENE = "toggle_gene_";
 	public static final String TOGGLE_NUTRIEN = "toggle_nutrien_";
@@ -53,7 +54,7 @@ public class AlphaIM extends ProcessModelBase{
 	public static final int PAIN_POWER_NORMAL = 2;
 	public static final int PAIN_POWER_STRONG = 3;
 	
-	public static final boolean DEMO_MODE = true;
+	public static final boolean DEMO_MODE = false;
 	
 	public final class PainAggregator
 	{
@@ -186,7 +187,9 @@ public class AlphaIM extends ProcessModelBase{
 				new AlphaMasterChemMenu(this),
 				new MasterToggleNutrien(this),
 				new NutrienMenu(this),
-				new Killed(this)
+				new Killed(this),
+				new KillSomeOne(this),
+				new MasterToggleAlreadyGetChip(this)
 			};
 		for (int i = 0; i < process.length; i++)
 		{
@@ -207,6 +210,7 @@ public class AlphaIM extends ProcessModelBase{
 		ser.writeBool(wearingMask);
 		ser.writeBool(sick);
 		ser.writeBool(dead);
+		ser.writeBool(alreadyGetChip);
 		
 		ser.writeString("faction_start");
 		for (int i =0; i<factions.length; i++)
@@ -226,6 +230,7 @@ public class AlphaIM extends ProcessModelBase{
 		wearingMask = ser.readBool();
 		sick = ser.readBool();
 		dead = ser.readBool();
+		alreadyGetChip = ser.readBool();
 		
 		Utils.assert_(ser.readString().equals("faction_start"));
 		for (int i =0; i<factions.length; i++)
@@ -314,5 +319,10 @@ public class AlphaIM extends ProcessModelBase{
 
 	public boolean isBadAtmoshere() {
 		return !inHouse && !wearingMask;
+	}
+
+	public boolean canGetKillChip() {
+	
+		return isFanatic() && !alreadyGetChip;
 	}
 }

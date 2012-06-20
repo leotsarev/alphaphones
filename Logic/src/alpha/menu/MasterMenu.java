@@ -5,6 +5,7 @@ import alpha.AlphaInit;
 import alpha.ToggleGender;
 import alpha.food.NutrienMenu;
 import alpha.genes.MasterGeneMenu;
+import alpha.ideology.MasterToggleAlreadyGetChip;
 import phones.InteractionModel.MenuDescriptor;
 import phones.MenuBase;
 import phones.ProcessModelBase;
@@ -30,6 +31,7 @@ public class MasterMenu extends MenuBase {
 			addMenuItemAndBind(menu, "Инициализация", new AlphaInit(model));
 		}
 		addMenuItemAndBind(menu, alphaIM.getGenderName() + " (переключить)", new ToggleGender(model));
+		addMenuItemAndBind(menu, (alphaIM.alreadyGetChip ? "Уже " : "Еще не ") + "брал чип убийства (переключить)" , new MasterToggleAlreadyGetChip(model));
 	}
 
 }
