@@ -31,6 +31,7 @@ public class Main {
 	static void next() {
 		while (true) {
 			long dt = (currentTime.getTime()-prevTime.getTime())/1000;
+			checkSerialize();
 			Descriptor descriptor = im.whatNext((int)dt, currentTime);
 			prevTime = currentTime;
 			remainingTimeout = descriptor.timeout == -1 ? 1 : descriptor.timeout;
@@ -60,6 +61,11 @@ public class Main {
 				signalMenuTimeout();
 			}
 		}
+	}
+
+	private static void checkSerialize() {
+		StringSerializer ser = new StringSerializer();
+		im.serialize(ser);
 	}
 
 	private static void signalMenuTimeout() {
