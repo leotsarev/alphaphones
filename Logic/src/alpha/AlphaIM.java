@@ -107,7 +107,6 @@ public class AlphaIM extends ProcessModelBase{
 
 	private void bindCommandWords() {
 		bindFixedCommandWord("HITME", new HitMeProcess(this));
-		//bindFixedCommandWord("MENU", new AlphaMenu(this));
 		
 		bindFixedCommandWord("INDIVIDUAL", new IdeologyChange(this, 0, 1));
 		bindFixedCommandWord("COMMONS", new IdeologyChange(this, 0, -1));
@@ -129,8 +128,6 @@ public class AlphaIM extends ProcessModelBase{
 		bindPrefixCommandWord(TOGGLE_GENE, new MasterToggleGene(this));
 		bindPrefixCommandWord(ANALYZE_GENE, new AnalyzeGene(this));
 		bindPrefixCommandWord(TOGGLE_NUTRIEN, new MasterToggleNutrien(this));
-		
-		bindPrefixCommandWord("_food_", new SetNutrient(this));
 		
 		bindFixedPhoneWord("MENU", new AlphaMenu(this));
 	}
@@ -190,6 +187,8 @@ public class AlphaIM extends ProcessModelBase{
 		ser.writeBool(sleeping);
 		ser.writeBool(wearingMask);
 		ser.writeBool(sick);
+		
+		ser.writeString("faction_start");
 		for (int i =0; i<factions.length; i++)
 		{
 			factions[i].serialize(ser);
@@ -206,6 +205,8 @@ public class AlphaIM extends ProcessModelBase{
 		sleeping = ser.readBool();
 		wearingMask = ser.readBool();
 		sick = ser.readBool();
+		
+		Utils.assert_(ser.readString().equals("faction_start"));
 		for (int i =0; i<factions.length; i++)
 		{
 			factions[i].unserialize(ser);
