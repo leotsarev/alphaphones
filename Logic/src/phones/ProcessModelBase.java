@@ -241,7 +241,7 @@ public class ProcessModelBase extends InteractionModel{
 			while (keys.hasMoreElements())
 			{
 				Object key = keys.nextElement();
-				result.put(key, result.get(key));
+				result.put(key, ProcessData.get(key));
 			}
 			return result;
 		}
