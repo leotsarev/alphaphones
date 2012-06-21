@@ -26,6 +26,7 @@ import alpha.AlphaIM;
 
 import phones.InteractionModel;
 import phones.InteractionModel.Descriptor;
+import phones.GenderDecorator;
 import phones.InteractionModelCheckDecorator;
 import phones.StringSerializer;
 import phones.Utils;
@@ -206,7 +207,8 @@ public class Main extends MIDlet implements ItemStateListener, CommandListener {
 		
 		code = "";
 
-		im = new InteractionModelCheckDecorator(new AlphaIM());
+		im = new GenderDecorator(new AlphaIM());
+		im = new InteractionModelCheckDecorator(im);
 
 		try {
 			StringSerializer ser = new StringSerializer();

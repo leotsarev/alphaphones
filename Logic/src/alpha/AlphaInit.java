@@ -14,9 +14,9 @@ public class AlphaInit extends AlphaProcess {
 
 	public Descriptor handle() {
 		getAlphaModel().setInitCompleted();
-		getAlphaModel().gender = true;
+		getAlphaModel().male = true;
 		getAlphaModel().updateCurrentFaction();
-		getAlphaModel().gender = true;
+		getAlphaModel().male = true;
 		getAlphaModel().inHouse = true;
 		getAlphaModel().wearingMask = false;
 		scheduleNow(new ScheduleNextOxygen(model));

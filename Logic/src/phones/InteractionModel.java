@@ -43,7 +43,7 @@ public abstract class InteractionModel {
 			timeout = DEFAULT_MENU_TIMEOUT;
 		}
 		
-		private static class MenuItem
+		static class MenuItem
 	    {
 			public MenuItem(String name, String command)
 			{
@@ -55,7 +55,7 @@ public abstract class InteractionModel {
 	    }
 		
 		public String menuHeader;
-        private Vector options = new Vector();
+        Vector options = new Vector();
         public String timeoutCommand = "";
         
 		public void addItem(String name, String command) {

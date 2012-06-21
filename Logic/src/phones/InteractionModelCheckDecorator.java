@@ -2,18 +2,16 @@ package phones;
 
 import java.util.Date;
 
-public class InteractionModelCheckDecorator extends InteractionModel {
-	
-	private InteractionModel innerModel;
+public class InteractionModelCheckDecorator extends IdentityIMDecorator {
 	
 	// TODO: check complete transition diagram compliance
 	private boolean commandWordAlreadyAsserted = false;
-	
+
 	public InteractionModelCheckDecorator(InteractionModel model)
 	{
-		innerModel = model;
+		super(model);
 	}
-
+	
 	public void reset() {
 		innerModel.reset();
 		commandWordAlreadyAsserted = false;

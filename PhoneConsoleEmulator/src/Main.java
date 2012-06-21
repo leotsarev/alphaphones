@@ -6,6 +6,7 @@ import java.util.Date;
 
 import alpha.AlphaIM;
 
+import phones.GenderDecorator;
 import phones.InteractionModel;
 import phones.InteractionModelCheckDecorator;
 import phones.StringSerializer;
@@ -105,7 +106,8 @@ public class Main {
 		in = new BufferedReader(new InputStreamReader(System.in));
 		out = new PrintStream(System.out, true, "utf-8"/*"866"*/);
 		
-		im = new InteractionModelCheckDecorator(new AlphaIM());
+		im = new GenderDecorator(new AlphaIM());
+		im = new InteractionModelCheckDecorator(im);
 		
 		
 		startTime = prevTime = currentTime = new Date(); 
@@ -181,6 +183,7 @@ public class Main {
 						next();
 						continue;
 					}
+					// FIXME: you can enter valid instead of menu option
 				}
 				catch (NumberFormatException e) {
 				}

@@ -15,11 +15,12 @@ import alpha.sleep.Asleep;
 import alpha.sleep.Awake;
 import alpha.wounds.ArmWound;
 import alpha.wounds.WoundMenu;
+import phones.IGender;
 import phones.ISerializer;
 import phones.ProcessModelBase;
 import phones.Utils;
 
-public class AlphaIM extends ProcessModelBase{
+public class AlphaIM extends ProcessModelBase implements IGender {
 
 	public Faction[] factions = Faction.createFactions(this);
 	public Faction currentFaction = null;
@@ -34,7 +35,7 @@ public class AlphaIM extends ProcessModelBase{
 	public final alpha.chem.Chemistry Chemistry = new alpha.chem.Chemistry();
 	
 	public boolean initCompleted;
-	public boolean gender;
+	public boolean male;
 	public boolean inHouse;
 	public boolean wearingMask;
 	public boolean sleeping;
@@ -55,6 +56,10 @@ public class AlphaIM extends ProcessModelBase{
 	public static final int PAIN_POWER_STRONG = 3;
 	
 	public static final boolean DEMO_MODE = false;
+	
+	public boolean isMale() {
+		return male;
+	}
 	
 	public final class PainAggregator
 	{
@@ -224,7 +229,7 @@ public class AlphaIM extends ProcessModelBase{
 	public void serialize(ISerializer ser) {
 		super.serialize(ser);
 		ser.writeBool(initCompleted);
-		ser.writeBool(gender);
+		ser.writeBool(male);
 		ser.writeBool(inHouse);
 		ser.writeBool(sleeping);
 		ser.writeBool(wearingMask);
@@ -245,7 +250,7 @@ public class AlphaIM extends ProcessModelBase{
 	public void unserialize(ISerializer ser) {
 		super.unserialize(ser);
 		initCompleted = ser.readBool();
-		gender = ser.readBool();
+		male = ser.readBool();
 		inHouse = ser.readBool();
 		sleeping = ser.readBool();
 		wearingMask = ser.readBool();
@@ -313,11 +318,11 @@ public class AlphaIM extends ProcessModelBase{
 	}
 
 	public void toggleGender() {
-		gender = !gender;
+		male = !male;
 	}
 
 	public String getGenderName() {
-		return gender ? "Мужчина" : "Женщина";
+		return male ? "Мужчина" : "Женщина";
 	}
 
 	public int calculateOxygenPause() {

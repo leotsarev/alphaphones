@@ -16,7 +16,7 @@ public abstract class AlphaProcess extends Process {
 	}
 
 	protected String gender(String m, String f) {
-		return getAlphaModel().gender ? m: f;
+		return getAlphaModel().male ? m: f;
 	}
 
 	protected final void setChemObj(String chemName) {
