@@ -306,7 +306,7 @@ public class AlphaIM extends ProcessModelBase implements IGender {
 			}
 		}
 		String factionName = (currentFaction != null) ? currentFaction.getName() : "Не определился"; 
-		status.addMessage("faction", "Фракция: " + factionName);
+		status.addMessage("faction", (isFanatic() ? "Фанатик" : "Фракция") + ": " + factionName);
 	}
 
 	public void selectFactionForFirstTime() {
