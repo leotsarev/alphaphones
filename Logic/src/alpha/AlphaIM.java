@@ -5,6 +5,7 @@ import java.util.Date;
 
 import alpha.chem.IChemObject;
 import alpha.chem.Chemistry.Nutrien;
+import alpha.disease.Malaria;
 import alpha.food.*;
 import alpha.food.deficit.*;
 import alpha.genes.*;
@@ -88,6 +89,8 @@ public class AlphaIM extends ProcessModelBase implements IGender {
 				return "в колене";
 			case LOCATION_WHOLE_BODY:
 				return "во всем теле";
+			case LOCATION_HEAD:
+				return "в виске";
 			default:
 				Utils.assert_(false, "Wrong location " + location);
 				return null;
@@ -180,6 +183,8 @@ public class AlphaIM extends ProcessModelBase implements IGender {
 		
 		bindPrefixCommandWord("06", new FoodItem(this));
 		bindPrefixCommandWord("12", new ChangeGene(this));
+		
+		bindFixedPhoneWord("402835", new Malaria(this));
 	}
 	
 	public Process createProcessByName(String name) {
@@ -229,7 +234,8 @@ public class AlphaIM extends ProcessModelBase implements IGender {
 				new IdeologyMasterStatus(this),
 				new FoodItem(this),
 				new ChangeGene(this),
-				new CheckFoodDeficits(this)
+				new CheckFoodDeficits(this),
+				new Malaria(this)
 			};
 		for (int i = 0; i < process.length; i++)
 		{
