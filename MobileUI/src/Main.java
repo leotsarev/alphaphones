@@ -114,12 +114,8 @@ public class Main extends MIDlet implements ItemStateListener, CommandListener {
 		mainScreen.setItemStateListener(this);
 		display.setCurrent(mainScreen);
 
-		if (menuDescriptor.alarm != InteractionModel.ALARM_SILENT) {
-			Alert a = new Alert(" ", " ", null, AlertType.ALARM);
-			a.setTimeout(300);
-			display.setCurrent(a, mainScreen);
-		}
-		
+		if (menuDescriptor.alarm != InteractionModel.ALARM_SILENT)
+			AlertType.ALARM.playSound(display);
 	}
 	
 	void createMessageBox() {
