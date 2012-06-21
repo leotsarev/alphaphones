@@ -1,4 +1,4 @@
-package disease;
+package alpha.disease;
 import alpha.AlphaIM;
 import phones.ProcessModelBase;
 

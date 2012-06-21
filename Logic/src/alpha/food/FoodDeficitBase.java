@@ -1,9 +1,9 @@
 package alpha.food;
 
-import disease.AlphaDiseaseBase;
+import phones.ProcessModelBase;
+import alpha.disease.AlphaDiseaseBase;
 import alpha.chem.IChemAction;
 import alpha.chem.IChemObject;
-import phones.ProcessModelBase;
 
 public abstract class FoodDeficitBase extends AlphaDiseaseBase implements IChemAction {
 
