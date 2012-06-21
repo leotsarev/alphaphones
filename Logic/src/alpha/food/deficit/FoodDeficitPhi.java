@@ -2,12 +2,14 @@ package alpha.food.deficit;
 
 import phones.ProcessModelBase;
 import phones.Utils;
+import alpha.chem.Chemistry;
 import alpha.food.FoodDeficitBase;
 
 public class FoodDeficitPhi extends FoodDeficitBase {
 
 	public FoodDeficitPhi(ProcessModelBase model) {
 		super(model);
+		setChem(Chemistry.NUTRIEN + "Phi");
 	}
 
 
@@ -60,9 +62,13 @@ public class FoodDeficitPhi extends FoodDeficitBase {
 
 	}
 
-	public String getName() {
+	protected String getStageMessage() {
 		// TODO Auto-generated method stub
-		return "____";
+		return null;
+	}
+	
+	public String getName() {
+		return "FoodDeficitPhi";
 	}
 
 }

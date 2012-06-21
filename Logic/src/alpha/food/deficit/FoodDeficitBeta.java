@@ -3,12 +3,14 @@ package alpha.food.deficit;
 import phones.ProcessModelBase;
 import phones.Utils;
 import alpha.AlphaIM;
+import alpha.chem.Chemistry;
 import alpha.food.FoodDeficitBase;
 
 public class FoodDeficitBeta extends FoodDeficitBase {
 
 	public FoodDeficitBeta(ProcessModelBase model) {
 		super(model);
+		setChem(Chemistry.NUTRIEN + "Beta");
 	}
 
 	protected String getHealMessage() {
@@ -67,8 +69,12 @@ public class FoodDeficitBeta extends FoodDeficitBase {
 		getAlphaModel().Pain.remove(getName(), AlphaIM.LOCATION_WHOLE_BODY);
 	}
 
+	protected String getStageMessage() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	public String getName() {
 		return "FoodDeficitBeta";
 	}
-
 }

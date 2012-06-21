@@ -1,5 +1,6 @@
 package alpha.food.deficit;
 
+import alpha.chem.Chemistry;
 import phones.ProcessModelBase;
 import phones.Utils;
 
@@ -7,6 +8,7 @@ public class FoodDeficitGamma extends alpha.food.FoodDeficitBase {
 
 	public FoodDeficitGamma(ProcessModelBase model) {
 		super(model);
+		setChem(Chemistry.NUTRIEN + "Gamma");
 	}
 
 
@@ -59,8 +61,12 @@ public class FoodDeficitGamma extends alpha.food.FoodDeficitBase {
 		removeStatusMessage(getName());
 	}
 
-	public String getName() {
+	protected String getStageMessage() {
 		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	public String getName() {
 		return "FoodDeficitGamma";
 	}
 

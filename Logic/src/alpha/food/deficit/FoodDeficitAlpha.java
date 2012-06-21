@@ -13,24 +13,7 @@ public class FoodDeficitAlpha extends alpha.food.FoodDeficitBase {
 		super(model);
 	}
 
-	public String getName() {
-		return "FoodDeficitAlpha";
-	}
-
-	protected String getHealMessage() {
-		switch (getStage()) {
-		case 1:
-			return "Боль в коленях прошла";
-		case 2:
-			return "Когда же пройдут эти несчастные колени, сил никаких нет? Впрочем, я чувствую себя спокойнее.";
-		case 3:
-			return "На ноги можно наступать, но колени все еще болят. Это очень раздражает!";
-		}
-		Utils.assert_(false);
-		return null;
-	}
-
-	protected String getProgressMessage() {
+	protected String getStageMessage() {
 		switch (getStage()) {
 		case 1:
 			return "Локоть пронзила мгновенная боль! Боль быстро прошла";
@@ -40,6 +23,10 @@ public class FoodDeficitAlpha extends alpha.food.FoodDeficitBase {
 			return "Сука, как меня все достало. И этот хмырь меня так бесит, пойду скажу ему!";
 		case 4:
 			return "Аааа, колени болят жутко, просто ужас, наступать на них нельзя. Впрочем, ничего и не хочется, лучше полежу.";
+		case HEALING_STAGE:
+			return "Кажется, боль начинает проходить, уже можно встать и даже пройтись... как же круто!";
+		case HEALED_STAGE:
+			return "Я полностью выздоровел!";
 		}
 		Utils.assert_(false);
 		return null;
@@ -59,6 +46,8 @@ public class FoodDeficitAlpha extends alpha.food.FoodDeficitBase {
 			addStatusMessage(ALPHA_DEFICIT_STAY, "Не могу стоять");
 			addStatusMessage(ALPHA_DEFICIT_PSI, "Апатия");
 			break;
+		case HEALED_STAGE:
+			addStatusMessage(ALPHA_DEFICIT_STAY, "Передвигаюсь с осторожностью");
 		default:
 			break;
 		}
@@ -70,4 +59,7 @@ public class FoodDeficitAlpha extends alpha.food.FoodDeficitBase {
 		getAlphaModel().Pain.remove(getName(), AlphaIM.LOCATION_KNEE);
 	}
 
+	public String getName() {
+		return "FoodDeficitAlpha";
+	}
 }

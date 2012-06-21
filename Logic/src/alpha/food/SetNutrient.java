@@ -1,6 +1,6 @@
 package alpha.food;
 
-import alpha.chem.ChemActionBase;
+import alpha.AlphaProcess;
 import alpha.chem.Chemistry;
 import phones.InteractionModel.Descriptor;
 import phones.ProcessModelBase;
@@ -14,7 +14,7 @@ public class SetNutrient extends NutrientPrefixBase  {
 	public Descriptor handle() {
 		targetNutrient().setPresent();
 		
-		ChemActionBase process = new RemoveNutrient(model, targetNutrient());
+		AlphaProcess process = new RemoveNutrient(model, targetNutrient());
 		
 		unscheduleEqual(process);
 		scheduleAfterMins(process, Chemistry.NUTRIEN_VANISH_MINS);

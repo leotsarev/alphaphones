@@ -683,7 +683,7 @@ public class ProcessModelBase extends InteractionModel{
 			
 		}
 	}
-	
+	 	
 	public Process createProcessByName(String name)
 	{
 		Process[] process = new Process[] {
@@ -700,7 +700,10 @@ public class ProcessModelBase extends InteractionModel{
 	}
 
 	public int randomInt(int n) {
-		return random.nextInt() % n;
+		long x = random.nextLong();
+		if (x < 0) x = -x;
+		if (x < 0) x = 0; // it is possible for minint
+		return (int) (x%n);
 	}
 
 	private void serializeProcess(ISerializer ser, IProcess item) {

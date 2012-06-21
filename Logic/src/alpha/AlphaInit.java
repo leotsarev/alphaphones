@@ -1,5 +1,6 @@
 package alpha;
 
+import alpha.chem.Chemistry.Nutrien;
 import alpha.food.CheckFoodDeficits;
 import alpha.oxygen.*;
 import phones.InteractionModel.Descriptor;
@@ -21,12 +22,15 @@ public class AlphaInit extends AlphaProcess {
 		scheduleNow(new ScheduleNextOxygen(model));
 		scheduleAfterMins(new CheckFoodDeficits(model), 0);
 		
-		getAlphaModel().Chemistry.setAllNutrients();
+		Nutrien[] n = getAlphaModel().Chemistry.getNutrienArray();
+		for (int i=0;i<n.length;i++)
+		{
+			getAlphaModel().consumeNutrien(n[i]);
+		}
 		return null;
 	}
 
 	public String getName() {
 		return "AlphaInit";
 	}
-
 }

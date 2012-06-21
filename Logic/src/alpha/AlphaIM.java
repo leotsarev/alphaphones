@@ -4,6 +4,7 @@ package alpha;
 import java.util.Date;
 
 import alpha.chem.IChemObject;
+import alpha.chem.Chemistry.Nutrien;
 import alpha.food.*;
 import alpha.food.deficit.*;
 import alpha.genes.*;
@@ -17,7 +18,6 @@ import alpha.wounds.WoundMenu;
 import phones.ISerializer;
 import phones.ProcessModelBase;
 import phones.Utils;
-import phones.Sample.HitMeProcess;
 
 public class AlphaIM extends ProcessModelBase{
 
@@ -54,7 +54,7 @@ public class AlphaIM extends ProcessModelBase{
 	public static final int PAIN_POWER_NORMAL = 2;
 	public static final int PAIN_POWER_STRONG = 3;
 	
-	public static final boolean DEMO_MODE = true;
+	public static final boolean DEMO_MODE = false;
 	
 	public final class PainAggregator
 	{
@@ -111,6 +111,10 @@ public class AlphaIM extends ProcessModelBase{
 		return super.whatNext(passedSecs, currentTime);
 	}
 	
+	public AlphaIM() {
+		bindCommandWords();
+	}
+	
 	public void reset()
 	{
 		super.reset();
@@ -162,7 +166,6 @@ public class AlphaIM extends ProcessModelBase{
 		// TODO Auto-generate
 		Process[] process =
 			{
-				new HitMeProcess(this),
 				new AlphaMenu(this),
 				new IdeologyMenu(this),
 				new IdeologyChange(this),
@@ -188,7 +191,14 @@ public class AlphaIM extends ProcessModelBase{
 				new ExitBase(this),
 				new SetNutrient(this),
 				new RemoveNutrient(this),
+				
 				new FoodDeficitAlpha(this),
+				new FoodDeficitBeta(this),
+				new FoodDeficitGamma(this),
+				new FoodDeficitDelta(this),
+				new FoodDeficitPhi(this),
+				new FoodDeficitChi(this),
+				
 				new TestInit(this),
 				new AlphaMasterChemMenu(this),
 				new MasterToggleNutrien(this),
@@ -198,7 +208,8 @@ public class AlphaIM extends ProcessModelBase{
 				new MasterToggleAlreadyGetChip(this),
 				new IdeologyMasterStatus(this),
 				new FoodItem(this),
-				new ChangeGene(this)
+				new ChangeGene(this),
+				new CheckFoodDeficits(this)
 			};
 		for (int i = 0; i < process.length; i++)
 		{
@@ -342,5 +353,11 @@ public class AlphaIM extends ProcessModelBase{
 	public void setInitCompleted() {
 		initCompleted =  true;
 		status.removeMessage("init");
+	}
+	
+	public void consumeNutrien(Nutrien nutrien) {
+		SetNutrient nutrient = new SetNutrient(this);
+		nutrient.setChem(nutrien);
+		scheduleNow(nutrient);
 	}
 }

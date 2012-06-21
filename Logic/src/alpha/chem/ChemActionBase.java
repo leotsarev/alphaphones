@@ -5,7 +5,7 @@ import phones.ProcessModelBase;
 import phones.Utils;
 import alpha.AlphaProcess;
 
-public abstract class ChemActionBase extends AlphaProcess implements IPrefixHandler {
+public abstract class ChemActionBase extends AlphaProcess implements IPrefixHandler, IChemAction {
 
 	public ChemActionBase(ProcessModelBase model) {
 		super(model);
@@ -21,29 +21,14 @@ public abstract class ChemActionBase extends AlphaProcess implements IPrefixHand
 
 	public final void setSuffixValue(String suffix) {
 		Utils.assert_(isValidSuffix(suffix));
-		setChemName(suffix);
+		setChemObj(suffix);
 	}
 
-	private void setChemName(String chemName) {
-		setStringArg("chemName", chemName);
+	public void setChem(String chemName) {
+		setChemObj(chemName);
 	}
 
-	protected final IChemObject getChemObj() {
-		IChemObject targetGene = getAlphaModel().Chemistry.getByName(getChemName());
-		Utils.assert_(targetGene != null, "Can't find gen:" + getChemName());
-		return targetGene;
+	public void setChem(IChemObject chemObj) {
+		setChemObj(chemObj);
 	}
-
-	protected final String getChemName() {
-		return getStringArg("chemName");
-	}
-
-	protected final void setChemObj(IChemObject obj) {
-		setStringArg("chemName", obj.getName());
-	}
-
-	public void setTargetChemObj(IChemObject chemObj) {
-		setChemName(chemObj.getName());
-	}
-
 }

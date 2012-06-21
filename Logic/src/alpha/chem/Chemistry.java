@@ -20,7 +20,7 @@ public class Chemistry {
 	public static final String BETA = "Beta";
 	public static final String ALPHA = "Alpha";
 	private static final String PSEUDO_NUTRIEN = "PseudoNutrien";
-	private static final String NUTRIEN = "Nutrien";
+	public static final String NUTRIEN = "Nutrien";
 	private static final String GENE = "GENE_";
 
 	private IChemObject[] data;
@@ -341,11 +341,7 @@ public class Chemistry {
 		{
 			return getName() + (nutrienValue ? "+" : "-");
 		}
-
-		public String getDeficitName() {
-			return "FoodDeficit" + getName();
-		}
-
+		
 		public boolean eligbleForAnalysis() {
 			return false;
 		}
@@ -585,14 +581,5 @@ public class Chemistry {
 
 	private boolean hasGene(String geneName) {
 		return getGene(geneName).isPresent();
-	}
-
-	public void setAllNutrients() {
-		Nutrien[] n = getNutrienArray();
-		for (int i=0;i<n.length;i++)
-		{
-			n[i].setPresent();
-		}
-		
 	}
 }

@@ -1,83 +1,29 @@
 package alpha.food;
 
-import phones.InteractionModel.Descriptor;
+import alpha.SimpleDiseaseBase;
+import alpha.chem.IChemAction;
+import alpha.chem.IChemObject;
 import phones.ProcessModelBase;
-import phones.Utils;
 
-public abstract class FoodDeficitBase extends NutrienActionBase {
+public abstract class FoodDeficitBase extends SimpleDiseaseBase implements IChemAction {
 
 	public FoodDeficitBase(ProcessModelBase model) {
 		super(model);
-		setIntArg("stage", 0);
-	}
-
-	protected int getMinsToDeficitProgress()
-	{
-		return 20;
 	}
 	
-	protected int getMinsToDeficitHeal() {
-		return 5;
+	public void setChem(String chemName) {
+		setChemObj(chemName);
 	}
 
-	public final Descriptor handle() {
-		
-		int stageChange = getStageChange();
-		int nextStage = getStage() + stageChange;
-		
-		Utils.assert_(nextStage >=0);
-		
-		setIntArg("stage", nextStage);
-		
-		cleanupStatus();
-		
-		if (nextStage == 0) {
-			getAlphaModel().sick = false;
-			return null;
-		} 
-		
-		updateStatusForStage();
-		
-		scheduleAfterMins(this, stageChange > 0 ? getMinsToDeficitProgress() : getMinsToDeficitHeal());
-		
-		if (stageChange == 0)
-		{
-			return null;
-		}
-
-		String message = stageChange > 0 ? getProgressMessage() : getHealMessage();
-		return message !=null ? createMessage(message) : null;
+	public void setChem(IChemObject chemObj) {
+		setChemObj(chemObj);
 	}
 
-	
-
-	protected abstract String getHealMessage();
-
-	protected abstract String getProgressMessage();
-
-	protected abstract void updateStatusForStage();
-
-	private int getStageChange() {
-		int stageChange;
-		if (getStage() == getMaxStage())
-		{
-			stageChange = 0;
-		}
-		else
-		{
-			stageChange = getChemObj().isPresent() ? -1 : +1;
-		}
-		return stageChange;
+	protected boolean shouldHeal() {
+		return getChemObj().isPresent();
 	}
 
-	protected final int getStage() {
-		return getIntArg("stage");
+	protected int getMaxStage() {
+		return 4;
 	}
-
-	private int getMaxStage() {
-		return 5;
-	}
-
-	protected abstract void cleanupStatus();
-
 }

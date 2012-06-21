@@ -26,11 +26,11 @@ public class FoodItem extends ThreeDigitCodeBase {
 			int bitFlag = foodFlag & (1 << i);
 			if (bitFlag>0)
 			{
-				SetNutrient nutrient = new SetNutrient(model);
-				nutrient.setTargetChemObj(nutriens[i]);
-				scheduleNow(nutrient);
+				getAlphaModel().consumeNutrien(nutriens[i]);
 			}
 		}
 		return null;
 	}
+
+
 }
