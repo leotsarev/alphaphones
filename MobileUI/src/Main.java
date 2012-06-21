@@ -36,6 +36,8 @@ import phones.Sample.SampleIM;
 
 public class Main extends MIDlet implements ItemStateListener, CommandListener {
 
+	static final int RECURRENT_ALARM_INTERVAL = 10;
+	
 	private Display display;
 	private Form mainScreen;
 	ChoiceGroup choiceGroup;
@@ -52,7 +54,8 @@ public class Main extends MIDlet implements ItemStateListener, CommandListener {
 	String code;
 	
 	Timer timer;
-	TimerTask timerTask = null;
+	TimerTask timeoutTimerTask = null;
+	TimerTask alarmTimerTask = null;
 	
 	
 	synchronized public void itemStateChanged(Item item) {
@@ -128,7 +131,11 @@ public class Main extends MIDlet implements ItemStateListener, CommandListener {
 	}
 	
  	synchronized void processDescriptor() {
-		if (descriptor instanceof SleepDescriptor) {
+		if (alarmTimerTask != null)
+			alarmTimerTask.cancel();
+		alarmTimerTask = null;
+ 		
+ 		if (descriptor instanceof SleepDescriptor) {
 			menuDescriptor = null;
 			sleepDescriptor = (SleepDescriptor)descriptor;
 			
@@ -163,7 +170,9 @@ public class Main extends MIDlet implements ItemStateListener, CommandListener {
 			else
 				createMenu();
 		
-			// TODO: recurring alarms
+			// recurring alarms
+			alarmTimerTask = new AlarmTimerTask();
+			timer.schedule(alarmTimerTask, Main.RECURRENT_ALARM_INTERVAL*1000);
 		}
 
 		if (descriptor.timeout == -1)
@@ -171,10 +180,10 @@ public class Main extends MIDlet implements ItemStateListener, CommandListener {
 
 		Utils.assert_(descriptor.timeout >= 0);
 		
-		if (timerTask != null)
-			timerTask.cancel();
-		timerTask = new TestTimerTask();
-		timer.schedule(timerTask, descriptor.timeout*1000);
+		if (timeoutTimerTask != null)
+			timeoutTimerTask.cancel();
+		timeoutTimerTask = new TimeoutTimerTask();
+		timer.schedule(timeoutTimerTask, descriptor.timeout*1000);
 		
 	}
  	
@@ -274,14 +283,14 @@ public class Main extends MIDlet implements ItemStateListener, CommandListener {
 	protected void pauseApp() {
 	}
 
-	private class TestTimerTask extends TimerTask {
+	private class TimeoutTimerTask extends TimerTask {
 		public final void run() {
 			synchronized (Main.this) {
 				
 				// this check is for unlikely event that task was cancelled right
 				// after run method started executing but before it entered
 				// critical section
-				if (timerTask == null)
+				if (timeoutTimerTask == null)
 					return;
 				
 				if (sleepDescriptor != null) {
@@ -297,7 +306,17 @@ public class Main extends MIDlet implements ItemStateListener, CommandListener {
 			}
 		}
 	}
-	
+
+	private class AlarmTimerTask extends TimerTask {
+		public final void run() {
+			synchronized (Main.this) {
+				AlertType.ALARM.playSound(display);
+				alarmTimerTask = new AlarmTimerTask();
+				timer.schedule(alarmTimerTask, Main.RECURRENT_ALARM_INTERVAL*1000);
+			}
+		}
+	}
+
 	class KeyCatcher extends CustomItem {
 		protected void keyPressed(int keyCode) {
 			Main.this.keyPressed(keyCode);

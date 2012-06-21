@@ -19,12 +19,12 @@ public class SampleIM extends InteractionModel {
 		if ("123".equals(command)) {
 			command = null;
 			MenuDescriptor result = new MenuDescriptor();
-			result.timeout = 10;
+			result.timeout = 20;
 			result.menuHeader = "Choose one option:";
 			result.addItem("Apples","APPLE");
 			result.addItem("bananas", "BANANA");
 			result.timeoutCommand = "TIMEOUT";
-			result.alarm = ALARM_SINGLE;
+			result.alarm = ALARM_RECURRENT;
 			return result;
 		}
 		
