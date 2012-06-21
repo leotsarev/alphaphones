@@ -145,6 +145,15 @@ public class Main {
 				}
 			}
 			
+			if (input.startsWith("hour")) {
+				try {
+					wait(60*60);
+					continue;
+				}
+				catch (NumberFormatException e) {
+				}
+			}
+			
 			
 			
 			if (sleepDescriptor != null) {
