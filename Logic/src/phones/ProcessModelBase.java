@@ -206,7 +206,7 @@ public class ProcessModelBase extends InteractionModel{
 			result.menuHeader = message;
 			result.timeout = 30;
 			result.alarm = ALARM_SINGLE;
-			result.addItem("ОК", "");
+			result.addItem("Ok", "");
 			return result;
 		}
 		
@@ -216,7 +216,7 @@ public class ProcessModelBase extends InteractionModel{
 			result.menuHeader = message;
 			result.timeout = 10;
 			result.alarm = ALARM_SILENT;
-			result.addItem("ОК", "");
+			result.addItem("Ok", "");
 			return result;
 		}
 		
