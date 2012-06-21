@@ -33,7 +33,7 @@ public abstract class ThreeDigitCodeBase extends AlphaProcess implements IPrefix
 	}
 
 	public final boolean isStartOfSuffix(String suffix) {
-		return suffix.length() <= SUFFIX_LENGTH;
+		return suffix.length() < SUFFIX_LENGTH;
 	}
 
 	protected final int getCode() {

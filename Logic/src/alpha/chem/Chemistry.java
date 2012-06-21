@@ -485,6 +485,20 @@ public class Chemistry {
 			}
 			return false;
 		}
+
+		public void setValue(int value) {
+			switch (value) {
+			case 0:
+				setNotPresent();
+				break;
+			case 1:
+				setHalfPresent();
+			case 2:
+				setPresent();
+			default:
+				break;
+			}
+		}
 	}
 
 	public Gene[] getGeneArray() {

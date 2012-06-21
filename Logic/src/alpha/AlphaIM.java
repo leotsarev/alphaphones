@@ -21,7 +21,7 @@ import phones.Sample.HitMeProcess;
 
 public class AlphaIM extends ProcessModelBase{
 
-	public Faction[] factions;
+	public Faction[] factions = Faction.createFactions(this);
 	public Faction currentFaction = null;
 	
 	public static final int OXYGEN_MIN = 0;
@@ -155,6 +155,7 @@ public class AlphaIM extends ProcessModelBase{
 		bindFixedPhoneWord("ANALYZE", new GeneAnalyzeMenu(this));
 		
 		bindPrefixCommandWord("06", new FoodItem(this));
+		bindPrefixCommandWord("12", new ChangeGene(this));
 	}
 	
 	public Process createProcessByName(String name) {
@@ -196,7 +197,8 @@ public class AlphaIM extends ProcessModelBase{
 				new KillSomeOne(this),
 				new MasterToggleAlreadyGetChip(this),
 				new IdeologyMasterStatus(this),
-				new FoodItem(this)
+				new FoodItem(this),
+				new ChangeGene(this)
 			};
 		for (int i = 0; i < process.length; i++)
 		{
