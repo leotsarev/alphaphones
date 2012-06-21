@@ -168,12 +168,12 @@ public class ProcessModelBase extends InteractionModel{
 		public abstract String getName();
 		protected ProcessModelBase model;
 		
-		protected String getStringArg(String key)
+		protected final String getStringArg(String key)
 		{
 			return (String) ProcessData.get(key);
 		}
 		
-		protected void setStringArg(String key, String value)
+		protected final void setStringArg(String key, String value)
 		{
 			ProcessData.put(key, value);
 		}
@@ -188,11 +188,11 @@ public class ProcessModelBase extends InteractionModel{
 			ProcessData = ser.readDict();
 		}
 		
-		protected int getIntArg(String key) {
+		protected final int getIntArg(String key) {
 			return Integer.parseInt(getStringArg(key));
 		}
 		
-		public void setIntArg(String key, int coord) {
+		public final void setIntArg(String key, int coord) {
 			setStringArg(key, Integer.toString(coord));
 		}
 		
@@ -234,7 +234,7 @@ public class ProcessModelBase extends InteractionModel{
 			model.status.removeMessage(tag);
 		}
 		
-		public Hashtable cloneData()
+		public final Hashtable cloneData()
 		{
 			Enumeration keys = ProcessData.keys();
 			Hashtable result = new Hashtable();
