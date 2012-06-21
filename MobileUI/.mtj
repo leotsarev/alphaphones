@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mtjMetadata jad="alpha.jad" version="1.2.1.201101310801">
+<mtjMetadata jad="alpha.jad" version="1.2.2.201110240906">
    <device group="Oracle Java(TM) Platform Micro Edition SDK 3.0.5" name="DefaultCldcPhone1"/>
    <signing projectSpecific="false" signProject="false">
       <alias/>
@@ -8,16 +8,16 @@
       <configuration active="true" name="DefaultCldcPhone1">
          <device group="Oracle Java(TM) Platform Micro Edition SDK 3.0.5" name="DefaultCldcPhone1"/>
          <symbolSet name="DefaultCldcPhone1">
-            <symbol name="screen.isColor" value="true"/>
             <symbol name="MMAPI" value="1.2"/>
+            <symbol name="screen.isColor" value="true"/>
             <symbol name="descriptor" value="CLDC emulator"/>
             <symbol name="screen.bitDepth" value="16"/>
             <symbol name="JSR82" value="1.1"/>
             <symbol name="apis.supported" value="J2ME-WS-1.0,JSR179-1.0,JSR180-1.1.0,JSR184-1.1,JSR211-1.0,JSR226-1.0,JSR229-1.1,JSR234-1.0,JSR238-1.0,JSR239-1.0,JSR253-1.0,JSR256-1.2,JSR257-1.0,JSR258-1.0,JSR280-1.0,JSR281-1.0,JSR293-2.0,JSR75-1.0,JSR82-1.1,MMAPI-1.2,SATSA-1.0,WMA-1.1,WMA-2.0"/>
             <symbol name="JSR280" value="1.0"/>
             <symbol name="JSR226" value="1.0"/>
-            <symbol name="MIDP" value="2.1"/>
             <symbol name="JSR281" value="1.0"/>
+            <symbol name="MIDP" value="2.0"/>
             <symbol name="JSR229" value="1.1"/>
             <symbol name="SATSA" value="1.0"/>
             <symbol name="CLDC" value="1.1"/>
@@ -33,8 +33,8 @@
             <symbol name="screen.isTouch" value="true"/>
             <symbol name="JSR239" value="1.0"/>
             <symbol name="JSR211" value="1.0"/>
-            <symbol name="JSR253" value="1.0"/>
             <symbol name="JSR234" value="1.0"/>
+            <symbol name="JSR253" value="1.0"/>
             <symbol name="JSR75" value="1.0"/>
             <symbol name="JSR184" value="1.1"/>
             <symbol name="version.configuration" value="CLDC-1.1"/>
