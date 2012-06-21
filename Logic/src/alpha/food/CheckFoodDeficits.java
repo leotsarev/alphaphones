@@ -2,7 +2,12 @@ package alpha.food;
 
 import alpha.AlphaIM;
 import alpha.chem.*;
+import alpha.disease.AggressiveDisease;
+import alpha.disease.DepressiveDisease;
+import alpha.disease.EmpathicDisease;
 import alpha.disease.OkrDisease;
+import alpha.disease.ParalyzeDisease;
+import alpha.disease.VirusDiseaseBase;
 import alpha.food.deficit.*;
 import phones.InteractionModel.Descriptor;
 import phones.ProcessModelBase;
@@ -30,8 +35,22 @@ public class CheckFoodDeficits extends alpha.AlphaProcess {
 		}
 		
 		scheduleNow(new OkrDisease(model));
+		scheduleNow(new ParalyzeDisease(model));
+		
+		startVirusDiseaseIfNeeded(new EmpathicDisease(model));
+		startVirusDiseaseIfNeeded(new AggressiveDisease(model));
+		startVirusDiseaseIfNeeded(new DepressiveDisease(model));
+		
 		scheduleAfterMins(this, 10);
 		return null;
+	}
+
+	private void startVirusDiseaseIfNeeded(VirusDiseaseBase virus) {
+		VirusDiseaseBase process = virus;
+		if (process.shouldStartDisease())
+		{
+			scheduleAfterMins(process, 120);
+		}
 	}
 
 	private void startDeficitIfNeeded(IChemAction deficit, String chemName) {

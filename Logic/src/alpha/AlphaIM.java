@@ -243,7 +243,11 @@ public class AlphaIM extends ProcessModelBase implements IGender {
 				new Vaskulit(this),
 				
 				new OkrDisease(this),
-				new ParalyzeDisease(this)
+				new ParalyzeDisease(this),
+				
+				new EmpathicDisease(this),
+				new DepressiveDisease(this),
+				new AggressiveDisease(this)
 			};
 		for (int i = 0; i < process.length; i++)
 		{
