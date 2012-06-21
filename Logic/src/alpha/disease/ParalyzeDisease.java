@@ -7,7 +7,7 @@ public class ParalyzeDisease extends GeneDiseaseBase {
 
 	public ParalyzeDisease(ProcessModelBase model) {
 		super(model);
-		setChemObj(getAlphaModel().Chemistry.getGene("t"))
+		setChemObj(getAlphaModel().Chemistry.getGene("t"));
 	}
 
 	protected String getStageMessage() {

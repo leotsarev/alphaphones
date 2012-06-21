@@ -9,6 +9,10 @@ public abstract class GeneDiseaseBase extends AlphaDiseaseBase {
 	}
 
 	protected final int getMaxStage() {
+		return 4;
+	}
+	
+	protected final int getQuantLenInMins() {
 		return 60;
 	}
 
@@ -22,7 +26,7 @@ public abstract class GeneDiseaseBase extends AlphaDiseaseBase {
 	}
 
 	protected final boolean shouldStartDisease() {
-		return hasDefectGene();
+		return hasDefectGene() && super.shouldStartDisease();
 	}
 
 }
