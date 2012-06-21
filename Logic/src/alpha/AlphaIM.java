@@ -150,6 +150,8 @@ public class AlphaIM extends ProcessModelBase{
 		bindFixedPhoneWord("DEATH4EVER3028", new Killed(this));
 		bindFixedPhoneWord("DEATH4EVER4453", new Killed(this));
 		bindFixedPhoneWord("ANALYZEGENOM", new GeneAnalyzeMenu(this));
+		
+		bindPrefixCommandWord("06", new FoodItem(this));
 	}
 	
 	public Process createProcessByName(String name) {
@@ -190,7 +192,8 @@ public class AlphaIM extends ProcessModelBase{
 				new Killed(this),
 				new KillSomeOne(this),
 				new MasterToggleAlreadyGetChip(this),
-				new IdeologyMasterStatus(this)
+				new IdeologyMasterStatus(this),
+				new FoodItem(this)
 			};
 		for (int i = 0; i < process.length; i++)
 		{

@@ -51,4 +51,10 @@ public class Utils {
 		assert_(join(sep, result).equals(s));
 		return result;
 	}
+	
+	public static int quickHash(int val)
+	{
+		assert_(val < 1000);
+		return (377*val+317)%1000;
+	}
 }
