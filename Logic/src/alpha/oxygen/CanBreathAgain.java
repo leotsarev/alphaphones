@@ -12,7 +12,7 @@ public class CanBreathAgain extends OxygenProcess{
 	public Descriptor handle() {
 		removeStatusMessage(BREATH);
 		scheduleNow(new ScheduleNextOxygen(model));
-		return createMessage("Вроде вы отдохнули, можно опять вернуться к труду.");
+		return createMessage("Отдохнул" + gender("", "a") + ", можно опять вернуться к труду.");
 	}
 
 	public String getName() {
