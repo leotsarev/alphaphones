@@ -188,6 +188,10 @@ public class AlphaIM extends ProcessModelBase implements IGender {
 		
 		bindFixedPhoneWord("402835", new Malaria(this));
 		bindFixedPhoneWord("402356", new Malaria(this));
+		
+		bindFixedCommandWord("84256829", new SetOxygenLevel(this, 1));
+		bindFixedCommandWord("84783829", new SetOxygenLevel(this, 2));
+		bindFixedCommandWord("84412829", new SetOxygenLevel(this, 3));
 	}
 	
 	public Process createProcessByName(String name) {
@@ -247,7 +251,9 @@ public class AlphaIM extends ProcessModelBase implements IGender {
 				
 				new EmpathicDisease(this),
 				new DepressiveDisease(this),
-				new AggressiveDisease(this)
+				new AggressiveDisease(this),
+				
+				new SetOxygenLevel(this)
 			};
 		for (int i = 0; i < process.length; i++)
 		{
@@ -359,7 +365,7 @@ public class AlphaIM extends ProcessModelBase implements IGender {
 	}
 
 	public int calculateOxygenPause() {
-		return (int) ((10.0 + oxygenLevel * 5) * (randomInt(100)/100.0 + 1) * getOoxygenGeneCoef() * getDemoCoef());
+		return (int) ((10.0 + oxygenLevel * 5) * (randomInt(100)/100.0 + 1) * getOoxygenGeneCoef() * getDemoCoef()) * (1 + Chemistry.getGene("o").getNumericValue());
 	}
 
 	private double getDemoCoef() {

@@ -29,7 +29,7 @@ public class FoodItem extends ThreeDigitCodeBase {
 				getAlphaModel().consumeNutrien(nutriens[i]);
 			}
 		}
-		return null;
+		return createMessage("Я поел{/а}");
 	}
 
 

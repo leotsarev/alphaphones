@@ -24,6 +24,7 @@ public class AlphaMasterChemMenu extends phones.MenuBase {
 			menu.addItem(items[i].toString(), "");
 		}
 		menu.addItem("Иммунитет: " + chem.getImmunityValue(), "");
+		menu.addItem("Кислород: " + ((AlphaIM)model).oxygenLevel, "");
 	}
 
 	public String getName() {

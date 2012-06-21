@@ -1,6 +1,7 @@
 package alpha;
 
 import alpha.chem.IChemObject;
+import phones.InteractionModel.Descriptor;
 import phones.ProcessModelBase;
 import phones.ProcessModelBase.Process;
 import phones.Utils;
@@ -33,6 +34,10 @@ public abstract class AlphaProcess extends Process {
 
 	protected final void setChemObj(IChemObject chemObj) {
 		setChemObj(chemObj.getName());
+	}
+
+	protected Descriptor nothing() {
+		return createMessage("Ничего не произошло");
 	}
 
 }

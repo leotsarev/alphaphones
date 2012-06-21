@@ -10,7 +10,7 @@ public class OutOfOxygen extends OxygenProcess {
 	}
 
 	public Descriptor handle() {
-		int oxygenPauseInMins = 1 - getAlphaModel().oxygenLevel;
+		int oxygenPauseInMins = 3 - getAlphaModel().oxygenLevel;
 		if (oxygenPauseInMins <= 0)
 		{
 			return null;
