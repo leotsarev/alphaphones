@@ -1,6 +1,5 @@
 package alpha.food.deficit;
 
-import alpha.chem.Chemistry;
 import phones.ProcessModelBase;
 import phones.Utils;
 
@@ -8,33 +7,22 @@ public class FoodDeficitGamma extends alpha.food.FoodDeficitBase {
 
 	public FoodDeficitGamma(ProcessModelBase model) {
 		super(model);
-		setChem(Chemistry.NUTRIEN + "Gamma");
 	}
 
-
-	protected String getHealMessage() {
-		switch (getStage()) {
-		case 1:
-			return "Все еще чешется...";
-		case 2:
-			return "А вот и чесотка, я скучал без нее... И как же бесят эти рожи! Зато ноги больше не беспокоят...";
-		case 3:
-			return "Кажется, я могу встать на ноги. Но лучше не буду...";
-		}
-		Utils.assert_(false);
-		return null;
-	}
-
-	protected String getProgressMessage() {
+	protected String getStageMessage() {
 		switch (getStage()) {
 		case 1:
 			return "Отчаянно зудит кожа на запястьях, да и много где. Почешусь-ка от души под лопатками!";
 		case 2:
 			return "Эта чесотка сведет меня с ума! И они постоянно хотят от меня всякой чуши. Наору на одного, может отстанут...";
 		case 3:
-			return "Я очень слаб, и ноги меня плохо слушаются. Хорошо бы полежать минутку-другую...";
+			return "Я очень слаб{/а}, и ноги меня плохо слушаются. Хорошо бы полежать минутку-другую...";
 		case 4:
 			return "Ноги совсем перестали двигаться! Кто-то должен мне помочь, пока не поздно. Заставлю их, если потребуется!!";
+		case HEALING_STAGE:
+			return "Уф, наконец-то. Я смог пошевелить ступней. Еще раз, и другой тоже! Как же славно, попробую встать.";
+		case HEALED_STAGE:
+			return "Я полностью выздоровел{/а}!";
 		}
 		Utils.assert_(false);
 		return null;
@@ -52,6 +40,8 @@ public class FoodDeficitGamma extends alpha.food.FoodDeficitBase {
 			break;
 		case 4:
 			addStatusMessage(getName(), "Ноги не слушаются, не могу стоять. Заставлю их помочь мне!");
+		case HEALING_STAGE:
+			addStatusMessage(getName(), CAN_T_STAY);
 		default:
 			break;
 		}
@@ -61,11 +51,6 @@ public class FoodDeficitGamma extends alpha.food.FoodDeficitBase {
 		removeStatusMessage(getName());
 	}
 
-	protected String getStageMessage() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
 	public String getName() {
 		return "FoodDeficitGamma";
 	}

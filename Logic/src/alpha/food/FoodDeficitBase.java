@@ -7,6 +7,8 @@ import phones.ProcessModelBase;
 
 public abstract class FoodDeficitBase extends SimpleDiseaseBase implements IChemAction {
 
+	protected static final String CAN_T_STAY = "Не могу стоять без помощи";
+
 	public FoodDeficitBase(ProcessModelBase model) {
 		super(model);
 	}

@@ -3,39 +3,28 @@ package alpha.food.deficit;
 import phones.ProcessModelBase;
 import phones.Utils;
 import alpha.AlphaIM;
-import alpha.chem.Chemistry;
 import alpha.food.FoodDeficitBase;
 
 public class FoodDeficitBeta extends FoodDeficitBase {
 
 	public FoodDeficitBeta(ProcessModelBase model) {
 		super(model);
-		setChem(Chemistry.NUTRIEN + "Beta");
 	}
 
-	protected String getHealMessage() {
-		switch (getStage()) {
-		case 1:
-			return "Интересно, рука так и останется парализованной навсегда?";
-		case 2:
-			return "К счастью, боль ушла, но подвижность руки не вернулась.";
-		case 3:
-			return "Ага, в голове проясняется. Я хоть вспомнил как кого зовут... Но боль вернулась! ";
-		}
-		Utils.assert_(false);
-		return null;
-	}
-
-	protected String getProgressMessage() {
+	protected String getStageMessage() {
 		switch (getStage()) {
 		case 1:
 			return "Руку на несколько секунд охватывает жгучая боль! Боль быстро прошла.";
 		case 2:
 			return "Опять болевой приступ! Все тело сводит судорогой, но затем боль уходит.";
 		case 3:
-			return "Все тело болит, левая рука по-прежнему не двигается. Нахлынуло смутное чувство тревоги. Похоже, меня отравили!";
+			return "Паралич распространяется на всю половину тела. Нахлынуло смутное чувство тревоги. Похоже, меня отравили!";
 		case 4:
-			return "Я почти ничего не помню. Как зовут этих людей? Что было вчера? Я должен понять, кто меня отравил, пока еще не слишком поздно.";
+			return "Я почти ничего не помню. Как зовут этих людей? Что было вчера? Я долж{ен/на} понять, кто меня отравил, пока еще не слишком поздно.";
+		case HEALING_STAGE:
+			return "Как пелена спала. Я снова все помню, да и рукой могу немного двигать. Похоже, я не на шутку запаниковал{/а}!";
+		case HEALED_STAGE:
+			return "Ну все, я здоров{/а}.";
 		}
 		Utils.assert_(false);
 		return null;
@@ -57,6 +46,8 @@ public class FoodDeficitBeta extends FoodDeficitBase {
 			addStatusMessage(getName() + "psi", "Надо найти отравителя, пока я не забыл все!!");
 			addStatusMessage(getName() + "phys", "Левая рука не двигается");
 			break;
+		case HEALING_STAGE:
+			addStatusMessage(getName()  + "phys", "Левая рука плохо слушается");
 		default:
 			
 			break;
@@ -67,11 +58,6 @@ public class FoodDeficitBeta extends FoodDeficitBase {
 		removeStatusMessage(getName() + "phys");
 		removeStatusMessage(getName() + "body");
 		getAlphaModel().Pain.remove(getName(), AlphaIM.LOCATION_WHOLE_BODY);
-	}
-
-	protected String getStageMessage() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	public String getName() {
