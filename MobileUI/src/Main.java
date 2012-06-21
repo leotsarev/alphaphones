@@ -158,7 +158,7 @@ public class Main extends MIDlet implements ItemStateListener, CommandListener {
 			code = "";
 		
 			if (menuDescriptor.getCount() == 1 && 
-				menuDescriptor.getNames()[0].equals("Ok") &&false)
+				menuDescriptor.getNames()[0].equals("Ok"))
 				createMessageBox();
 			else
 				createMenu();
