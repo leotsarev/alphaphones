@@ -204,8 +204,8 @@ public class ProcessModelBase extends InteractionModel{
 		public Descriptor createMessage(String message) {
 			MenuDescriptor result = new MenuDescriptor();
 			result.menuHeader = message;
-			result.timeout = 30;
-			result.alarm = ALARM_SINGLE;
+			result.timeout = 600;
+			result.alarm = ALARM_RECURRENT;
 			result.addItem("Ok", "");
 			return result;
 		}
