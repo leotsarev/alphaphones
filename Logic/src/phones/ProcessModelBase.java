@@ -90,8 +90,8 @@ public class ProcessModelBase extends InteractionModel{
 			return ((IPrefixHandler)processTemplate).isValidSuffix(getSuffix(word));
 		}
 
-		public String getSuffix(String word) {
-			Utils.assert_(word.length() > commandWordPrefix.length(), "Invalid word " + word);
+		private String getSuffix(String word) {
+			Utils.assert_(word.length() >= commandWordPrefix.length(), "Invalid word " + word);
 			return word.substring(commandWordPrefix.length());
 		}
 
