@@ -12,7 +12,7 @@ public class AlphaInit extends AlphaProcess {
 	}
 
 	public Descriptor handle() {
-		getAlphaModel().initCompleted = true;
+		getAlphaModel().setInitCompleted();
 		getAlphaModel().gender = true;
 		getAlphaModel().updateCurrentFaction();
 		getAlphaModel().gender = true;

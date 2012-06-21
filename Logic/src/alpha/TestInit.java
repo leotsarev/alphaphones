@@ -11,7 +11,7 @@ public class TestInit extends AlphaProcess {
 	}
 
 	public Descriptor handle() {
-		getAlphaModel().initCompleted = true;
+		getAlphaModel().setInitCompleted();
 		getAlphaModel().gender = true;
 		getAlphaModel().inHouse = true;
 		getAlphaModel().wearingMask = false;

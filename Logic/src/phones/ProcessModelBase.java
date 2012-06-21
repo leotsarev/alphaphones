@@ -526,6 +526,10 @@ public class ProcessModelBase extends InteractionModel{
 	}
 	
 	public void reset() {
+		init();
+	}
+
+	private void init() {
 		scheduler = new ProcessScheduler();
 		commandWordDefs = new Vector();
 		usedCodes = new Hashtable();
@@ -614,7 +618,7 @@ public class ProcessModelBase extends InteractionModel{
 	
 	public ProcessModelBase()
 	{
-		reset();
+		init();
 	}
 	
 	public final int checkCommandWord(String commandWord) {
@@ -644,7 +648,7 @@ public class ProcessModelBase extends InteractionModel{
 	}
 
 	public void unserialize(ISerializer ser) {
-		reset();
+		init();
 		scheduler.unserialize(ser);
 		usedCodes = ser.readDict();
 		status.unserialize(ser);

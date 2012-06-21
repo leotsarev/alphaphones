@@ -49,7 +49,7 @@ public class AlphaIM extends ProcessModelBase{
 	public static final int LOCATION_WHOLE_BODY = 0;
 	public static final int LOCATION_KNEE = 1;
 	
-	public PainAggregator Pain;
+	public PainAggregator Pain = new PainAggregator();
 	public static final int PAIN_POWER_WEAK = 1;
 	public static final int PAIN_POWER_NORMAL = 2;
 	public static final int PAIN_POWER_STRONG = 3;
@@ -119,6 +119,9 @@ public class AlphaIM extends ProcessModelBase{
 		
 		factions = Faction.createFactions(this);
 		Pain = new PainAggregator();
+		inHouse = true;
+		
+		status.addMessage("init", DEMO_MODE ?  "УРа, демка работает. MENU для вызова меню! " : "Ура, финальная версия работает. Обратитесь к мастерам для старта игры.");
 	}
 
 	private void bindCommandWords() {
@@ -149,7 +152,7 @@ public class AlphaIM extends ProcessModelBase{
 		bindFixedPhoneWord("DEATH4EVER2456", new Killed(this));
 		bindFixedPhoneWord("DEATH4EVER3028", new Killed(this));
 		bindFixedPhoneWord("DEATH4EVER4453", new Killed(this));
-		bindFixedPhoneWord("ANALYZEGENOM", new GeneAnalyzeMenu(this));
+		bindFixedPhoneWord("ANALYZE", new GeneAnalyzeMenu(this));
 		
 		bindPrefixCommandWord("06", new FoodItem(this));
 	}
@@ -332,5 +335,10 @@ public class AlphaIM extends ProcessModelBase{
 	public boolean canGetKillChip() {
 	
 		return isFanatic() && !alreadyGetChip;
+	}
+
+	public void setInitCompleted() {
+		initCompleted =  true;
+		status.removeMessage("init");
 	}
 }
