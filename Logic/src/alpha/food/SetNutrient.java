@@ -5,7 +5,7 @@ import alpha.chem.Chemistry;
 import phones.InteractionModel.Descriptor;
 import phones.ProcessModelBase;
 
-public class SetNutrient extends NutrientPrefixBase  {
+public class SetNutrient extends NutrienActionBase  {
 
 	public SetNutrient(ProcessModelBase model) {
 		super(model);

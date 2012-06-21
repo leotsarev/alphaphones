@@ -4,7 +4,7 @@ import phones.InteractionModel.Descriptor;
 import phones.ProcessModelBase;
 import alpha.chem.Chemistry.Nutrien;
 
-public class RemoveNutrient extends NutrientPrefixBase {
+public class RemoveNutrient extends NutrienActionBase {
 
 	public RemoveNutrient(ProcessModelBase model) {
 		super(model);
