@@ -33,7 +33,10 @@ public class MasterMenu extends MenuBase {
 			addMenuItemAndBind(menu, "Инициализация", new AlphaInit(model));
 		}
 		addMenuItemAndBind(menu, alphaIM.getGenderName() + " (переключить)", new ToggleGender(model));
-		addMenuItemAndBind(menu, (alphaIM.alreadyGetChip ? "Уже " : "Еще не ") + "брал чип убийства (переключить)" , new MasterToggleAlreadyGetChip(model));
+		if (alphaIM.isFanatic())
+		{
+			addMenuItemAndBind(menu, (alphaIM.alreadyGetChip ? "Уже " : "Еще не ") + "брал чип убийства (переключить)" , new MasterToggleAlreadyGetChip(model));
+		}
 	}
 
 }
