@@ -47,8 +47,11 @@ public class AlphaIM extends ProcessModelBase implements IGender {
 	public static final String TOGGLE_NUTRIEN = "toggle_nutrien_";
 	public static final String ANALYZE_GENE = "analyze_gene_";
 	
+	public static final int LOCATION_MIN = 0;
 	public static final int LOCATION_WHOLE_BODY = 0;
 	public static final int LOCATION_KNEE = 1;
+	public static final int LOCATION_HEAD = 2;
+	public static final int LOCATION_MAX = 2;
 	
 	public PainAggregator Pain = new PainAggregator();
 	public static final int PAIN_POWER_WEAK = 1;
@@ -107,6 +110,14 @@ public class AlphaIM extends ProcessModelBase implements IGender {
 
 		public void remove(String tag, int location) {
 			status.removeMessage(tag+String.valueOf(location));
+		}
+		
+		public void remove(String tag) {
+			//TODO: В будущем, реализовать это будет проще...
+			for (int i = 0; i<LOCATION_MAX; i++)
+			{
+				remove(tag, i);
+			}
 		}
 	}
 	
