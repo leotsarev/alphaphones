@@ -2,7 +2,6 @@ package alpha.genes;
 
 import phones.InteractionModel.Descriptor;
 import phones.ProcessModelBase;
-import phones.Utils;
 import alpha.ThreeDigitCodeBase;
 
 public class ChangeGene extends ThreeDigitCodeBase {
@@ -19,7 +18,6 @@ public class ChangeGene extends ThreeDigitCodeBase {
 	}
 
 	public String getName() {
-		// TODO Auto-generated method stub
 		return "ChangeGene";
 	}
 
