@@ -13,7 +13,7 @@ public class Awake extends AlphaProcess {
 	public Descriptor handle() {
 		getAlphaModel().sleeping = false;
 		removeStatusMessage("sleep");
-		return createChangeStatusMessage("Я проснулся");
+		return createChangeStatusMessage(getAlphaModel().gender ? "Я проснулся" : "Я проснулась");
 	}
 
 	public String getName() {

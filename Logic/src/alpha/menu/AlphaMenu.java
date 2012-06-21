@@ -44,7 +44,7 @@ public class AlphaMenu extends MenuBase {
 		addMenuItemAndBind(menu, "Выбор идеологии", new IdeologyCheck(model));
 		if (((AlphaIM) model).canGetKillChip())
 		{
-			addMenuItemAndBind(menu, "Совершить убийство", new KillSomeOne(model));
+			addMenuItemAndBind(menu, "Убить", new KillSomeOne(model));
 		}
 		addMenuItemAndBind(menu, "Ранение", new WoundMenu(model));
 		addMenuItemAndBind(menu, "Лечь спать", new Asleep(model));
@@ -52,11 +52,11 @@ public class AlphaMenu extends MenuBase {
 		addMaskMenuItem(menu);
 		if (((AlphaIM)model).inHouse)
 		{
-			addMenuItemAndBind(menu, "Выйти из поселения", new ExitBase(model));
+			addMenuItemAndBind(menu, "Выйти из базы", new ExitBase(model));
 		}
 		else
 		{
-			addMenuItemAndBind(menu, "Войти в поселение", new EnterBase(model));
+			addMenuItemAndBind(menu, "Войти в базу", new EnterBase(model));
 		}
 
 	}
@@ -64,11 +64,11 @@ public class AlphaMenu extends MenuBase {
 	private void addMaskMenuItem(MenuDescriptor menu) {
 		if (((AlphaIM)model).wearingMask)
 		{
-			addMenuItemAndBind(menu, "Снять защ. костюм", new PutMaskOff(model));
+			addMenuItemAndBind(menu, "Снять защ.костюм", new PutMaskOff(model));
 		}
 		else
 		{
-			addMenuItemAndBind(menu, "Одеть защ. костюм", new PutMaskOn(model));
+			addMenuItemAndBind(menu, "Надеть защ.костюм", new PutMaskOn(model));
 		}
 	}
 

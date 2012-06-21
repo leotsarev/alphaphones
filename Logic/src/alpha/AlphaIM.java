@@ -54,7 +54,7 @@ public class AlphaIM extends ProcessModelBase{
 	public static final int PAIN_POWER_NORMAL = 2;
 	public static final int PAIN_POWER_STRONG = 3;
 	
-	public static final boolean DEMO_MODE = false;
+	public static final boolean DEMO_MODE = true;
 	
 	public final class PainAggregator
 	{
