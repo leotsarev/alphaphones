@@ -8,6 +8,10 @@ public class Malaria extends EarthDiseaseBase {
 		super(model);
 	}
 	
+	protected int getQuantLenInMins() {
+		return 10;
+	}
+	
 	protected String getStageMessage() {
 		switch (getStage()) {
 		case 1:
