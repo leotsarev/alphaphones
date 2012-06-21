@@ -56,6 +56,7 @@ public class GenderDecorator extends IdentityIMDecorator {
 		}
 		else {
 			MenuDescriptor md = (MenuDescriptor)d;
+			md.menuHeader = fixGender(md.menuHeader);
 			for (int i = 0; i < md.options.size(); i++) {
 				MenuItem mi = (MenuItem)md.options.elementAt(i);
 				mi.ItemName = fixGender(mi.ItemName);
