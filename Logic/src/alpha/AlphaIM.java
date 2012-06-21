@@ -73,6 +73,10 @@ public class AlphaIM extends ProcessModelBase implements IGender {
 		public void add(String tag, int location, int painPower) {
 			status.addMessage(tag+location, getPainPowerString(painPower) + " " + getLocationString(location));
 		}
+		
+		public void add(String tag, int location) {
+			add(tag, location, PAIN_POWER_NORMAL);
+		}
 
 		private String getLocationString(int location) {
 			switch (location)
