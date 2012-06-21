@@ -223,6 +223,9 @@ public class ProcessModelBase extends InteractionModel{
 			model.status.addMessage(statusTag, message);
 			
 		}
+		protected void addStatusMessage(String message) {
+			addStatusMessage(getName(), message);
+		}
 		protected void scheduleAfterMins(IProcess process, int mins) {
 			scheduleAfterSecs(process, mins * 60);
 		}
