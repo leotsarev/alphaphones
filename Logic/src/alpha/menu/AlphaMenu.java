@@ -49,14 +49,7 @@ public class AlphaMenu extends MenuBase {
 		addMenuItemAndBind(menu, "Ранение", new WoundMenu(model));
 		addMenuItemAndBind(menu, "Лечь спать", new Asleep(model));
 		
-		if (((AlphaIM)model).wearingMask)
-		{
-			addMenuItemAndBind(menu, "Снять маску", new PutMaskOff(model));
-		}
-		else
-		{
-			addMenuItemAndBind(menu, "Одеть маску", new PutMaskOn(model));
-		}
+		addMaskMenuItem(menu);
 		if (((AlphaIM)model).inHouse)
 		{
 			addMenuItemAndBind(menu, "Выйти из поселения", new ExitBase(model));
@@ -66,6 +59,17 @@ public class AlphaMenu extends MenuBase {
 			addMenuItemAndBind(menu, "Войти в поселение", new EnterBase(model));
 		}
 
+	}
+
+	private void addMaskMenuItem(MenuDescriptor menu) {
+		if (((AlphaIM)model).wearingMask)
+		{
+			addMenuItemAndBind(menu, "Снять защ. костюм", new PutMaskOff(model));
+		}
+		else
+		{
+			addMenuItemAndBind(menu, "Одеть защ. костюм", new PutMaskOn(model));
+		}
 	}
 
 	private void bindDemoMenu(MenuDescriptor menu) {
@@ -79,14 +83,7 @@ public class AlphaMenu extends MenuBase {
 		addMenuItemAndBind(menu, "Старт теста", new TestInit(model));
 		addMenuItemAndBind(menu, "Лечь спать", new Asleep(model));
 
-		if (((AlphaIM)model).wearingMask)
-		{
-			addMenuItemAndBind(menu, "Снять маску", new PutMaskOff(model));
-		}
-		else
-		{
-			addMenuItemAndBind(menu, "Одеть маску", new PutMaskOn(model));
-		}
+		addMaskMenuItem(menu);
 		if (((AlphaIM)model).inHouse)
 		{
 			addMenuItemAndBind(menu, "Выйти из поселения", new ExitBase(model));

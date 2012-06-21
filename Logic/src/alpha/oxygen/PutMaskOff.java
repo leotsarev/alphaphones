@@ -14,11 +14,11 @@ public class PutMaskOff extends AlphaProcess {
 		removeStatusMessage("mask");
 		if (!getAlphaModel().wearingMask)
 		{
-			return createMessage("Я без маски, что снимать?");
+			return createChangeStatusMessage("Я без костюма, что снимать?");
 		}
 		getAlphaModel().wearingMask = false;
 		scheduleNow(new ScheduleNextOxygen(model));
-		return createChangeStatusMessage("Снимаю маску...");
+		return createChangeStatusMessage("Снимаю костюм...");
 	}
 
 	public String getName() {
