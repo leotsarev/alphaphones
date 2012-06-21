@@ -20,7 +20,7 @@ public class FoodItem extends alpha.AlphaProcess implements IPrefixHandler {
 
 	public void setSuffixValue(String suffix) {
 		Utils.assert_(isValidSuffix(suffix));
-		setIntArg("food", getFoodFromSuffix(suffix));
+		setIntArg("food", 97 - getfoodPartFromSuffix(suffix));
 	}
 
 	public boolean isValidSuffix(String suffix) {
@@ -28,13 +28,13 @@ public class FoodItem extends alpha.AlphaProcess implements IPrefixHandler {
 		{
 			return false;
 		}
-		int foodFlag = getFoodFromSuffix(suffix);
-		int check = Integer.valueOf(suffix.substring(3, 3)).intValue();
+		int foodFlag = getfoodPartFromSuffix(suffix);
+		int check = Integer.valueOf(suffix.substring(3, 6)).intValue();
 		
 		return Utils.quickHash(foodFlag) == check;
 	}
 
-	private int getFoodFromSuffix(String suffix) {
+	private int getfoodPartFromSuffix(String suffix) {
 		return Integer.valueOf(suffix.substring(0, 3)).intValue();
 	}
 
@@ -49,7 +49,8 @@ public class FoodItem extends alpha.AlphaProcess implements IPrefixHandler {
 		int foodFlag = getIntArg("food");
 		for (int i =0; i<nutriens.length; i++)
 		{
-			if ((foodFlag & (1 << i))>0)
+			int bitFlag = foodFlag & (1 << i);
+			if (bitFlag>0)
 			{
 				SetNutrient nutrient = new SetNutrient(model);
 				nutrient.setTargetChemObj(nutriens[i]);
