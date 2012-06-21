@@ -1,7 +1,6 @@
 package alpha.food;
 
 import alpha.chem.Chemistry.Nutrien;
-import alpha.chem.IPersistentChemObject;
 import phones.InteractionModel.Descriptor;
 import phones.ProcessModelBase;
 

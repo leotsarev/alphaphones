@@ -1,6 +1,5 @@
 package alpha.disease;
 
-import alpha.AlphaIM;
 import phones.ProcessModelBase;
 
 public class Vaskulit extends EarthDiseaseBase {

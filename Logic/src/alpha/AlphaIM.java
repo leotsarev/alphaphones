@@ -6,6 +6,7 @@ import java.util.Date;
 import alpha.chem.IChemObject;
 import alpha.chem.Chemistry.Nutrien;
 import alpha.disease.Malaria;
+import alpha.disease.Vaskulit;
 import alpha.food.*;
 import alpha.food.deficit.*;
 import alpha.genes.*;
@@ -52,7 +53,9 @@ public class AlphaIM extends ProcessModelBase implements IGender {
 	public static final int LOCATION_WHOLE_BODY = 0;
 	public static final int LOCATION_KNEE = 1;
 	public static final int LOCATION_HEAD = 2;
-	public static final int LOCATION_MAX = 2;
+	public static final int LOCATION_LEFT_HAND = 3;
+	public static final int LOCATION_RIGHT_HAND = 4;
+	public static final int LOCATION_MAX = 4;
 	
 	public PainAggregator Pain = new PainAggregator();
 	public static final int PAIN_POWER_WEAK = 1;

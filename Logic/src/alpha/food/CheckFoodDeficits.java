@@ -2,6 +2,7 @@ package alpha.food;
 
 import alpha.AlphaIM;
 import alpha.chem.*;
+import alpha.disease.OkrDisease;
 import alpha.food.deficit.*;
 import phones.InteractionModel.Descriptor;
 import phones.ProcessModelBase;
@@ -28,6 +29,7 @@ public class CheckFoodDeficits extends alpha.AlphaProcess {
 			startDeficitIfNeeded(new FoodDeficitChi(model), Chemistry.CHI + 1);
 		}
 		
+		scheduleNow(new OkrDisease(model));
 		scheduleAfterMins(this, 10);
 		return null;
 	}
