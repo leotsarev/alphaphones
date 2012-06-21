@@ -34,7 +34,7 @@ public class Main {
 			checkSerialize();
 			Descriptor descriptor = im.whatNext((int)dt, currentTime);
 			prevTime = currentTime;
-			remainingTimeout = descriptor.timeout == -1 ? 1 : descriptor.timeout;
+			remainingTimeout = descriptor.timeout == -1 ? 100000 : descriptor.timeout;
 			if (descriptor instanceof SleepDescriptor) {
 				sleepDescriptor = (SleepDescriptor)descriptor;
 				menuDescriptor = null;
