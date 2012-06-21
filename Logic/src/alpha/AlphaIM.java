@@ -121,7 +121,7 @@ public class AlphaIM extends ProcessModelBase{
 		Pain = new PainAggregator();
 		inHouse = true;
 		
-		status.addMessage("init", DEMO_MODE ?  "УРа, демка работает. MENU для вызова меню! " : "Ура, финальная версия работает. Обратитесь к мастерам для старта игры.");
+		status.addMessage("init", DEMO_MODE ?  "Ура, демка работает. MENU для вызова меню! " : "Ура, финальная версия работает. Обратитесь к мастерам для старта игры.");
 	}
 
 	private void bindCommandWords() {
