@@ -7,12 +7,14 @@ import phones.Utils;
 
 public class Chemistry {
 	public static final String XI = "XI";
-	public static final String PI = "PI";
+	private static final String PI = "PI";
+	private static final String PI1 = PI + 1;
 	public static final String KAPPA = "Kappa";
 	public static final String EPSILON = "Epsilon";
 	public static final String YOTA = "Yota";
 	public static final String MU = "Mu";
 	public static final String GAMMA = "Gamma";
+	private static final String GAMMA1 = GAMMA+"1";
 	public static final String RO = "Ro";
 	public static final String DELTA = "Delta";
 	public static final String PHI = "Phi";
@@ -78,14 +80,14 @@ public class Chemistry {
 				
 				new Substance(BETA+"11") {
 					public boolean isPresent() {
-						return has(BETA +"1") && has(GAMMA+"1");
+						return has(BETA +"1") && has(GAMMA1);
 					}
 				},
 				
 				new Substance(GAMMA+"2") {
 					public boolean isPresent() {
 						return (hasGene("g") && hasNutrienOrPseudoNutrien(GAMMA))
-								|| (hasGene("t") && has(GAMMA+"1"));
+								|| (hasGene("t") && has(GAMMA1));
 					}
 				},
 				
@@ -113,7 +115,7 @@ public class Chemistry {
 					}
 				},
 				
-				new Substance(GAMMA+"1") {
+				new Substance(GAMMA1) {
 					public boolean isPresent() {
 						boolean var1 = (hasGene("g") || hasGene("s")) &&  hasNutrienOrPseudoNutrien(GAMMA);
 						boolean var2 = hasGene("u") && has(ALPHA + "1");
@@ -153,11 +155,11 @@ public class Chemistry {
 				
 				new Substance(KAPPA + 1) {
 					public boolean isPresent() {
-						return hasGene("k") && !hasGene("x") && !hasGene("g") && has(PI + 1);
+						return hasGene("k") && !hasGene("x") && !hasGene("g") && has(PI1);
 					}
 				},
 				
-				new Substance(PI + 1) {
+				new Substance(PI1) {
 					public boolean isPresent() {
 						return hasGene("p") && !hasGene("x");
 					}
@@ -252,6 +254,10 @@ public class Chemistry {
 		{
 			return name + (isPresent() ? "+" : "-");
 		}
+		
+		public int getNumericValue() {
+			return isPresent() ? 1: 0;
+		}
 	}
 	
 	public void serialize(ISerializer ser)
@@ -344,6 +350,10 @@ public class Chemistry {
 		
 		public boolean eligbleForAnalysis() {
 			return false;
+		}
+
+		public int getNumericValue() {
+			return nutrienValue ? 1: 0;
 		}
 		
 	}
@@ -495,6 +505,10 @@ public class Chemistry {
 				break;
 			}
 		}
+
+		public int getNumericValue() {
+			return geneValue;
+		}
 	}
 
 	public Gene[] getGeneArray() {
@@ -581,5 +595,16 @@ public class Chemistry {
 
 	private boolean hasGene(String geneName) {
 		return getGene(geneName).isPresent();
+	}
+
+	public int getImmunityValue() {
+		//TODO Так переводится формула с гуманитарного на человеческий. Но! Гарантии никакой. Надо перепроверить
+		return numericValue(GENE + "l")
+				+ Math.max(numericValue(PI1) - 1, 0) 
+				- 2 * Math.max(numericValue(GAMMA1) -2, 0);
+	}
+
+	private int numericValue(String name) {
+		return getByName(name).getNumericValue();
 	}
 }

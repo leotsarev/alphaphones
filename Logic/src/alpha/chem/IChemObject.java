@@ -5,4 +5,5 @@ public interface IChemObject {
 	public abstract boolean isNotPresent(); // 0
 	public abstract boolean isStrictlyPresent(); //Для генов 1. 
 	public abstract String getName();
+	public abstract int getNumericValue();
 }

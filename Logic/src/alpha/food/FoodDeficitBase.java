@@ -1,6 +1,6 @@
 package alpha.food;
 
-import alpha.AlphaDiseaseBase;
+import disease.AlphaDiseaseBase;
 import alpha.chem.IChemAction;
 import alpha.chem.IChemObject;
 import phones.ProcessModelBase;
