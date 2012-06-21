@@ -35,14 +35,15 @@ public class AlphaMenu extends MenuBase {
 		
 		menu.addItem("Закрыть", "");
 		
-		if (((AlphaIM)model).sleeping)
+		AlphaIM alphaIM = (AlphaIM)model;
+		if (alphaIM.sleeping)
 		{
 			addMenuItemAndBind(menu, "Проснуться", new Awake(model));
 			return;
 		}
 
 		addMenuItemAndBind(menu, "Выбор идеологии", new IdeologyCheck(model));
-		if (((AlphaIM) model).canGetKillChip())
+		if (alphaIM.canGetKillChip())
 		{
 			addMenuItemAndBind(menu, "Убить", new KillSomeOne(model));
 		}
@@ -50,7 +51,7 @@ public class AlphaMenu extends MenuBase {
 		addMenuItemAndBind(menu, "Лечь спать", new Asleep(model));
 		
 		addMaskMenuItem(menu);
-		if (((AlphaIM)model).inHouse)
+		if (alphaIM.inHouse)
 		{
 			addMenuItemAndBind(menu, "Выйти из базы", new ExitBase(model));
 		}
