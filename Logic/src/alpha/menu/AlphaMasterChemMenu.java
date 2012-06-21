@@ -1,6 +1,7 @@
 package alpha.menu;
 
 import alpha.AlphaIM;
+import alpha.chem.Chemistry;
 import alpha.chem.IChemObject;
 import phones.InteractionModel.MenuDescriptor;
 import phones.ProcessModelBase;
@@ -16,11 +17,13 @@ public class AlphaMasterChemMenu extends phones.MenuBase {
 	}
 
 	public void addMenuItems(MenuDescriptor menu) {
-		IChemObject[] items = ((AlphaIM)model).Chemistry.getSubstanceArray();
+		Chemistry chem = ((AlphaIM)model).Chemistry;
+		IChemObject[] items = chem.getSubstanceArray();
 		for (int i =0; i < items.length; i++)
 		{
 			menu.addItem(items[i].toString(), "");
 		}
+		menu.addItem("Иммунитет: " + chem.getImmunityValue(), "");
 	}
 
 	public String getName() {
