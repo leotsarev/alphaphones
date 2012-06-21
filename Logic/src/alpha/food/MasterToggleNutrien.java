@@ -1,5 +1,6 @@
 package alpha.food;
 
+import alpha.chem.Chemistry.Nutrien;
 import alpha.chem.IPersistentChemObject;
 import phones.InteractionModel.Descriptor;
 import phones.ProcessModelBase;
@@ -11,8 +12,16 @@ public class MasterToggleNutrien extends alpha.chem.ChemActionBase {
 	}
 
 	public Descriptor handle() {
-		((IPersistentChemObject)getChemObj()).masterToggle();
 		scheduleNow(new NutrienMenu(model));
+		if (getChemObj().isPresent())
+		{
+			scheduleNow(new RemoveNutrient(model, (Nutrien) getChemObj()));
+		}
+		else
+		{
+			getAlphaModel().consumeNutrien((Nutrien) getChemObj());
+		}
+		
 		return null;
 	}
 
