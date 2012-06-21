@@ -19,4 +19,8 @@ public abstract class EarthDiseaseBase extends AlphaDiseaseBase {
 		return getStage() == 2 && getAlphaModel().Chemistry.getImmunityValue() > -1;
 	}
 
+	protected int getQuantLenInMins() {
+		return 10;
+	}
+
 }

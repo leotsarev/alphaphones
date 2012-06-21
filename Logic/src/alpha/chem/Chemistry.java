@@ -14,7 +14,8 @@ public class Chemistry {
 	public static final String YOTA = "Yota";
 	public static final String MU = "Mu";
 	public static final String GAMMA = "Gamma";
-	private static final String GAMMA1 = GAMMA+"1";
+	public static final String GAMMA2 = GAMMA+"2";
+	public static final String GAMMA1 = GAMMA+"1";
 	public static final String RO = "Ro";
 	public static final String DELTA = "Delta";
 	public static final String PHI = "Phi";
@@ -84,7 +85,7 @@ public class Chemistry {
 					}
 				},
 				
-				new Substance(GAMMA+"2") {
+				new Substance(GAMMA2) {
 					public boolean isPresent() {
 						return (hasGene("g") && hasNutrienOrPseudoNutrien(GAMMA))
 								|| (hasGene("t") && has(GAMMA1));
@@ -600,8 +601,8 @@ public class Chemistry {
 	public int getImmunityValue() {
 		//TODO Так переводится формула с гуманитарного на человеческий. Но! Гарантии никакой. Надо перепроверить
 		return numericValue(GENE + "l")
-				+ Math.max(numericValue(PI1) - 1, 0) 
-				- 2 * Math.max(numericValue(GAMMA1) -2, 0);
+				+ numericValue(PI1) 
+				- 2 * numericValue(GAMMA2);
 	}
 
 	private int numericValue(String name) {

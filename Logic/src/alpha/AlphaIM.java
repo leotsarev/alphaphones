@@ -185,6 +185,7 @@ public class AlphaIM extends ProcessModelBase implements IGender {
 		bindPrefixCommandWord("12", new ChangeGene(this));
 		
 		bindFixedPhoneWord("402835", new Malaria(this));
+		bindFixedPhoneWord("402356", new Malaria(this));
 	}
 	
 	public Process createProcessByName(String name) {
@@ -235,7 +236,8 @@ public class AlphaIM extends ProcessModelBase implements IGender {
 				new FoodItem(this),
 				new ChangeGene(this),
 				new CheckFoodDeficits(this),
-				new Malaria(this)
+				new Malaria(this),
+				new Vaskulit(this)
 			};
 		for (int i = 0; i < process.length; i++)
 		{
