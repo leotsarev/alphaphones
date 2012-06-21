@@ -12,7 +12,7 @@ public abstract class EarthDiseaseBase extends AlphaDiseaseBase {
 		return 4;
 	}
 	protected boolean shouldStartDisease() {
-		return getAlphaModel().Chemistry.getImmunityValue() > 1; 
+		return getAlphaModel().Chemistry.getImmunityValue() < 2; 
 	}
 
 	protected boolean shouldHeal() {
