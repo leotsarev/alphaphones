@@ -162,7 +162,6 @@ public class ProcessModelBase extends InteractionModel{
 		public Process (ProcessModelBase model)
 		{
 			this.model = model;
-			Utils.assert_(getName() != null);
 		}
 		public abstract Descriptor handle();
 		private Hashtable ProcessData = new Hashtable();
@@ -535,7 +534,6 @@ public class ProcessModelBase extends InteractionModel{
 		commandWordDefs = new Vector();
 		usedCodes = new Hashtable();
 		status = new StatusContainer();
-		bindFixedCommandWord("", new DoNothingProcess(this));
 	}
 	
 	private int currentSec;
