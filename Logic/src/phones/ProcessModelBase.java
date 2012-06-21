@@ -9,6 +9,7 @@ import java.util.Vector;
 
 public class ProcessModelBase extends InteractionModel{
 	
+	private static final int INFINITE_SLEEP = 60;
 	private Hashtable usedCodes;
 	protected StatusContainer status = new StatusContainer();
 	private Vector commandWordDefs = new Vector();
@@ -587,7 +588,7 @@ public class ProcessModelBase extends InteractionModel{
 		Descriptor result = new SleepDescriptor(status.get());
 		int nextEventTime = scheduler.getNextEventTime();
 		
-		result.timeout = nextEventTime == Integer.MAX_VALUE ? -1 : ( nextEventTime - targetSec);
+		result.timeout = nextEventTime == Integer.MAX_VALUE ? INFINITE_SLEEP : ( nextEventTime - targetSec);
 		return result;
 	}
 
