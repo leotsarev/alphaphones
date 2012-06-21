@@ -1,5 +1,6 @@
 package phones;
 
+import phones.InteractionModel.MenuDescriptor;
 import phones.InteractionModel.*;
 
 
@@ -32,5 +33,9 @@ public abstract class MenuBase extends ProcessModelBase.Process {
 	}
 
 	public abstract void addMenuItems(MenuDescriptor menu);
+
+	protected void addClose(MenuDescriptor menu) {
+		menu.addItem("Закрыть", "");
+	}
 
 }

@@ -22,7 +22,7 @@ public class MasterMenu extends MenuBase {
 	}
 
 	public void addMenuItems(MenuDescriptor menu) {
-		menu.addItem("Закрыть", "");
+		addClose(menu);
 		addMenuItemAndBind(menu, "Гены", new MasterGeneMenu(model));
 		addMenuItemAndBind(menu, "Нутриены", new NutrienMenu(model));
 		addMenuItemAndBind(menu, "Хим.анализ", new AlphaMasterChemMenu(model));
