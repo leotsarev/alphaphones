@@ -1,9 +1,10 @@
-package alpha;
+package phones;
 
 import phones.InteractionModel.Descriptor;
-import phones.ProcessModelBase;
+import phones.ProcessModelBase.Process;
 
-public abstract class SimpleDiseaseBase extends AlphaProcess  {
+
+public abstract class SimpleDiseaseBase extends Process {
 
 	protected static final int START_STAGE = 0;
 	protected static final int HEALING_STAGE = -1;
@@ -11,37 +12,48 @@ public abstract class SimpleDiseaseBase extends AlphaProcess  {
 
 	public SimpleDiseaseBase(ProcessModelBase model) {
 		super(model);
-		setStage(0);
 	}
-	
+
 	protected abstract int getMaxStage();
+
 	protected abstract void cleanupStatus();
+
 	protected abstract boolean shouldHeal();
+
 	protected abstract String getStageMessage();
+
 	protected abstract void updateStatusForStage();
+	
+	protected abstract void onDiseaseStart();
+	protected abstract boolean shouldStartDisease();
+	protected abstract void onDiseaseEnd();
+
 	protected boolean shouldProgress() {
 		return true;
 	}
+
 	protected int getQuantLenInMins() {
 		return 30;
 	}
 
-	private final void setStage(int stage) {
+	protected final void setStage(int stage) {
 		setIntArg("stage", stage);
 	}
-	
+
 	protected final int getStage() {
 		return getIntArg("stage");
 	}
 
 	public final Descriptor handle() {
-		if (getStage() == START_STAGE)
-		{
-			if (getAlphaModel().sick)
+		if (getStage() == START_STAGE) {
+			if (shouldStartDisease())
 			{
-				return null; // Мы уже чем-то больны, не будем болеть еще раз
+				onDiseaseStart();
 			}
-			getAlphaModel().sick = true;
+			else
+			{
+				return null;
+			}
 		}
 		
 		boolean shouldHeal = shouldHeal();
@@ -53,7 +65,7 @@ public abstract class SimpleDiseaseBase extends AlphaProcess  {
 		{
 			if (getStage() == HEALING_STAGE)
 			{
-				getAlphaModel().sick = false; //Мы больше не больны.
+				onDiseaseEnd(); //Мы больше не больны.
 				setStage(HEALED_STAGE);
 			}
 			else

@@ -1,11 +1,11 @@
 package alpha.food;
 
-import alpha.SimpleDiseaseBase;
+import alpha.AlphaDiseaseBase;
 import alpha.chem.IChemAction;
 import alpha.chem.IChemObject;
 import phones.ProcessModelBase;
 
-public abstract class FoodDeficitBase extends SimpleDiseaseBase implements IChemAction {
+public abstract class FoodDeficitBase extends AlphaDiseaseBase implements IChemAction {
 
 	protected static final String CAN_T_STAY = "Не могу стоять без помощи";
 
