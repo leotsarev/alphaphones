@@ -2,7 +2,6 @@ package alpha.ideology;
 
 import alpha.AlphaIM;
 import phones.ISerializer;
-import phones.ProcessModelBase;
 import phones.Utils;
 
 public class Faction {
