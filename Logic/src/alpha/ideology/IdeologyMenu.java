@@ -19,7 +19,7 @@ public class IdeologyMenu extends MenuBase {
 		menu.addItem("Мистика", "MYSTIC");
 		menu.addItem("Личность", "INDIVIDUAL");
 		menu.addItem("Общество", "COMMONS");
-		menu.addItem("Освоить", "EXPLORE");
+		menu.addItem("Освоить планету", "EXPLORE");
 		menu.addItem("Сохранить планету", "PROTECT");
 		menu.addItem("Милосердие", "WEAK");
 		menu.addItem("Суровость", "HARD");
