@@ -16,6 +16,7 @@ import phones.InteractionModel.*;
 
 public class Main {
 
+	private static final String ENCODING = "utf-8";//"utf-8" / "866"
 	static BufferedReader in;
 	static PrintStream out;
 
@@ -104,7 +105,7 @@ public class Main {
 	
 	public static void main(String[] args) throws IOException {
 		in = new BufferedReader(new InputStreamReader(System.in));
-		out = new PrintStream(System.out, true, "utf-8"/*"866"*/);
+		out = new PrintStream(System.out, true, ENCODING);
 		
 		im = new GenderDecorator(new AlphaIM());
 		im = new InteractionModelCheckDecorator(im);
