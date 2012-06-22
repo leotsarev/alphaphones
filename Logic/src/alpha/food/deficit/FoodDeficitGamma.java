@@ -46,11 +46,7 @@ public class FoodDeficitGamma extends alpha.food.FoodDeficitBase {
 			break;
 		}
 	}
-
-	protected void cleanupStatus() {
-		removeStatusMessage(getName());
-	}
-
+	
 	public String getName() {
 		return "FoodDeficitGamma";
 	}

@@ -52,7 +52,7 @@ public class FoodDeficitChi extends FoodDeficitBase {
 		}
 	}
 
-	protected void cleanupStatus() {
+	public void cleanupStatus() {
 		removeStatusMessage(EYES);
 	}
 

@@ -13,10 +13,17 @@ public class WoundMenu extends MenuBase {
 	public String getName() {
 		return "WoundMenu";
 	}
+	
+	public String getMenuName() {
+		return "Ранен в..";
+	}
 
 	public void addMenuItems(MenuDescriptor menu) {
-		menu.addItem("Ранен в левую руку", "wound_left_arm");
-		
+		menu.addItem("...правую руку", "wound_left_arm");
+		menu.addItem("...левую руку", "wound_right_arm");
+		menu.addItem("...правую ногу", "wound_right_leg");
+		menu.addItem("...левую ногу", "wound_left_leg");
+		menu.addItem("..корпус", "wound_torso");
 	}
 
 }

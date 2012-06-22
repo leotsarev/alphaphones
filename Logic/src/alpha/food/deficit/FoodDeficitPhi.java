@@ -48,10 +48,6 @@ public class FoodDeficitPhi extends FoodDeficitBase {
 			break;
 		}
 	}
-
-	protected void cleanupStatus() {
-		removeStatusMessage(getName());
-	}
 	
 	public String getName() {
 		return "FoodDeficitPhi";

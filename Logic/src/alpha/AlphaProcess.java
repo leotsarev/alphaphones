@@ -1,6 +1,7 @@
 package alpha;
 
 import alpha.chem.IChemObject;
+import alpha.wounds.WoundBase;
 import phones.InteractionModel.Descriptor;
 import phones.ProcessModelBase;
 import phones.ProcessModelBase.Process;
@@ -38,6 +39,11 @@ public abstract class AlphaProcess extends Process {
 
 	protected Descriptor nothing() {
 		return createMessage("Ничего не произошло");
+	}
+
+	protected void unscheduleAndCleanup(WoundBase process) {
+		unscheduleByName(process);
+		process.cleanupStatus();
 	}
 
 }

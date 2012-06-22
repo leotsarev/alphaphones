@@ -13,7 +13,7 @@ public abstract class AlphaDiseaseBase extends SimpleDiseaseBase  {
 		setStage(0);
 	}
 	
-	protected void cleanupStatus() {
+	public void cleanupStatus() {
 		getAlphaModel().Pain.remove(getName());
 		removeStatusMessage(getName());
 	}

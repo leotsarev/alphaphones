@@ -53,7 +53,7 @@ public class FoodDeficitAlpha extends alpha.food.FoodDeficitBase {
 		}
 	}
 
-	protected void cleanupStatus() {
+	public void cleanupStatus() {
 		removeStatusMessage(ALPHA_DEFICIT_PSI);
 		removeStatusMessage(ALPHA_DEFICIT_STAY);
 		getAlphaModel().Pain.remove(getName(), AlphaIM.LOCATION_KNEE);

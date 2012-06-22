@@ -15,6 +15,8 @@ import alpha.oxygen.*;
 import alpha.sleep.Asleep;
 import alpha.sleep.Awake;
 import alpha.wounds.ArmWound;
+import alpha.wounds.LegWound;
+import alpha.wounds.TorsoWound;
 import alpha.wounds.WoundMenu;
 import phones.IGender;
 import phones.ISerializer;
@@ -29,9 +31,6 @@ public class AlphaIM extends ProcessModelBase implements IGender {
 	public static final int OXYGEN_MIN = 0;
 	public static final int OXYGEN_MAX = 3;
 	public int oxygenLevel = OXYGEN_MIN;
-	
-	public static final int LEFT_LIMB = 1;
-	public static final int RIGHT_LIMB = 1;
 	
 	public final alpha.chem.Chemistry Chemistry = new alpha.chem.Chemistry();
 	
@@ -54,7 +53,9 @@ public class AlphaIM extends ProcessModelBase implements IGender {
 	public static final int LOCATION_HEAD = 2;
 	public static final int LOCATION_LEFT_HAND = 3;
 	public static final int LOCATION_RIGHT_HAND = 4;
-	public static final int LOCATION_MAX = 4;
+	public static final int LOCATION_LEFT_LEG = 5;
+	public static final int LOCATION_RIGHT_LEG = 6;
+	public static final int LOCATION_MAX = 6;
 	
 	public PainAggregator Pain = new PainAggregator();
 	public static final int PAIN_POWER_WEAK = 1;
@@ -93,6 +94,14 @@ public class AlphaIM extends ProcessModelBase implements IGender {
 				return "во всем теле";
 			case LOCATION_HEAD:
 				return "в виске";
+			case LOCATION_LEFT_HAND:
+				return "в левой руке";
+			case LOCATION_RIGHT_HAND:
+				return "в правой руке";
+			case LOCATION_LEFT_LEG:
+				return "в левой ноге";
+			case LOCATION_RIGHT_LEG:
+				return "в правой ноге";
 			default:
 				Utils.assert_(false, "Wrong location " + location);
 				return null;
@@ -166,8 +175,11 @@ public class AlphaIM extends ProcessModelBase implements IGender {
 		bindFixedCommandWord("WEAK", new IdeologyChange(this, 3, 1));
 		bindFixedCommandWord("HARD", new IdeologyChange(this, 3, -1));
 		
-		bindFixedCommandWord("wound_left_arm", new ArmWound(this, LEFT_LIMB));
-		bindFixedCommandWord("wound_right_arm", new ArmWound(this, RIGHT_LIMB));
+		bindFixedCommandWord("wound_left_arm", new ArmWound(this, LOCATION_LEFT_HAND));
+		bindFixedCommandWord("wound_right_arm", new ArmWound(this, LOCATION_RIGHT_HAND));
+		bindFixedCommandWord("wound_left_leg", new ArmWound(this, LOCATION_LEFT_LEG));
+		bindFixedCommandWord("wound_right_leg", new ArmWound(this, LOCATION_RIGHT_LEG));
+		bindFixedCommandWord("wound_torso", new TorsoWound(this));
 		
 		bindFixedPhoneWord("IDDQD", new MasterMenu(this));
 		
@@ -192,6 +204,8 @@ public class AlphaIM extends ProcessModelBase implements IGender {
 		bindFixedCommandWord("84256829", new SetOxygenLevel(this, 1));
 		bindFixedCommandWord("84783829", new SetOxygenLevel(this, 2));
 		bindFixedCommandWord("84412829", new SetOxygenLevel(this, 3));
+		
+		bindFixedCommandWord("432463", new HealAll(this));
 	}
 	
 	public Process createProcessByName(String name) {
@@ -208,8 +222,13 @@ public class AlphaIM extends ProcessModelBase implements IGender {
 				new ScheduleNextOxygen(this),
 				new MasterGeneMenu(this),
 				new MasterToggleGene(this),
+				
 				new WoundMenu(this),
-				new ArmWound(this, LEFT_LIMB),
+				new ArmWound(this, 0),
+				new LegWound(this, 0),
+				new TorsoWound(this),
+				new HealAll(this),
+				
 				new MasterGeneMenu(this),
 				new MasterMenu(this),
 				new ToggleGender(this),

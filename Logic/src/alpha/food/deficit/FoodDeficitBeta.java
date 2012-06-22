@@ -54,7 +54,7 @@ public class FoodDeficitBeta extends FoodDeficitBase {
 		}
 	}
 
-	protected void cleanupStatus() {
+	public void cleanupStatus() {
 		removeStatusMessage(getName() + "phys");
 		removeStatusMessage(getName() + "body");
 		getAlphaModel().Pain.remove(getName(), AlphaIM.LOCATION_WHOLE_BODY);

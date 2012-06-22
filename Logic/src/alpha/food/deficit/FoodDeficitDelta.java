@@ -52,7 +52,7 @@ public class FoodDeficitDelta extends alpha.food.FoodDeficitBase {
 		}
 	}
 
-	protected void cleanupStatus() {
+	public void cleanupStatus() {
 		getAlphaModel().Pain.remove(getName(), AlphaIM.LOCATION_KNEE);
 		removeStatusMessage(LIGHT);
 	}
