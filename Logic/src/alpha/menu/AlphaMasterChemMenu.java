@@ -17,14 +17,17 @@ public class AlphaMasterChemMenu extends phones.MenuBase {
 	}
 
 	public void addMenuItems(MenuDescriptor menu) {
-		Chemistry chem = ((AlphaIM)model).Chemistry;
+		AlphaIM alphaIM = (AlphaIM)model;
+		Chemistry chem = alphaIM.Chemistry;
+		addClose(menu);
 		IChemObject[] items = chem.getSubstanceArray();
 		for (int i =0; i < items.length; i++)
 		{
 			menu.addItem(items[i].toString(), "");
 		}
 		menu.addItem("Иммунитет: " + chem.getImmunityValue(), "");
-		menu.addItem("Кислород: " + ((AlphaIM)model).oxygenLevel, "");
+		menu.addItem("Кислород: " + alphaIM.oxygenLevel, "");
+		menu.addItem("Радиация: " + alphaIM.radDamage + "/" + alphaIM.Chemistry.getRadImmune() + "|" + alphaIM.radStage, "");
 	}
 
 	public String getName() {

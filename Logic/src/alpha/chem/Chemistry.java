@@ -599,7 +599,6 @@ public class Chemistry {
 	}
 
 	public int getImmunityValue() {
-		//TODO Так переводится формула с гуманитарного на человеческий. Но! Гарантии никакой. Надо перепроверить
 		return numericValue(GENE + "l")
 				+ numericValue(PI1) 
 				- 2 * numericValue(GAMMA2);
@@ -607,5 +606,9 @@ public class Chemistry {
 
 	private int numericValue(String name) {
 		return getByName(name).getNumericValue();
+	}
+
+	public int getRadImmune() {
+		return 6 + 6 * numericValue(GENE+"n") + 6 * numericValue(GAMMA1) + 12 * numericValue(GENE + "u");
 	}
 }

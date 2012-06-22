@@ -39,6 +39,8 @@ public class AlphaIM extends ProcessModelBase implements IGender {
 	public boolean sick;
 	public boolean dead;
 	public boolean alreadyGetChip;
+	public int radDamage;
+	public int radStage;
 	
 	public static final String TOGGLE_GENE = "toggle_gene_";
 	public static final String TOGGLE_NUTRIEN = "toggle_nutrien_";
@@ -155,6 +157,7 @@ public class AlphaIM extends ProcessModelBase implements IGender {
 		factions = Faction.createFactions(this);
 		Pain = new PainAggregator();
 		inHouse = true;
+		radStage = radDamage = 0;
 		
 		status.addMessage("init", DEMO_MODE ?  "Ура, демка работает. MENU для вызова меню! " : "Ура, финальная версия работает. Обратитесь к мастерам для старта игры.");
 	}
@@ -203,6 +206,7 @@ public class AlphaIM extends ProcessModelBase implements IGender {
 		bindFixedCommandWord("84412829", new SetOxygenLevel(this, 3));
 		
 		bindFixedCommandWord("432463", new HealAll(this));
+		bindPrefixCommandWord("44", new RadDamage(this));
 	}
 	
 	public Process createProcessByName(String name) {
@@ -269,7 +273,10 @@ public class AlphaIM extends ProcessModelBase implements IGender {
 				new DepressiveDisease(this),
 				new AggressiveDisease(this),
 				
-				new SetOxygenLevel(this)
+				new SetOxygenLevel(this),
+				
+				new UpdateRad(this),
+				new RadDamage(this)
 			};
 		for (int i = 0; i < process.length; i++)
 		{
@@ -291,6 +298,8 @@ public class AlphaIM extends ProcessModelBase implements IGender {
 		ser.writeBool(sick);
 		ser.writeBool(dead);
 		ser.writeBool(alreadyGetChip);
+		ser.writeInt(radDamage);
+		ser.writeInt(radStage);
 		
 		ser.writeString("faction_start");
 		for (int i =0; i<factions.length; i++)
@@ -312,6 +321,8 @@ public class AlphaIM extends ProcessModelBase implements IGender {
 		sick = ser.readBool();
 		dead = ser.readBool();
 		alreadyGetChip = ser.readBool();
+		radDamage = ser.readInt();
+		radStage = ser.readInt();
 		
 		Utils.assert_(ser.readString().equals("faction_start"));
 		for (int i =0; i<factions.length; i++)

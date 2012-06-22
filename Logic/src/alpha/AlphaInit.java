@@ -22,6 +22,8 @@ public class AlphaInit extends AlphaProcess {
 		scheduleNow(new ScheduleNextOxygen(model));
 		scheduleAfterMins(new CheckFoodDeficits(model), 0);
 		
+		scheduleAfterMins(new UpdateRad(model), 10);
+		
 		Nutrien[] n = getAlphaModel().Chemistry.getNutrienArray();
 		for (int i=0;i<n.length;i++)
 		{
