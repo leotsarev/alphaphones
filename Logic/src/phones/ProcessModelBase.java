@@ -168,6 +168,9 @@ public class ProcessModelBase extends InteractionModel{
 		public abstract String getName();
 		protected ProcessModelBase model;
 		
+		public void cleanup() {	
+		}
+		
 		protected final String getStringArg(String key)
 		{
 			return (String) ProcessData.get(key);
@@ -260,8 +263,12 @@ public class ProcessModelBase extends InteractionModel{
 		}
 		
 		protected void unscheduleByName(IProcess process) {
-			model.scheduler.unscheduleByName(process.getName());
+			String name = process.getName();
+			unscheduleByName(name);
 			
+		}
+		protected void unscheduleByName(String name) {
+			model.scheduler.unscheduleByName(name);
 		}
 		protected void unscheduleEqual(IProcess process) {
 			model.scheduler.unscheduleEqual(process);
@@ -274,6 +281,9 @@ public class ProcessModelBase extends InteractionModel{
 		public boolean equals(Object obj)
 		{
 			return obj !=null && obj instanceof Process && equals((Process)obj);
+		}
+		protected Event[] getFutureEvents() {
+			return model.scheduler.getEvents();
 		}
 	}
 	
@@ -310,6 +320,11 @@ public class ProcessModelBase extends InteractionModel{
 		public void unserialize(ISerializer ser) {
 			table = ser.readDict();
 		}
+
+
+		public void clear() {
+			table = new Hashtable();
+		}
 	}
 	
 	private class ProcessScheduler
@@ -336,7 +351,9 @@ public class ProcessModelBase extends InteractionModel{
 				Enumeration remove = elementsToRemove.elements();
 				while (remove.hasMoreElements())
 				{
-					stack.removeElement(remove.nextElement());
+					IProcess process = (IProcess) remove.nextElement();
+					process.cleanup();
+					stack.removeElement(process);
 				}
 			}
 
@@ -382,6 +399,28 @@ public class ProcessModelBase extends InteractionModel{
 			public IProcess pop() {
 				return (IProcess) stack.pop();
 			}
+
+			public IProcess getByName(String name) {
+				Enumeration e = stack.elements();
+				while (e.hasMoreElements())
+				{
+					IProcess next = (IProcess) e.nextElement();
+					if (next.getName().equals(name))
+					{
+						return next;
+					}
+				}
+				return null;
+			}
+
+			public void getEvents(Vector events, int time) {
+				Enumeration e = stack.elements();
+				while (e.hasMoreElements())
+				{
+					IProcess next = (IProcess) e.nextElement();
+					events.addElement(new Event(next, time));
+				}	
+			}
 		}
 		Hashtable processStacks = new Hashtable();
 
@@ -397,6 +436,39 @@ public class ProcessModelBase extends InteractionModel{
 					processStacks.remove(timeKey);
 				}
 			}
+		}
+		
+		public Event[] getEvents() {
+			Vector events = new Vector();
+			Enumeration enm = processStacks.keys();
+			while (enm.hasMoreElements())
+			{
+				String timeKey = (String) enm.nextElement();
+				ProcessStack stack = ((ProcessStack)processStacks.get(timeKey));
+				stack.getEvents(events, Integer.valueOf(timeKey).intValue());
+			}
+			Event[] interim = new Event[events.size()];
+			for (int i = 0; i<interim.length; i++)
+			{
+				interim[i] = (Event) events.elementAt(i);
+			}
+			return interim;
+		}
+
+		public Event getByName(String name)
+		{
+			Enumeration enm = processStacks.keys();
+			while (enm.hasMoreElements())
+			{
+				String timeKey = (String) enm.nextElement();
+				ProcessStack stack = ((ProcessStack)processStacks.get(timeKey));
+				IProcess pr = stack.getByName(name);
+				if (pr != null)
+				{
+					return new Event(pr, Integer.valueOf(timeKey).intValue());
+				}
+			}
+			return null;
 		}
 
 		public void unscheduleEqual(IProcess process) {
@@ -722,6 +794,14 @@ public class ProcessModelBase extends InteractionModel{
 		Utils.assert_(ser.readString().equals("PR_DATA"), "Failed to read process header on " + name);
 		process.unserializeData(ser);
 		return process;
+	}
+
+	public Event getByName(String name) {
+		return this.scheduler.getByName(name);
+	}
+
+	public void cleanStatus() {
+		status.clear();
 	}
 	
 }

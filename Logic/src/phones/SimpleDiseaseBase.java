@@ -45,6 +45,8 @@ public abstract class SimpleDiseaseBase extends Process {
 	}
 
 	public final Descriptor handle() {
+		cleanupStatus();
+		
 		if (getStage() == START_STAGE) {
 			if (shouldStartDisease())
 			{
@@ -58,8 +60,6 @@ public abstract class SimpleDiseaseBase extends Process {
 		
 		boolean shouldHeal = shouldHeal();
 		boolean shouldProgress = !shouldHeal && shouldProgress() && getStage() != getMaxStage();
-		
-		cleanupStatus();
 		
 		if (shouldHeal)
 		{
@@ -87,6 +87,15 @@ public abstract class SimpleDiseaseBase extends Process {
 		
 		String message = getStageMessage();
 		return message != null ? createMessage(message) : null;
+	}
+
+	public String toString() {
+		return getName() + " St: " + getStage();
+	}
+	
+	public final void cleanup()
+	{
+		cleanupStatus();
 	}
 
 }

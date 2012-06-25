@@ -12,13 +12,13 @@ import alpha.genes.*;
 import alpha.ideology.*;
 import alpha.menu.*;
 import alpha.oxygen.*;
-import alpha.sleep.Asleep;
-import alpha.sleep.Awake;
+import alpha.sleep.*;
 import alpha.wounds.*;
 import phones.IGender;
 import phones.ISerializer;
 import phones.ProcessModelBase;
 import phones.Utils;
+import phones.Sample.*;
 
 public class AlphaIM extends ProcessModelBase implements IGender {
 
@@ -41,6 +41,7 @@ public class AlphaIM extends ProcessModelBase implements IGender {
 	public boolean alreadyGetChip;
 	public int radDamage;
 	public int radStage;
+	public boolean radEnabled = true;
 	
 	public static final String TOGGLE_GENE = "toggle_gene_";
 	public static final String TOGGLE_NUTRIEN = "toggle_nutrien_";
@@ -158,13 +159,14 @@ public class AlphaIM extends ProcessModelBase implements IGender {
 		Pain = new PainAggregator();
 		inHouse = true;
 		radStage = radDamage = 0;
+		radEnabled = true;
 		
-		status.addMessage("init", DEMO_MODE ?  "Ура, демка работает. MENU для вызова меню! " : "Ура, финальная версия работает. Обратитесь к мастерам для старта игры.");
+		status.addMessage("init", DEMO_MODE ?  "Ура, демка работает. MENU для вызова меню! " : "Все работает. Обратитесь к мастерам для начала игры");
 	}
 
 	private void bindCommandWords() {
-		bindFixedCommandWord("INDIVIDUAL", new IdeologyChange(this, 0, 1));
-		bindFixedCommandWord("COMMONS", new IdeologyChange(this, 0, -1));
+		bindFixedCommandWord("INDIVIDUAL", new IdeologyChange(this, 0, -1));
+		bindFixedCommandWord("COMMONS", new IdeologyChange(this, 0, +1));
 		
 		bindFixedCommandWord("SCIENCE", new IdeologyChange(this, 1, 1));
 		bindFixedCommandWord("MYSTIC", new IdeologyChange(this, 1, -1));
@@ -177,8 +179,8 @@ public class AlphaIM extends ProcessModelBase implements IGender {
 		
 		bindFixedCommandWord("wound_left_arm", new ArmWound(this, LOCATION_LEFT_HAND));
 		bindFixedCommandWord("wound_right_arm", new ArmWound(this, LOCATION_RIGHT_HAND));
-		bindFixedCommandWord("wound_left_leg", new ArmWound(this, LOCATION_LEFT_LEG));
-		bindFixedCommandWord("wound_right_leg", new ArmWound(this, LOCATION_RIGHT_LEG));
+		bindFixedCommandWord("wound_left_leg", new LegWound(this, LOCATION_LEFT_LEG));
+		bindFixedCommandWord("wound_right_leg", new LegWound(this, LOCATION_RIGHT_LEG));
 		bindFixedCommandWord("wound_torso", new TorsoWound(this));
 		
 		bindFixedPhoneWord("IDDQD", new MasterMenu(this));
@@ -207,6 +209,8 @@ public class AlphaIM extends ProcessModelBase implements IGender {
 		
 		bindFixedCommandWord("432463", new HealAll(this));
 		bindPrefixCommandWord("44", new RadDamage(this));
+		
+		bindFixedCommandWord("837896", new DisableRad(this));
 	}
 	
 	public Process createProcessByName(String name) {
@@ -276,7 +280,12 @@ public class AlphaIM extends ProcessModelBase implements IGender {
 				new SetOxygenLevel(this),
 				
 				new UpdateRad(this),
-				new RadDamage(this)
+				new RadDamage(this),
+				new DisableRad(this),
+				
+				new CleanStatus(this),
+				
+				new CancelByName(this)
 			};
 		for (int i = 0; i < process.length; i++)
 		{

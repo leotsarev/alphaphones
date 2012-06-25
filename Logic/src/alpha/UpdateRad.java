@@ -2,7 +2,6 @@ package alpha;
 
 import phones.InteractionModel.Descriptor;
 import phones.ProcessModelBase;
-import phones.Utils;
 
 public class UpdateRad extends AlphaProcess {
 
@@ -54,7 +53,10 @@ public class UpdateRad extends AlphaProcess {
 		}
 		else
 		{
-			getAlphaModel().radDamage += getAlphaModel().wearingMask ? 1 : 6;
+			if (getAlphaModel().radEnabled)
+			{
+				getAlphaModel().radDamage += getAlphaModel().wearingMask ? 1 : 6;
+			}
 		}
 		getAlphaModel().radStage = getAlphaModel().radDamage / getAlphaModel().Chemistry.getRadImmune();
 	}

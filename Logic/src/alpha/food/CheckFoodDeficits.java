@@ -23,7 +23,14 @@ public class CheckFoodDeficits extends alpha.AlphaProcess {
 	public Descriptor handle() {
 		if (AlphaIM.DEMO_MODE) {
 			return null;
-		} 
+		}
+		
+		scheduleAfterMins(this, 10);
+		
+		if (getAlphaModel().sleeping)
+		{
+			return null;
+		}
 		startDeficitIfNeeded(new FoodDeficitAlpha(model), Chemistry.ALPHA + 1);
 		startDeficitIfNeeded(new FoodDeficitBeta(model), Chemistry.BETA + 11);
 		startDeficitIfNeeded(new FoodDeficitGamma(model), Chemistry.GAMMA + 2);
@@ -41,7 +48,7 @@ public class CheckFoodDeficits extends alpha.AlphaProcess {
 		startVirusDiseaseIfNeeded(new AggressiveDisease(model));
 		startVirusDiseaseIfNeeded(new DepressiveDisease(model));
 		
-		scheduleAfterMins(this, 10);
+		
 		return null;
 	}
 

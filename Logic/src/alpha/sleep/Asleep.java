@@ -23,6 +23,10 @@ public class Asleep extends AlphaProcess {
 		{
 			return createMessage("В таком воздухе не поспишь!");
 		}
+		if (getAlphaModel().sick)
+		{
+			return createMessage("Я больной, какой тут сон!");
+		}
 		getAlphaModel().sleeping = true;
 		addStatusMessage("sleep", "Сплю");
 		return createChangeStatusMessage("Я потихоньку засыпаю...");

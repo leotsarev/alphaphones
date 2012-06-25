@@ -39,5 +39,12 @@ public abstract class WoundBase extends AlphaDiseaseBase {
 	protected void addPain(int power) {
 		getAlphaModel().Pain.add(getName(), getIntArg("location"), power);
 	}
+	
+	protected boolean shouldStartDisease() {
+		return true;
+	}
+	
+	protected void onDiseaseStart() {
+	}
 
 }

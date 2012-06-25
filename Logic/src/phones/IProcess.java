@@ -15,5 +15,7 @@ public interface IProcess {
 	public abstract void unserializeData(ISerializer ser);
 
 	public abstract void serializeData(ISerializer ser);
+	
+	public abstract void cleanup();
 
 }

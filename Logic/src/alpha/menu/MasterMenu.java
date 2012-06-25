@@ -2,12 +2,14 @@ package alpha.menu;
 
 import alpha.AlphaIM;
 import alpha.AlphaInit;
+import alpha.CleanStatus;
 import alpha.ToggleGender;
 import alpha.food.NutrienMenu;
 import alpha.genes.MasterGeneMenu;
 import alpha.ideology.IdeologyMasterStatus;
 import alpha.ideology.MasterToggleAlreadyGetChip;
 import phones.InteractionModel.MenuDescriptor;
+import phones.Event;
 import phones.MenuBase;
 import phones.ProcessModelBase;
 
@@ -37,6 +39,7 @@ public class MasterMenu extends MenuBase {
 		{
 			addMenuItemAndBind(menu, (alphaIM.alreadyGetChip ? "Уже " : "Еще не ") + "брал чип убийства (переключить)" , new MasterToggleAlreadyGetChip(model));
 		}
+		addMenuItemAndBind(menu, "Очистить статус", new CleanStatus(model));
 	}
 
 }

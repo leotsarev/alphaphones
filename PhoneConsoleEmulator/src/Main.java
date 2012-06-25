@@ -41,8 +41,8 @@ public class Main {
 				sleepDescriptor = (SleepDescriptor)descriptor;
 				menuDescriptor = null;
 				
-				if (!sleepDescriptor.status.equals(prevStatus)) {
-					out.println("STATUS: " + sleepDescriptor.status);
+				if (!sleepDescriptor.status.equals(prevStatus) || true) {
+					out.println(getCurrentTime() + " STATUS: " + sleepDescriptor.status);
 					prevStatus = sleepDescriptor.status;
 				}
 				
@@ -79,7 +79,7 @@ public class Main {
 		if (dt == 0)
 			return;
 		// TODO: accumulate time and only print on status change or menu
-		out.println(dt+" seconds later...");
+		//out.println(dt+" seconds later...");
 		currentTime = new Date(currentTime.getTime()+1000*dt);
 	}
 	
@@ -115,7 +115,7 @@ public class Main {
 		next();
 
 		while (true) {
-			out.print((currentTime.getTime() -  startTime.getTime())/1000 +  ">>> ");
+			out.print( ">>> ");
 			String input = in.readLine();
 			
 			if (input.equals("exit"))
@@ -199,6 +199,10 @@ public class Main {
 			
 			out.println("Unrecognized command (" + input + ") Type 'help' for help.");
 		}
+	}
+
+	private static long getCurrentTime() {
+		return (currentTime.getTime() -  startTime.getTime())/1000;
 	}
 
 }

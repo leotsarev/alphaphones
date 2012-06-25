@@ -37,5 +37,9 @@ public abstract class MenuBase extends ProcessModelBase.Process {
 	protected void addClose(MenuDescriptor menu) {
 		menu.addItem("Закрыть", "");
 	}
+	
+	public final void cleanup()
+	{
+	}
 
 }

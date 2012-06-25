@@ -208,7 +208,7 @@ public class Main extends MIDlet implements ItemStateListener, CommandListener {
 		code = "";
 
 		im = new GenderDecorator(new AlphaIM());
-		im = new InteractionModelCheckDecorator(im);
+		//im = new InteractionModelCheckDecorator(im);
 
 		try {
 			StringSerializer ser = new StringSerializer();
